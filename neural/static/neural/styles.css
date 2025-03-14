@@ -11,7 +11,6 @@ max-height: auto;
 justify-content:space-evenly;
 flex-direction: column;
 flex-wrap: nowrap;
-flex-wrap:300px;
 background-image: url("/static/neural/DeepNeural_Wallpaper.png");
 background-repeat: no-repeat;
 background-size: cover;
