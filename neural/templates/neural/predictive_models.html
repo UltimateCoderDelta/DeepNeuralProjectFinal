@@ -1,0 +1,151 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>Predictive Models</title>
+ <meta name="viewport" content="width=device-width,initial-scale=1" >
+ <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+{% endblock %}
+
+  {% block header %}
+  <nav id="nav">
+    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
+    <div>
+      <span class="nav-item"><a href="{% url 'predictive_models' %}">Predictive Models</a></span>
+      <span class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+    </div>
+  </nav>
+  <section>
+   <div class="blog_title">
+    <h2>DeepNeural ML Models</h2>
+    <div>
+      <p>
+        We are aiming to develop machine learning models aimed
+        at enhancing the healthcare industry, and we are aware
+        that we must start somewhere, that start is here, and it
+        is only the beginning of the journey; get access to all
+        DeepNeural model information at a click of a button!
+      </p>
+    </div>
+   </div>
+ </section>
+  {% endblock %}
+ 
+  {% block content %}
+  <main>
+     <section id="deepneural_models" class="deepneural_models">
+      <article id="tabular" role="button" class="model_name_card card_one">
+         <div class="symbol">
+          <i class="fa-solid fa-table"></i>
+          <p class="coming_soon" style="font-size: smaller;">In Progress</p>
+         </div>
+         <div class="model_info">
+            <h2>Tabular</h2>
+            <p>
+              Leverage the power of classical machine learning models,
+              which use tabular data to make future predictions for health conditions. 
+            </p>
+        </div>
+      </article>
+      <article id="text" role="button" class="model_name_card card_one">
+        <div class="symbol">
+          <i class="fa-solid fa-comment"></i>
+          <p class="coming_soon" style="font-size: smaller;">Coming Soon</p>
+        </div>
+        <div class="model_info">
+          <h2>Text</h2>
+          <p>
+            Language is one of the most import apects of healtcare. 
+            Leverage this power by performing a plethora of actions, ranging
+            from text summarization to sentiment analysis.
+          </p>
+      </div>
+      </article>
+      <article id="vision" role="button" class="model_name_card card_one">
+        <div class="symbol">
+          <i class="fa-solid fa-eye"></i>
+          <p class="coming_soon" style="font-size: smaller;">Coming Soon</p>
+        </div>
+        <div class="model_info">
+          <h2>Vision</h2>
+          <p>
+            Interpret various diseases through vision-based ML models,
+            capable of assisiting in providing faster diagnoses. 
+          </p>
+      </div>
+      </article>
+     </section>
+     <script>
+
+        // Function: when we click an element card it should link to the 
+       //correct html page. 
+
+       //Select all elements
+       const tabularCard = document.getElementById("tabular");
+       const textCard = document.getElementById("text");
+       const visionCard = document.getElementById("vision");
+       const cardData = document.getElementById("deepneural_models");
+
+       function modelCard(option) {
+         if (option === "tabular") {
+            window.location.href = "#";
+            tabularCard.disable = true;
+         }
+         else if (option === "text") {
+          window.location.href = "#";
+         }
+         else {
+          window.location.href = "#";
+         }
+       }
+
+       tabularCard.addEventListener("click", () => {
+        modelCard("tabular");
+       });
+       textCard.addEventListener("click", () => {
+        modelCard("text");
+       });
+       visionCard.addEventListener("click", () => {
+        modelCard("vision");
+       });
+
+           // If the window size gets too small, change the cards to display vertical
+    function switchModelCardToColumn(){
+       if (window.innerWidth > 700) {
+        cardData.style.flexDirection = "row";
+       } else {
+        cardData.style.flexDirection = "column";
+       }
+    }
+
+    switchModelCardToColumn();
+
+    window.addEventListener("resize", switchModelCardToColumn);
+     </script>
+  </main>
+  {% endblock %}
+
+  {% block footer %}
+  <section class="company_info">
+    <article class="info_cards">
+       <h3>Stay Connected</h3>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://x.com/DNeural76430">X</a></span>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://www.linkedin.com/company/dneural">LinkedIn</a></span>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://www.instagram.com/deep_neural/">Instagram</a></span>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://www.facebook.com/DeepNeuralCorp/">Facebook</a></span>
+       <!-- <span class="info_cards_span nav-item"><a class="anchor" href="#">YouTube</a></span> -->
+    </article>
+    <article class="info_cards">
+      <h3>Check Out</h3>
+      <span class="info_cards_span nav-item"><a class="anchor" href="{% url 'predictive_models' %}">Predictive Models</a></span>
+      <span class="info_cards_span nav-item"><a class="anchor" href="{% url 'deepneural_blog' %}">Blog</a></span>
+   </article>
+  </section>
+    <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+  {% endblock %}

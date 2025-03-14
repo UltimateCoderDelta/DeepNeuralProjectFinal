@@ -1,0 +1,385 @@
+html, body {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-family: "Poppins", serif;
+}
+
+#header_box {
+display: flex;
+max-height: auto;
+justify-content:space-evenly;
+flex-direction: column;
+flex-wrap: nowrap;
+flex-wrap:300px;
+background-image: url("/static/neural/DeepNeural_Wallpaper.png");
+background-repeat: no-repeat;
+background-size: cover;
+filter: grayscale(60%);
+}
+
+#nav{
+    display: flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap: nowrap;
+    margin:0;
+    padding:18px;
+    position: fixed;
+    top: 0;
+    overflow: hidden;
+    width: 100%;
+    background-color: #fff;
+    opacity: 70%;
+    z-index: 999;
+    border-bottom: solid 1px #A9A9A9;
+}
+
+
+#banner_section {
+  width: 70%;
+  text-align:left;
+  margin-left: 10%;
+  margin-bottom: 10%;
+}
+
+#banner_section h2 {
+  font-size: 2.5rem;
+  font-weight: 500;
+  padding-top: 45px;
+  text-align: left;
+  margin-top: 200px;
+}
+
+#logo {
+    height: 30px;
+    height: 30px;
+}
+
+#banner_section p {
+    float: right;
+    font-size: 15px;
+    margin-top: 20%;
+    text-align: right;
+    max-width: 500px;
+    font-weight: 400;
+    text-align: left;
+    padding-bottom: 30px;
+}
+
+.nav-item {
+    margin-right: 40px;  
+    font-size: 15px;
+}
+
+.title {
+    font-size: larger;
+    font-weight: medium;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: #000;
+}
+
+#home_content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #28282B;
+    padding-top: 150px;
+}
+
+.mission_section {
+    /* margin-left: 30px; */
+    width: 100%;
+    color: #fff;
+    padding-bottom: 10%;
+    border-bottom: solid 1px #A9A9A9;
+}
+
+.mission_section p {
+    margin-left: 50px;
+    font-weight:230;
+    text-align: left;  
+    font-size: 22px;
+    max-width: 50%;
+    margin-bottom: 60px;
+}
+
+.mission_section h2 {
+    margin-left: 50px;
+    font-size: 15px;
+    font-weight:230;
+    text-align: left;
+}
+
+.products_info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: #28282B;
+    color: #fff;
+    padding:30px;
+    margin: 30px;
+    margin-bottom: 60px;
+    border-radius: 12px;
+    font-weight: lighter;
+    font-size: larger;
+    text-align: left;
+    max-width: 800px;
+    border-left: solid 1px #A9A9A9;
+    border-right: solid 1px #A9A9A9;
+    margin-bottom: 130px;
+}
+
+.span_object {
+    display: inline;
+}
+
+.information {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding-top: 60px;
+}
+
+.information {
+    flex-direction:column;
+}
+
+#btn1, #btn2, #btn3 {
+    border-radius: 15px;
+    border-color: #A9A9A9;
+    background-color: #A9A9A9;
+    width: 150px;
+    height: 35px;
+    /* background-color: #D3D3D3; */
+    /* background-color: #343a40; */
+    font-size: 15px;
+    font-weight: 600;
+    border-color:#D3D3D3;
+}
+
+/* #btn1:hover, #btn2:hover, #btn3:hover {
+    background-color: #fff;
+    transition: background-color ease-in 0.2s;
+} */
+
+#card_text {
+   margin-top: 150px;
+}
+
+.company_info {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 400px;
+    background-color: #f5f5f5;
+    padding-top: 90px;
+}
+
+.info_cards h3 {
+    width: 230px;
+    font-weight: 200;
+}
+
+.info_cards_span {
+    display: block;
+}
+
+.anchor {
+    font-weight: 200;
+    font-size: 20px;
+}
+
+.blog_title {
+    border-bottom: solid 1px #A9A9A9;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 10%;
+}
+.blog_page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 10%;
+}
+
+.blog_page img {
+    width: 600px;
+    height: 600px;
+    margin-bottom: 50px;
+}
+
+.blog_page p, .blog_page q {
+    text-align: left;
+    max-width: 750px;
+  }
+
+
+.blog_title p {
+    max-width: 550px;
+    text-align: left;
+    margin-left:20px;
+}
+
+.blog_description {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+   align-items: flex-start;
+   margin-left:20px;
+}
+
+.end_blog_section {
+    margin-top: 50px;
+    margin-bottom: 160px;
+    border-top: solid 1px #A9A9A9;
+}
+
+.end_blog_section h2 {
+    font-weight: 400;
+    margin-top: 40px;
+}
+
+.blog_title h2 {
+    font-size: 60px;
+    font-weight: 300;
+    text-align: left;
+    margin-left: 100px;
+    margin-bottom: 80px;
+    padding-top: 80px;
+}
+
+.blog_info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 1px #A9A9A9;
+    /* max-height: 350px; */
+    margin-left: 40px;
+}
+
+.blog_date {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content:flex-start;
+    align-items: flex-start;
+}
+
+ .deepneural_models{
+   display: flex;
+   flex-direction: column;
+   align-items:flex-start;
+   flex-wrap: nowrap;
+   /* background-color: #28282B; */
+   /* color: #fff; */
+   padding-top: 30px;
+ }
+
+ .deepneural_models_vertical {
+    flex-direction: column;
+ }
+
+ 
+ .model_name_card{
+    border-left: solid 1px #A9A9A9;
+    margin-left:0%;
+    margin-right: 0%;
+    margin-top: 100px;
+    margin-bottom: 200px;
+    width: 400px;
+    height: 350px;
+    padding: 12px;
+    cursor: pointer;
+ }
+
+ .card_one {
+    margin-left:50px;
+ }
+
+ .model_name_card:hover {
+    opacity:0.6;
+    border-color: #C70039 ;
+ }
+
+ .coming_soon {
+    width: 120px;
+    height: 25px;
+    margin-top: 1.5px;
+    border: solid 1px #A9A9A9;
+    border-radius: 12px;
+    text-align: center;
+ }
+
+ .model_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: 15px;
+    margin-top: 25%;
+ }
+
+ .symbol {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* float: left; */
+ }
+
+ .model_name_card h2 {
+    text-align: center;
+    font-weight: 400;
+ }
+
+.blog_date h3 {
+    font-weight: 300;
+    float: left;
+    flex:1;
+}
+
+.blog_info h2 {
+    margin-bottom: 150px;
+    font-size: 40px;
+    font-weight: 400;
+    float:left;
+    flex: 1;
+}
+
+.blog_info p {
+    max-width: 600px;
+    text-align: left;
+    font-size: larger;
+    margin-bottom: 50px;
+    margin-right: 35px;
+    /* flex: 1.5; */
+}
+
+.read_more {
+    text-align: left;
+    border-bottom:solid 1px #A9A9A9;
+    width: 90px;
+}
+
+.read_more a {
+    text-decoration: none;
+    color:#000;
+}
+
+.read_more a:hover {
+    color:#A9A9A9;
+    transition: color 0.2s ease-in;
+}
+

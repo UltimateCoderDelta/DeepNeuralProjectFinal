@@ -1,0 +1,132 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>DeepNeural Blogs</title>
+ <meta name="viewport" content="width=device-width,initial-scale=1" >
+ <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+{% endblock %}
+
+  {% block header %}
+  <nav id="nav">
+    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
+    <div>
+      <span class="nav-item"><a href="{% url 'predictive_models' %}">Predictive Models</a></span>
+      <span class="nav-item"><a href="#">Blog</a></span>
+    </div>
+  </nav>
+  <section>
+   <div class="blog_title">
+    <h2>DeepNeural Blog</h2>
+   </div>
+ </section>
+  {% endblock %}
+ 
+  {% block content %}
+  <main>
+    {% for item in blogs %}
+     <section>
+      <article class="blog_info">
+        <div class="blog_date">
+         <h3>{{item.date}}</h3>
+         <h2>{{ item.title}}</h2>
+       </div>
+         <div class="blog_description">
+          <p>{{item.description}}</p>
+          <div class="read_more">
+            {% with item.template_name as url_name %}
+             <a href="{% url url_name %}">Read more</a>
+            {% endwith %}
+          </div>
+         </div>
+      </article>
+      {% endfor %}
+     </section>
+     <script>
+       const cardText = document.getElementById("card_text");
+       const btn1 = document.getElementById("btn1");
+       const btn2 = document.getElementById("btn2");
+       const btn3 = document.getElementById("btn3");
+       
+       cardText.textContent = `
+          Machine learning algorithms have the ability
+          to improve patient care, through means such as
+          Computer Vision, NLP and classical predictive models
+          for better patient care.  
+       
+       `
+
+       const textOne = `
+          Machine learning algorithms have the ability
+          to improve patient care, through means such as
+          Computer Vision, NLP and classical predictive models
+          for better patient care.   
+         `
+
+       const textTwo = `
+        DeepNeural's current focus is to develop
+        machine learning models designed for assistive
+        diagnostics, by focusing on tabular, natural language, 
+        and vision-based models for classification and regression.
+       `
+
+       const textThree = `
+        All good things must start small. Our approach aims to
+        reflect that statement; most of our models will be released in
+        phases, and will carefully keep in mind that healthcare requires
+        robust and trustworthy data, allowing us to build similar models.
+       `
+   
+       function changeInnerText(btnId) {
+          if (btnId.srcElement.id == "btn1") {
+            cardText.textContent = textOne;
+            btn1.style.backgroundColor = "#fff";
+            btn2.style.backgroundColor = "#D3D3D3";
+            btn3.style.backgroundColor = "#D3D3D3";
+          }
+
+          else if (btnId.srcElement.id == "btn2") {
+            cardText.textContent = textTwo;
+            btn1.style.backgroundColor = "#D3D3D3";
+            btn3.style.backgroundColor = "#D3D3D3";
+            btn2.style.backgroundColor = "#fff";
+          }
+
+          else {
+            cardText.textContent = textThree;
+            btn1.style.backgroundColor = "#D3D3D3";
+            btn2.style.backgroundColor = "#D3D3D3";
+            btn3.style.backgroundColor = "#fff";
+          }
+       }
+
+       btn1.addEventListener("click", changeInnerText);
+       btn2.addEventListener("click", changeInnerText);
+       btn3.addEventListener("click", changeInnerText);
+     </script>
+  </main>
+  {% endblock %}
+
+  {% block footer %}
+  <section class="company_info">
+    <article class="info_cards">
+       <h3>Stay Connected</h3>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://x.com/DNeural76430">X</a></span>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://www.linkedin.com/company/dneural">LinkedIn</a></span>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://www.instagram.com/deep_neural/">Instagram</a></span>
+       <span class="info_cards_span nav-item"><a class="anchor" href="https://www.facebook.com/DeepNeuralCorp/">Facebook</a></span>
+       <!-- <span class="info_cards_span nav-item"><a class="anchor" href="#">YouTube</a></span> -->
+    </article>
+    <article class="info_cards">
+      <h3>Check Out</h3>
+      <span class="info_cards_span nav-item"><a class="anchor" href="{% url 'predictive_models' %}">Predictive Models</a></span>
+      <span class="info_cards_span nav-item"><a class="anchor" href="{% url 'deepneural_blog' %}">Blog</a></span>
+   </article>
+  </section>
+  {% endblock %}
