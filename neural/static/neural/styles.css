@@ -6,9 +6,9 @@ html {
     font-family: "Poppins", serif;
 }
 
-body {
+/* body {
     width: 100%;
-}
+} */
 
 #header_box {
 display: flex;
