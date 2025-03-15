@@ -275,6 +275,7 @@ filter: grayscale(60%);
     flex-wrap: nowrap;
     align-items: center;
     justify-content: flex-start;
+    width: 100%;
 }
 
 .blog_date {
