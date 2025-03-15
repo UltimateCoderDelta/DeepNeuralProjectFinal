@@ -1,6 +1,7 @@
-html {
+html, body {
     margin: 0;
     /* width:fit-content; */
+    /* width: 100%; */
     text-align: center;
     font-family: "Poppins", serif;
 }
