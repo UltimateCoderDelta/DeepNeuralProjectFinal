@@ -95,7 +95,7 @@ filter: grayscale(60%);
     justify-content: space-evenly;
     background-color: #28282B;
     padding-top: 150px;
-    width: 100%;
+    width: fit-content;
 }
 
 .mission_section {
