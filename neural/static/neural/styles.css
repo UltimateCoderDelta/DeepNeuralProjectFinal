@@ -247,6 +247,7 @@ filter: grayscale(60%);
     margin-top: 50px;
     margin-bottom: 160px;
     border-top: solid 1px #A9A9A9;
+    /* max-width: 100px; */
 }
 
 .end_blog_section h2 {
