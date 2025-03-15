@@ -203,11 +203,11 @@ filter: grayscale(60%);
     flex-direction: column;
     align-items: flex-start;
     padding-bottom: 10%;
-    width: 100%;
 }
 .blog_page {
   display: flex;
   flex-direction: column;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-evenly;
   margin-top: 10%;
