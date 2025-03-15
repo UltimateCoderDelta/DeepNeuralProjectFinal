@@ -1,14 +1,9 @@
 html {
     margin: 0%;
-    width:fit-content;
-    /* width: 100%; */
     text-align: center;
     font-family: "Poppins", serif;
+    width: calc();
 }
-
-/* body {
-    width: 100%;
-} */
 
 #header_box {
 display: flex;
@@ -95,7 +90,6 @@ filter: grayscale(60%);
     justify-content: space-evenly;
     background-color: #28282B;
     padding-top: 150px;
-    width: fit-content;
 }
 
 .mission_section {
@@ -165,8 +159,6 @@ filter: grayscale(60%);
     background-color: #A9A9A9;
     width: 150px;
     height: 35px;
-    /* background-color: #D3D3D3; */
-    /* background-color: #343a40; */
     font-size: 15px;
     font-weight: 600;
     border-color:#D3D3D3;
