@@ -1,5 +1,5 @@
 html {
-    margin: 0;
+    margin: 0%;
     /* width:fit-content; */
     /* width: 100%; */
     text-align: center;
@@ -94,7 +94,7 @@ filter: grayscale(60%);
     justify-content: space-evenly;
     background-color: #28282B;
     padding-top: 150px;
-
+    width: 100%;
 }
 
 .mission_section {
