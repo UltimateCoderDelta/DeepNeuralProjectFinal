@@ -269,6 +269,14 @@ filter: grayscale(60%);
     padding-bottom: 25px;
 }
 
+.blog_content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 .blog_date {
     display: flex;
     flex-direction: column;
