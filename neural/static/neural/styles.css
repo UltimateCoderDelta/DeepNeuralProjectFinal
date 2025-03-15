@@ -208,9 +208,10 @@ filter: grayscale(60%);
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-evenly;
+  /* align-items: center;
+  justify-content: center; */
   margin-top: 10%;
+  max-width: 700px;
 }
 
 .blog_page img {
@@ -219,17 +220,17 @@ filter: grayscale(60%);
     margin-bottom: 50px;
 }
 
+.blog_orientation {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
 .blog_page p, .blog_page q {
     text-align: left;
-    max-width: 750px;
   }
-
-
-.blog_title p {
-    max-width: 550px;
-    text-align: left;
-    margin-left:20px;
-}
 
 .blog_description {
    display: flex;
