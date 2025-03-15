@@ -13,6 +13,7 @@ html {
 #header_box {
 display: flex;
 max-height: auto;
+width: 100%;
 justify-content:space-evenly;
 flex-direction: column;
 flex-wrap: nowrap;
