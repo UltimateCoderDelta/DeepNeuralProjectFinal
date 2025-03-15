@@ -3,6 +3,7 @@ html, body {
     width:fit-content;
     text-align: center;
     font-family: "Poppins", serif;
+    width: 100%;
 }
 
 #header_box {
@@ -14,7 +15,6 @@ flex-wrap: nowrap;
 background-image: url("/static/neural/DeepNeural_Wallpaper.png");
 background-repeat: no-repeat;
 background-size: cover;
-/* width: 100%; */
 filter: grayscale(60%);
 }
 
@@ -90,17 +90,15 @@ filter: grayscale(60%);
     justify-content: space-evenly;
     background-color: #28282B;
     padding-top: 150px;
-    /* width: 100%; */
 
 }
 
 .mission_section {
-    /* margin-left: 30px; */
     width: 100%;
     color: #fff;
     padding-bottom: 10%;
     border-bottom: solid 1px #A9A9A9;
-    flex:1;
+    /* flex:1; */
 }
 
 .mission_section p {
@@ -187,7 +185,6 @@ filter: grayscale(60%);
     height: 400px;
     background-color: #f5f5f5;
     padding-top: 90px;
-    width: 100%;
 }
 
 .info_cards h3 {
@@ -272,8 +269,7 @@ filter: grayscale(60%);
     justify-content: space-between;
     align-items: center;
     border-bottom: solid 1px #A9A9A9;
-    /* max-height: 350px; */
-    margin-left: 40px;
+    padding-bottom: 25px;
 }
 
 .blog_date {
@@ -282,6 +278,7 @@ filter: grayscale(60%);
     flex-wrap: nowrap;
     justify-content:flex-start;
     align-items: flex-start;
+    margin-left: 20px;
 }
 
  .deepneural_models{
@@ -308,7 +305,7 @@ filter: grayscale(60%);
     width: 400px;
     height: 350px;
     padding: 12px;
-    cursor: pointer;
+    /* cursor: pointer; */
  }
 
  .card_one {
