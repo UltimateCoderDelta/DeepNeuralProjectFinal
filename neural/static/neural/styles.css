@@ -246,6 +246,7 @@ filter: grayscale(60%);
 
 .blog_title p {
     max-width: 500px;
+    padding: 30px;
 }
 
 .blog_info {
