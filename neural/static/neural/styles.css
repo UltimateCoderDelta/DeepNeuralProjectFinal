@@ -376,11 +376,16 @@ filter: grayscale(60%);
     flex-direction: column;
     flex-wrap: nowrap;
     max-width: 800px;
+    align-items: center;
 }
 
 .blog_content_orientation p {
     text-align: left;
 }
+
+/* .blog_figures {
+
+} */
 
 .blog_content_orientation img {
     width: 650px;
