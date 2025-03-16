@@ -244,6 +244,10 @@ filter: grayscale(60%);
     padding-top: 80px;
 }
 
+.blog_title p {
+    max-width: 500px;
+}
+
 .blog_info {
     display: flex;
     flex-direction: row;
