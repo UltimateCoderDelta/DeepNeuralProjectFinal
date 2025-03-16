@@ -365,9 +365,9 @@ filter: grayscale(60%);
 /* Blog page CSS */
 .blog_content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
-    justify-content:center ;
+    align-items:center ;
     margin: 36px;
 }
 
@@ -380,4 +380,9 @@ filter: grayscale(60%);
 
 .blog_content_orientation p {
     text-align: left;
+}
+
+.blog_content_orientation img {
+    width: 650px;
+    height: 650px;
 }
