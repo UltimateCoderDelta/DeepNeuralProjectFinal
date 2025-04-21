@@ -1,0 +1,212 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>Predictive Models</title>
+ <meta name="viewport" content="width=320,initial-scale=0.7" >
+ <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+ <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+<script>hljs.highlightAll();</script>
+{% endblock %}
+
+{% block header %}
+<nav id="nav">
+  <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Logo_Main.png'%}"></a></span>
+  <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
+  <div>
+    <span class="nav-item"><a href="{% url 'predictive_models' %}">Predictive Models</a></span>
+    <span class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+   <main class="model_description_content">
+     <section>
+       <h3>Model Description</h3>
+       <p>
+        The following model is designed to predict, given a certain number of inputs, whether a person has and/or is 
+        it at risk of acquiring diabetes. The model has a total of 21 input features, and is 
+        designed to work within form-based applications, i.e. software applications which require user input.
+       </p>
+       <p>
+        NOTE: The following model is meant as an assistive tool, and must NOT directly be used to produce the final 
+        verdict on a person or patient's condition. As it is meant to promote further evaluations upon having completed its prediction.
+       </p>
+       <ul>
+         <li><b>Developed by:</b> DeepNeural</li>
+         <li><b>Model type:</b> Tabular Classification</li>
+         <li><b>Language(s):</b> English</li>
+         <li><b>License:</b> MIT</li>      
+       </ul>
+     </section>
+     <section>
+      <h3>Model Inputs</h3>
+
+     </section>
+     <section>
+      <h3>Uses</h3>
+        <p>
+            This model is primarily designed for Data Scientists, Software Engineers and Machine Learning Engineers 
+            who have an interest in developing diabetic-based software applications, for various healthcare institutions, ranging from hospitals to clinics. Furthermore, this model is also designed for educational purposes within acadamia, 
+            whereby diabetic risk-analysis is a priority of the study.
+        </p>
+        <p>
+            Foreseeable users of the software applications to be developed with this model include: doctors, nurses (with respect to their patients)
+        </p>
+     </section>
+     <section>
+       <h3>Bias, Risks, and Limitations</h3>
+       <p>
+        Please be adviced that our model had to be adjusted to place a greater emphasis on the minority class - a positive result - which 
+        ensured a robust model was built. However, in correcting the aforementioned issue of an imbalanced dataset, our model now works well 
+        with real life data, whereby the minority class requires a greater level of importance (see the results for metrics). However, the model may still suffer from misclassifications at certain points, and therefore, 
+        users are adviced to remember that this model is meant as an assistive tool, aiding in faster diagnostics.
+       </p>
+     </section>
+     <section>
+      <h3>How to Use the Model</h3>
+        <p>
+          To properly make use of this model, please refer to the illustration below, which showcases how this model can be loaded directly into an application. Please note, that, because it was built with the Scikit-Learn Machine Learning library, the model has been saved as a .joblib file. With that in mind, please proceed by 
+          copying the following code into your coding environment (Python).
+        </p>
+        <ol>
+          <li>
+            <p>Install Joblib</p>
+          <div class="code_article">
+            <pre class="code_block">
+
+              !pip install joblib
+            </pre>
+           <div class="button-float">
+            <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i>  
+          </div>
+          </div>
+          </li>
+          <li>
+          <p>Load model upon installtion</p>
+          <div class="code_article">
+            <pre class="code_block">
+
+              my_model = joblib.load(<span class="hljs-string">"diabetes_health_indicators_classifier_v1.joblib"</span>)
+            </pre>
+            <div class="button-float">
+            <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+            </div> 
+          </div>
+          </li>
+          <li>
+           <p>Alternatively (for a direct download from Hugging Face models)</p>
+           <div class="code_article">
+            <pre class="code_block">  
+            <span class="hljs-keyword">from</span> huggingface_hub <span class="hljs-keyword">import</span> hf_hub_download
+            <span class="hljs-keyword">import</span> joblib model =  joblib.load(
+               hf_hub_download(
+                    <span class="hljs-string">"DeepNeural/diabetes_health_indicators_classifier_v1"</span> , <span class="hljs-string">"diabetes_health_indicators_classifier_v1.joblib"</span>))</span>
+
+          <span class="hljs-string"># only load pickle files from sources you trust</span>
+          <span class="hljs-string"># read more about it here https://skops.readthedocs.io/en/stable/persistence.html </span>
+           </pre>
+           <div class="button-float">
+           <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+           </div> 
+          </div>                 
+          </li>
+          <li>
+           <p>Make predictions (Binary or probability)</p>
+        <article class="code_article">
+            <pre class="code_block">
+
+                 my_model.predict(X_test)
+
+                 <span class="hljs-string"># For probability-based outputs</span>
+
+                 my_model.predict_proba(X_test)
+            </pre>
+            <div class="button-float">
+            <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+            </div> 
+           </article>
+          </li>
+        </ol>
+     </section>
+     <section>
+       <h3>Metrics</h3>
+       <p>
+        We tested our dataset on various Machine Learning models, namely: logistic regression, Stochastic Gradient Descent, 
+        and Support Vector Machines. In all of these cases, we tested our models on the new (unforseen) test data. In doing this, 
+        we discovered that all three models performed well, with promising accuracy, recall, and AUC scores; these being the most 
+        trustworthy scores, as our dataset was originally imbalanced; we thus performed multiple types of imbalance adjustments, 
+        to place a greater emphasis on the minority class, which is, the more important class. Upon having adjusted the dataset, 
+        we retrained all of our models once more to draw a conclusion. The best performing model, after performing hyperparameter tuning, 
+        was the SGDClassifier model. The primary metrics used were: accuracy, recall, AUC, 
+        precision and f1-score. Please refer to the results section to see the results.
+       </p>
+     </section>
+     <section>
+      <h3>Results</h3>
+      <p>
+        Accuracy - 73% Precision - 31% Recall - 78% AUC - 75% F1-Score - 44%
+      </p>
+     </section>
+     <script>
+      //Initially, we will initialize the contents of the code block
+      const codeBlock = document.querySelectorAll(".code_block");
+      const copyButton = document.querySelectorAll(".clone_button");
+      //Iterate through the list of code blocks
+    
+      //Create function to perform the copy action via eventlistener
+      function copyCodeBlock() {
+        return undefined; //return undefined for now
+      }
+
+     let assignAttributesToButtonsAndBlocks = function () {
+        for (let j=0; j<copyButton.length; j++) {
+             copyButton[j].id = j+1;
+             codeBlock[j].id = j+1; 
+        }
+     }
+
+     assignAttributesToButtonsAndBlocks(); // initialize id attributes
+     let actionListener = function () {
+      copyButton.forEach((btn) => {
+        btn.addEventListener("click", () => {
+           codeBlock.forEach((blId) => {
+            let btnId = btn.getAttribute("id");
+            if (btnId === blId.getAttribute("id")) {
+                try {
+                  navigator.clipboard.writeText(blId.textContent);
+                }
+                catch(error) {
+                  console.log("Error message: " + error);
+                }
+                finally {
+                  if (btn.textContent === "Copied!") {
+                      btn.textContent = "";
+                  } else {
+                    //Make the text and button color go back to normal after 50 milliseconds
+                    btn.textContent = "Copied!";
+                    btn.classList.add("clone_button_trans");
+                  }
+                  setTimeout(() => {
+                      btn.textContent = "";
+                      btn.classList.remove("clone_button_trans");
+                    }, 700);
+                }
+            }
+           });
+        });
+      });
+     }
+
+     actionListener();
+    </script> 
+   </main>
+{% endblock %}

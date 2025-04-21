@@ -40,7 +40,8 @@
   {% block content %}
   <main>
      <section id="deepneural_models" class="deepneural_models">
-      <article id="tabular" role="button" class="model_name_card card_one">
+      <article id="tabular" role="button" class="model_name_card card_one"
+           style="cursor: pointer;">
          <div class="symbol">
           <i class="fa-solid fa-table"></i>
           <p class="coming_soon" style="font-size: smaller;">In Progress</p>
@@ -92,18 +93,18 @@
        const visionCard = document.getElementById("vision");
        const cardData = document.getElementById("deepneural_models");
 
-      //  function modelCard(option) {
-      //    if (option === "tabular") {
-      //       window.location.href = "#";
-      //       tabularCard.disable = true;
-      //    }
-      //    else if (option === "text") {
-      //     window.location.href = "#";
-      //    }
-      //    else {
-      //     window.location.href = "#";
-      //    }
-      //  }
+       function modelCard(option) {
+         if (option === "tabular") {
+             window.location.href = "{%  url 'tabular_models' %}";
+             tabularCard.disable = true;
+         }
+         else if (option === "text") {
+            window.location.href = "#";
+        }
+          else {
+           window.location.href = "#";
+           }
+        }
 
        tabularCard.addEventListener("click", () => {
         modelCard("tabular");

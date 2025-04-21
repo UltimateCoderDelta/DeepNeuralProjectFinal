@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context
-from .models import BlogsOriginal
+from .models import BlogsOriginal, TabularModels
 # Create your views here.
 def predictive_models(request):
     context = {
@@ -55,3 +55,19 @@ def deepneural_blog(request):
 
 def deepneural_blog_one(request):
     return render(request, "neural/deepneural_intro.html")
+
+def tabular_models(request):
+    tabular_mls = TabularModels.objects.all()
+    context = {
+        "tabular_models": tabular_mls
+    }
+    return render(request, "neural/tabular_models.html", context)
+
+def breast_cancer_model_desc(request):
+    return render(request, "neural/breast_cancer_classifier.html")
+
+def heart_disease_model_desc(request):
+    return render(request, "neural/heart_disease_classifier.html")
+
+def diabetes_health_indicator(request):
+    return render(request, "neural/diabetes_health_indicator.html")

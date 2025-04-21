@@ -30,7 +30,7 @@ filter: grayscale(60%);
     width: 100%;
     background-color: #fff;
     opacity: 70%;
-    z-index: 999;
+    z-index: 1;
     border-bottom: solid 1px #A9A9A9;
 }
 
@@ -408,4 +408,99 @@ filter: grayscale(60%);
     flex-wrap: wrap;
     flex-direction: column;
     max-width: 300px;
+}
+
+/* CSS FOR MODELS */
+.model_card {
+    display: flexbox;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: #5D3FD3;
+    padding: 20px;
+    padding-top: 5px;
+    margin-top: 30px;
+    border-radius: 15px;
+    margin-left: 45px;
+    margin-right: 45px;
+    margin-bottom: 30px;
+    border-left: #A9A9A9 solid 2px;
+    border-right: #A9A9A9 solid 2px;
+    text-align: left;
+    color:#fff;
+    cursor: pointer;
+    width: 400px;
+}
+
+.model_categorization {
+    display: flex;
+    flex-direction: row;
+    max-width: 2000px;
+    flex-wrap: wrap;
+    margin-bottom: 100px;
+}
+
+.model_card:hover {
+    background-color:#7393B3;
+    transition: background-color ease-in-out .2s;
+}
+
+.model_card h3 {
+    font-weight: 300;
+    flex:2;
+}
+
+.model_card p {
+    flex:1;
+    font-size: 12px;
+}
+
+.model_description_content {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    margin-left:10%;
+}
+
+.model_description_content p {
+    max-width: 50%;
+    max-height: auto;
+}
+
+.code_article {
+   display: flex; 
+   flex-wrap: nowrap;
+   background-color: #101623;
+   color: #fff;
+   overflow-x: auto;
+   scrollbar-width: thin;
+   border-radius: 12px;
+   min-width: 60px;
+   max-width: 650px;
+}
+
+.clone_button_trans {
+    transition: color ease-in 0.2s;
+    padding: 5px;
+    font-size: 10px;
+    position: sticky;  
+}
+
+.button-float {
+    position: absolute;
+     cursor: pointer;
+}
+  
+
+pre {
+    display: block;
+    font-family: monospace;
+    unicode-bidi: isolate;
+    white-space: pre;
+    margin: 0px;
+    padding:0px;
+    flex-shrink: 1;
+    min-width: 0;
 }

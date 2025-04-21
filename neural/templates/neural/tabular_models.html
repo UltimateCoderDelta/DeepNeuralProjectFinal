@@ -1,0 +1,87 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>Predictive Models</title>
+ <meta name="viewport" content="width=320,initial-scale=0.7" >
+ <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  <nav id="nav">
+    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
+    <div>
+      <span class="nav-item"><a href="{% url 'predictive_models' %}">Predictive Models</a></span>
+      <span class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+    </div>
+  </nav>
+  <section>
+    <div class="blog_title">
+     <h2>Tabular Health Predictive Models</h2>
+     <div>
+       <p style="text-align: left;">
+        Leverage the power of predictive healthcare models, designed for 
+        form-based software applications, where doctors and patients alike,
+        can make use of assisstive ML models for accurate diagnoses of patient
+        conditions, ranging from breast cancer analysis to heart disease. 
+       </p>
+     </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="model_categorization">
+        {%  for item in tabular_models %}
+          <article id="model_card" class="model_card">
+            <h3 class="model_title">{{item.model_name}}</h3>
+            <p>{{item.model_description}}</p>
+          </article>
+
+        {% endfor %}
+
+    </section>
+    <script>
+        let modelTitle = document.querySelectorAll(".model_title");
+        const modelCard = document.querySelectorAll(".model_card");
+        // Add event listener to the model card
+        for (let i = 0; i < modelCard.length; i++) {
+           modelCard[i].addEventListener("click", (event) => {
+              let temp_target_name = event.target.textContent;
+              if (temp_target_name === modelTitle[i].textContent) {
+                 const template_name = modelTitle[i].textContent.trim().replace(/\s+/g, "_").toLowerCase();
+                 window.location.href = `${template_name}/`;
+              }
+           });
+        }
+    </script>
+</main>
+
+{% endblock  %}
+
+
+{% block footer %}
+<section class="company_info">
+  <article class="info_cards">
+     <h3>Stay Connected</h3>
+     <span class="info_cards_span nav-item"><a class="anchor" href="https://x.com/DNeural76430">X</a></span>
+     <span class="info_cards_span nav-item"><a class="anchor" href="https://www.linkedin.com/company/dneural">LinkedIn</a></span>
+     <span class="info_cards_span nav-item"><a class="anchor" href="https://www.instagram.com/deep_neural/">Instagram</a></span>
+     <span class="info_cards_span nav-item"><a class="anchor" href="https://www.facebook.com/DeepNeuralCorp/">Facebook</a></span>
+     <!-- <span class="info_cards_span nav-item"><a class="anchor" href="#">YouTube</a></span> -->
+  </article>
+  <article class="info_cards">
+    <h3>Check Out</h3>
+    <span class="info_cards_span nav-item"><a class="anchor" href="{% url 'predictive_models' %}">Predictive Models</a></span>
+    <span class="info_cards_span nav-item"><a class="anchor" href="{% url 'deepneural_blog' %}">Blog</a></span>
+ </article>
+</section>
+  <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+{% endblock %}
