@@ -17,7 +17,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-#TO DO - Install rest framwork
 
 # Create your views here.
 def predictive_models(request):
