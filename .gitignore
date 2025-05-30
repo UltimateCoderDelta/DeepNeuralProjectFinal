@@ -1,3 +1,4 @@
 #ignore settings
 deepsite/settings.py
 .venv/
+deepsite/neural/visualizations
