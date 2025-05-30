@@ -1,0 +1,173 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>Predictive Models</title>
+ <meta name="viewport" content="width=320,initial-scale=0.7" >
+ <link type="text/css" href="{% static 'neural/chatbot.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+ <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+<script>hljs.highlightAll();</script>
+{% endblock %}
+
+{% block header %}
+<nav id="nav">
+  <span  class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Main_Gray.png'%}"></a></span>
+  <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
+  <div>
+    <span class="nav-item"><a href="{% url 'predictive_models' %}">Predictive Models</a></span>
+    <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVision</a></span>
+    <span class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+    <!-- When the screen size gets smaller, use the dropdown symbol --> 
+  </div>
+</nav>
+
+{% endblock %}
+
+{% block content %}
+ <main id="chatbot_section">
+  <h2 id="greetingMessage">This is Anxio, how can I help?</h2>     
+   <div id="responseBody">
+     
+   </div>
+   <section id="textbox-box">
+        <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" placeholder="Enter document text" maxlength="2000"></textarea> 
+        <button id="send_button" class="send_button" type="submit" style="margin-top: 65px;">
+          <i class="fa-regular fa-paper-plane" style="size: larger;"></i>
+        </button>
+   </section> 
+ </main>
+
+    <script type="module">
+    const textBoxArea = document.getElementById("textbox");
+    const sendButton = document.getElementById("send_button");
+    const greetingMessage = document.getElementById("greetingMessage");
+    //Make send button initially disabled
+    function disableSendButton(){
+      sendButton.disabled = true;
+    }
+ 
+    function addToTextCanva(parentElement, childElement){
+       //This function is designed to add the sent text to the main body
+        parentElement.appendChild(childElement);
+    }
+
+    // If the text area has a length of text greater than 5 characters allow for the send action
+    textBoxArea.addEventListener("input", (e)=>{
+  
+       const responseBody = document.getElementById("responseBody"); //Parent element where all text and responses should appear
+       let inputTextLength = textBoxArea.value.length;
+       
+
+       if (inputTextLength >= 3) {
+        sendButton.disabled = false;
+        //Hereafter add an event listener to the button - when clicked, send the text to the screen as a new component
+       } else if (inputTextLength < 3){
+        sendButton.disabled = true;
+       }
+    })
+
+    // Create an event listener for the send button, which upon being sent will retrieve the user document from the text area, and
+    // send it as a post request to the respective POST location
+
+    const buttonListener = () => {
+            const bodyText = document.createElement("p");
+            const resonseText = document.createElement("p");
+            //Adding a class attribute to each div
+            bodyText.setAttribute("class", "responseBox");
+            resonseText.setAttribute("class", "summaryBox");
+            //Check if the h2 content is displayed, if it is, remove it,
+            if (!(greetingMessage.textContent === "")) {
+              //Deactivate 
+              greetingMessage.textContent = "";
+            }
+            if (textBoxArea.value === undefined) {
+              throw new Error("The textbox body is empty!");
+            }
+            const documentMain = textBoxArea.value;
+            bodyText.textContent = documentMain;
+            addToTextCanva(responseBody, bodyText);
+            //Also send the message to the summarizer via fetch
+            postUserDocument(documentMain)
+               .then(() => {
+                //If the POST is successful then call get
+                 return getUserDocument();
+               })
+               .then((summary) => {
+                //If get is successful, return the summary
+                try {
+                  if (!((summary === "") || (summary === undefined))) {
+                  // If not empty, return string, and add it to the screen as the response
+                  resonseText.textContent = summary;
+                  addToTextCanva(responseBody, resonseText);
+                }
+               } catch (error) {
+                 console.log(error);
+              }
+               })
+               .catch((failureMessage) => {
+                console.log(failureMessage);
+               });
+            // const message = {inputs: bodyText}
+            textBoxArea.value = "";
+            sendButton.disabled = true;
+    }
+
+    sendButton.addEventListener("click", ()=>{  //9 is the enter key code
+            buttonListener();
+        });
+
+    textBoxArea.addEventListener("keyup", (event) => {
+      if (event.keyCode === 13) {
+         buttonListener();
+      }
+    });
+
+        //Get request function
+        const postUserDocument = async function(documentUser) { //Returns a promise
+            if (document === undefined) {
+                throw new Error("The document is empty!");
+            }
+            const response = await fetch("http://localhost:8000/neural/chatbot_request/", {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({"document": documentUser}),                  
+            }).then(response => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)   
+          ).then(jsonResponse => {
+            console.log(jsonResponse);
+          })
+        }  
+          // return the summarized data to the user
+        const getUserDocument = async () => {
+          try {
+            const response = await fetch("http://localhost:8000/neural/chatbot_summary/");
+            if (response.ok) {
+              const jsonResponse = await response.json();
+              //returns a JavaScript object with the summary
+              const userSummary = jsonResponse['summary'];
+              console.log("User summary " + userSummary);
+              return userSummary;
+            }
+            throw new Error('Request failed!');
+          } catch (error) {
+            console.log(error);
+          }          
+        }
+
+      disableSendButton();
+   </script>
+{% endblock %}
+

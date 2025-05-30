@@ -1,0 +1,154 @@
+body {
+    text-align: center;
+    font-family: "Poppins", serif;
+    background-color: #343434;
+    overflow-y:hidden;
+}
+
+#chatbot_section {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: space-between;
+    width:100%;
+    max-height: 700px;
+    min-height: 100px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    margin-top: 10%;
+}
+
+#chatbot_section h2{
+    color: #fff;
+    margin-bottom: 120px;
+    font-size: 30px;
+}
+
+#textbox {
+    border-radius: 12px;
+    background-color:transparent ;
+    color:#fff; 
+    font-size: larger;
+    font-family: "Poppins", serif;
+    max-width: 800px;
+    border-right: #818589;
+    overflow-y: auto;
+    resize: none;
+    flex:1;
+    zoom:1;
+}
+
+#textbox::placeholder {
+    color: #fff;
+    font-weight: medium;
+}
+
+#nav{
+    display: flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap: nowrap;
+    flex-basis: 70px;
+    margin:0;
+    margin-bottom: 50px;
+    padding:15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #818589;
+    border-bottom: solid 1px #818589;
+    margin-left: 0;
+}
+
+.nav-item {
+    margin-right: 40px;  
+    font-size: 15px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: #fff;
+}
+
+#logo {
+    max-width:40px;
+    max-height:40px;
+}
+
+.send_button {
+    width: 70px;
+    height: 50px;
+    background-color: #89CFF0;
+    border-radius: 25px;
+    margin-right: 10px;
+    border: 1px solid #818589;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+#textbox:invalid {
+   border: 2px dashed red;
+}
+
+#textbox:focus {
+    outline:none;
+}
+#textbox {
+    border: none;
+}
+
+.send_button:hover {
+    background-color: #fff;
+    transition: background-color .3s ease-out;
+}
+
+#responseBody {
+    display:flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-basis: 100px;
+    min-height: 300px;
+    max-height: 800px;
+    width: 75%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #fff #343434;
+    bottom:20%;
+    /* top: auto; */
+}
+
+#textbox-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color:#818589;
+    border-radius: 12px;
+    max-width: 75%;
+    top:80%;
+    border: 2px solid #343434;
+    position: fixed;
+}
+
+.responseBox {
+    background-color: #89CFF0;
+    color:#fff;
+    border-radius: 15px;
+    max-width: 600px;
+    max-height: auto;
+    margin-bottom: 45px;
+    padding:6px;
+    text-align: left;
+}
+
+.summaryBox {
+    color:#fff;
+    border-radius: 15px;
+    max-width: 600px;
+    max-height: auto;
+    margin-bottom: 30px;
+    padding:6px;
+    text-align: left;
+}

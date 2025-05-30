@@ -1,0 +1,9 @@
+    {% load static %}
+     <link type="text/css" href="{% static '/neural/styles.css' %}" rel="stylesheet">
+      <form action=""  method="post" enctype="multipart/form-data" class="user-form-data">
+        {% csrf_token %}
+        <div>
+        {{form}}
+        </div>
+         <input id="submit-button" type="submit" value="Upload" >
+      </form>
