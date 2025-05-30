@@ -1,2 +1,3 @@
 #ignore settings
 deepsite/settings.py
+.venv/
