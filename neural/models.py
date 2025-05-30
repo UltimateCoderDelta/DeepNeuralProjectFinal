@@ -57,3 +57,12 @@ class ModelDecriptions(models.Model):
             'Results':self.results,
         }
         return str(data)
+     
+class UserPostDocumentation(models.Model):
+    document = models.JSONField()
+
+    def __str__(self):
+        return str(self.document)
+
+    def returnJson(self):
+        return str(self.document)
