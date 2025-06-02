@@ -14,8 +14,8 @@ import time
 #   print(f"Total Time Elapsed: {end - start:.2f}s")
 #   return ("SUMMARY: \n" + output[0]['summary_text'])
 
-
 def generate_text(text):
   return text
+
 
 

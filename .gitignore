@@ -3,3 +3,4 @@ deepsite/settings.py
 .venv/
 deepsite/neural/visualizations
 deepsite/neural/__pycache__
+deepsite/neural/ml_models
