@@ -69,7 +69,7 @@ class UserPostDocumentation(models.Model):
     
 
 class UserImagePost(models.Model):
-    image = models.ImageField()
+    image = models.ImageField(upload_to='neural/media')
     
     def __str__(self):
         return self.image.name
