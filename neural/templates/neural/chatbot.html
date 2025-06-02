@@ -160,7 +160,26 @@
         const userImage = fileUploadButton.files[0];
         console.log(userImage);
         //When it changes, send the image file to the expected HTTP path
-        postUserImage(userImage, "classification_upload");
+        postUserImage(userImage, "classification_upload")
+          .then(() => {
+              // If post request is successful, then call get
+              getUserDocument("prediction", "classification_result");
+          })
+          .then((predictionList) => {
+            console.log(predictionList);
+            //  If prediction is successful show both the image and the prediction
+            const div = document.createElement("div");
+            const p = document.createElement("p");
+            p.textContent = predictionList; //get the predicted result
+            // const img = document.createElement("img");
+            // img.src = `${predictionList[1]}` //Get the image src and set it to the img
+
+            //Append the image and message to a div
+            // div.appendChild(img);
+            div.appendChild(p);
+            //Add the div to the response body for the user to see
+            addToTextCanva(responseBody, div);
+          });
       }
    }, false);
    //Add event listeners to the article cards
@@ -277,7 +296,6 @@
       const postUserImage = async function (file, checkpoint) {
            const formData = new FormData();
            formData.append("file", file);
-           console.log(formData);
            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
             method:"POST",
             body: formData
