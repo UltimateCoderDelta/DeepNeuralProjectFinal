@@ -31,8 +31,7 @@
 {% endblock %}
 
 {% block content %}
- <main id="chatbot_section">
-        
+ <main id="chatbot_section">    
    <div id="responseBody">
       <h2 id="greetingMessage">This is Anxio, how can I help?</h2>
    </div>
@@ -43,13 +42,18 @@
     </div>
    <section id="textbox-box">
       <!-- Establish the pop up for selection -->
-        <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" placeholder="Enter document text" maxlength="2000"></textarea> 
-        <button id="send_button" class="send_button" type="submit" style="margin-top: 65px;">
-          <i class="fa-regular fa-paper-plane" style="size: larger;"></i>
-        </button>
-        <button id="menu-button" class="send_button" style="margin-top: 65px;">
-          <i class="fa-solid fa-ellipsis-vertical"></i>
-        </button>
+          <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" style="max-width: 80%" placeholder="Enter document text" maxlength="2000"></textarea> 
+        
+            <input type="file" id="file-uploader" accept="image/png, image/jpeg" disabled>
+            <label class="send_button" style="margin-top: 65px;" for="file-uploader" >
+                <i class="fa-solid fa-paperclip" style="margin-top: 19px;"></i>
+            </label>
+            <button id="send_button" class="send_button" type="submit" style="margin-top: 65px;">
+              <i class="fa-regular fa-paper-plane" style="size: larger;"></i>
+            </button>
+            <button id="menu-button" class="send_button" style="margin-top: 65px;">
+              <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
    </section> 
  </main>
 
@@ -63,6 +67,7 @@
     const imageClass = document.getElementById("image-class");
     // const responseBody = document.getElementById("responseBody"); 
     const modelCards = document.querySelectorAll(".model_card");
+    const fileUploadButton = document.getElementById("file-uploader");
 
     //Make send button initially disabled
     function disableSendButton(){
@@ -101,6 +106,7 @@
           //Give each element a unique id (numerical)
           
           if (index === 0) {
+            fileUploadButton.disabled = false;
             //Clear the response body
             //Add an event listener for the skin cancer classifier card
             element.addEventListener(("click"), () => {
@@ -117,6 +123,7 @@
                 
                 `;
                 responseBody.appendChild(displayMessage);
+                //Allow the user to interact with the skin classifier model
             });
           }
           else if (index === 1) {
@@ -133,13 +140,29 @@
                 
                 `;
                 responseBody.appendChild(displayMessage);
-            })
-    
+            });
+          } else {
+            fileUploadButton.disabled = true;
           }
-          // elements.push(element);
      });
   }
 
+
+   //Add an event listener to the input file element, once the value is not empty/changed
+   // add the image to the canva
+   fileUploadButton.addEventListener("change", () => {
+      console.log("item selected");
+      if (fileUploadButton.files[0]) {
+        // const loader = document.createElement("div");
+        // loader.classList.add("loader");
+        // responseBody.appendChild(loader);
+        // setTimeout()
+        const userImage = fileUploadButton.files[0];
+        console.log(userImage);
+        //When it changes, send the image file to the expected HTTP path
+        postUserImage(userImage, "classification_upload");
+      }
+   }, false);
    //Add event listeners to the article cards
 
 
@@ -195,10 +218,10 @@
             bodyText.textContent = documentMain;
             addToTextCanva(responseBody, bodyText);
             //Also send the message to the summarizer via fetch
-            postUserDocument(documentMain)
+            postUserDocument("document", documentMain, "chatbot_request")
                .then(() => {
                 //If the POST is successful then call get
-                 return getUserDocument();
+                 return getUserDocument("summary", "chatbot_summary");
                })
                .then((summary) => {
                 //If get is successful, return the summary
@@ -230,17 +253,16 @@
       }
     });
 
-        //Get request function
-        const postUserDocument = async function(documentUser) { //Returns a promise
+    const postUserDocument = async function(key, file, checkpoint) { //Returns a promise
             if (document === undefined) {
                 throw new Error("The document is empty!");
             }
-            const response = await fetch("http://localhost:8000/neural/chatbot_request/", {
+            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
                     method: "POST",
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({"document": documentUser}),                  
+                    body: JSON.stringify({key: file}),                  
             }).then(response => {
               if (response.ok) {
                 return response.json();
@@ -250,17 +272,37 @@
           ).then(jsonResponse => {
             console.log(jsonResponse);
           })
-        }  
+        } 
+        
+      const postUserImage = async function (file, checkpoint) {
+           const formData = new FormData();
+           formData.append("file", file);
+           console.log(formData);
+           const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
+            method:"POST",
+            body: formData
+           })
+           .then(response => {
+            response.json();
+              })
+           .then (
+            success => {console.log(success);
+            }
+           )
+           .catch (
+             error => {
+              console.log(error);
+             }
+           )};
           // return the summarized data to the user
-        const getUserDocument = async () => {
+        const getUserDocument = async (key, checkpoint) => {
           try {
-            const response = await fetch("http://localhost:8000/neural/chatbot_summary/");
+            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`);
             if (response.ok) {
               const jsonResponse = await response.json();
               //returns a JavaScript object with the summary
-              const userSummary = jsonResponse['summary'];
-              console.log("User summary " + userSummary);
-              return userSummary;
+              const userResult = jsonResponse[`${key}`];
+              return userResult;
             }
             throw new Error('Request failed!');
           } catch (error) {

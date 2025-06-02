@@ -206,4 +206,45 @@ def get_user_summary(request):
 
 
 
+@api_view(['POST'])
+def post_user_image(request):
+    """
+    This function will allow the user to post their
+    image files, which will be accessed by a seperate view
+    """ 
+    if request.method == "POST":
+       #We expect a JSON object
+       try:
+          user_image = request.data.get("file")
+          if not user_image:
+            raise ValueError("The file provided is empty or incorrect!")
+         #Post the as JSON to the IMAGE FILE database (TO DO)
+          user_document = UserImagePost.objects.create(image=user_image)
+          user_document.save()
+          return Response({"image": user_image}, status=status.HTTP_201_CREATED)
+       except Exception as e:
+         return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_user_classification(request):
+    field_name = 'image'
+    if request.method == "GET":
+       #Then predict the image result
+       try:
+         #Get the user data from the database instead
+          user_data = UserImagePost.objects.first() #returns JSON data
+          field_object = UserImagePost._meta.get_field(field_name)
+          field_value = getattr(user_data, field_object.attname)
+          # Convert the JSON data to a string
+          user_image = field_value['user_image']
+          if not user_image:
+           raise ValueError("The image provided is not available!")    
+        #   user_data = json.loads(json_str)      
+        #   predicted_result = generate_text(user_image) #Create prediction function (TO DO)
+          #Delete all data from the database for the next request
+          UserImagePost.objects.all().delete()
+          return Response({"prediction": user_image}, status=status.HTTP_200_OK)
+       except Exception as e:
+          return Response({"error ": {str(e)}}, status=status.HTTP_400_BAD_REQUEST)
+
     

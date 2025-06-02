@@ -66,3 +66,10 @@ class UserPostDocumentation(models.Model):
 
     def returnJson(self):
         return str(self.document)
+    
+
+class UserImagePost(models.Model):
+    image = models.ImageField()
+    
+    def __str__(self):
+        return self.image.name
