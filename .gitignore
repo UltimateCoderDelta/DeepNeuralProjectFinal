@@ -3,4 +3,6 @@ deepsite/settings.py
 .venv/
 deepsite/neural/visualizations
 deepsite/neural/__pycache__
-deepsite/neural/ml_models
+deepsite/neural/ml_models/deepneural_Skin_Cancer_Detector.keras
+deepsite/neural/ml_models/deepneural_summarizer_v2.keras
+
