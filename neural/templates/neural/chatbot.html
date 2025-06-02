@@ -32,14 +32,23 @@
 
 {% block content %}
  <main id="chatbot_section">
-  <h2 id="greetingMessage">This is Anxio, how can I help?</h2>     
+        
    <div id="responseBody">
-     
+      <h2 id="greetingMessage">This is Anxio, how can I help?</h2>
    </div>
+    <div id="task-selection">
+         <div id="image-class" class="task-item" >Image Classification</div>
+         <div class="task-item">Text Classification</div>
+         <div class="task-item">Document Summarization</div>
+    </div>
    <section id="textbox-box">
+      <!-- Establish the pop up for selection -->
         <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" placeholder="Enter document text" maxlength="2000"></textarea> 
         <button id="send_button" class="send_button" type="submit" style="margin-top: 65px;">
           <i class="fa-regular fa-paper-plane" style="size: larger;"></i>
+        </button>
+        <button id="menu-button" class="send_button" style="margin-top: 65px;">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
    </section> 
  </main>
@@ -48,10 +57,102 @@
     const textBoxArea = document.getElementById("textbox");
     const sendButton = document.getElementById("send_button");
     const greetingMessage = document.getElementById("greetingMessage");
+    const menuButton = document.getElementById("menu-button");
+    const taskSelectionMenu = document.getElementById("task-selection");
+    const modelCard = document.querySelector(".model_categorization");
+    const imageClass = document.getElementById("image-class");
+    // const responseBody = document.getElementById("responseBody"); 
+    const modelCards = document.querySelectorAll(".model_card");
+
     //Make send button initially disabled
     function disableSendButton(){
       sendButton.disabled = true;
     }
+
+    //Hard-coded for now
+   imageClass.addEventListener("click", () =>{
+    const responseBody = document.getElementById("responseBody"); 
+    const modelCategory = document.createElement("section");
+    const textOne = ["Leverage the power AI to perform early skin cancer predictions","Leverage the power AI to perform early lung disease classification"];
+    const titles = ["Skin Cancer Classifier", "Pneumonia Classifier"];
+
+    modelCategory.classList.add("model_categorization");
+    for (let i = 0; i < 2; i++) {
+        const modelArticle = document.createElement("article");
+        modelArticle.classList.add("model_card");
+        modelArticle.setAttribute("class", " model_card article-card");
+        const modelTitle = document.createElement("h3");
+        const modelPar = document.createElement("p");
+        modelTitle.textContent = titles[i];
+        modelPar.textContent = textOne[i];
+        modelArticle.appendChild(modelTitle);
+        modelArticle.appendChild(modelPar);
+        modelCategory.appendChild(modelArticle);
+    }
+    //After article creation, add the attributes and text
+    responseBody.appendChild(modelCategory);
+    articleCardSelectionEvent();
+   });
+
+   const articleCardSelectionEvent = function () {
+        const modelCards = document.querySelectorAll(".article-card");
+        const elements = [];
+        modelCards.forEach((element, index) => {
+          //Give each element a unique id (numerical)
+          
+          if (index === 0) {
+            //Clear the response body
+            //Add an event listener for the skin cancer classifier card
+            element.addEventListener(("click"), () => {
+              responseBody.innerHTML = "";
+                //Use skin cancer classifier
+                const displayMessage = document.createElement("p");
+                displayMessage.textContent = `
+                Skin cancer classification mode initiated. 
+                Please upload an image scan for classification
+                purposes. Target classes are: malignant [1] 
+                and benign [0]. 
+
+                PLEASE NOTE: This model is designed for assistive purposes only!
+                
+                `;
+                responseBody.appendChild(displayMessage);
+            });
+          }
+          else if (index === 1) {
+            element.addEventListener(("click"), () => {
+                responseBody.innerHTML = "";
+                const displayMessage = document.createElement("p");
+                displayMessage.textContent = `
+                Pneumonia classification mode initiated. 
+                Please upload an image scan for classification
+                purposes. Target classes are: pneumonia [1] 
+                and non-pneumonia [0]. 
+
+                PLEASE NOTE: This model is designed for assistive purposes only!
+                
+                `;
+                responseBody.appendChild(displayMessage);
+            })
+    
+          }
+          // elements.push(element);
+     });
+  }
+
+   //Add event listeners to the article cards
+
+
+
+     menuButton.addEventListener("click", () => {
+          if (taskSelectionMenu.style.display === "block") {
+            taskSelectionMenu.style.display = "none"; 
+          }
+          else {
+             taskSelectionMenu.style.display = "block"; 
+          }       
+     });
+ 
  
     function addToTextCanva(parentElement, childElement){
        //This function is designed to add the sent text to the main body
