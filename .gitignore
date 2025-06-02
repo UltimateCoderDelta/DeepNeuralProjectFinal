@@ -1,7 +1,7 @@
 #ignore settings
 deepsite/settings.py
 .venv/
-deepsite/neural/visualizations
+neural/visualizations
 deepsite/neural/__pycache__
 neural/ml_models
 # neural/ml_models/deepneural_Skin_Cancer_Detector.keras
