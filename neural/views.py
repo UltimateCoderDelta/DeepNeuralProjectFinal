@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context
-from .models import BlogsOriginal, TabularModels, UserPostDocumentation
+from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost
 from .forms import UploadFileForm
 import requests
 import json
 import pandas as pd
-from .ai_models import generate_text
+from .ai_models import generate_text, skin_cancer_classifier
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -203,9 +203,6 @@ def get_user_summary(request):
        except Exception as e:
           return Response({"error ": {str(e)}}, status=status.HTTP_400_BAD_REQUEST)
  
-
-
-
 @api_view(['POST'])
 def post_user_image(request):
     """
@@ -215,36 +212,33 @@ def post_user_image(request):
     if request.method == "POST":
        #We expect a JSON object
        try:
-          user_image = request.data.get("file")
+          user_image = request.FILES.get("file")
           if not user_image:
             raise ValueError("The file provided is empty or incorrect!")
          #Post the as JSON to the IMAGE FILE database (TO DO)
           user_document = UserImagePost.objects.create(image=user_image)
           user_document.save()
-          return Response({"image": user_image}, status=status.HTTP_201_CREATED)
+          return Response({"image": user_image.name}, status=status.HTTP_201_CREATED)
        except Exception as e:
          return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def get_user_classification(request):
-    field_name = 'image'
     if request.method == "GET":
        #Then predict the image result
        try:
          #Get the user data from the database instead
           user_data = UserImagePost.objects.first() #returns JSON data
-          field_object = UserImagePost._meta.get_field(field_name)
-          field_value = getattr(user_data, field_object.attname)
+          image_path = user_data.image.path
+        #   user_image = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
-          user_image = field_value['user_image']
-          if not user_image:
+          if not image_path:
            raise ValueError("The image provided is not available!")    
         #   user_data = json.loads(json_str)      
-        #   predicted_result = generate_text(user_image) #Create prediction function (TO DO)
-          #Delete all data from the database for the next request
+          predicted_result = skin_cancer_classifier(image_path)
           UserImagePost.objects.all().delete()
-          return Response({"prediction": user_image}, status=status.HTTP_200_OK)
+          return Response({"prediction": predicted_result}, status=status.HTTP_200_OK)
        except Exception as e:
-          return Response({"error ": {str(e)}}, status=status.HTTP_400_BAD_REQUEST)
+          return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     
