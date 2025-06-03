@@ -229,10 +229,11 @@ input[type="file"] {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 10px;
+  height: 10px;
   animation: spin 2s linear infinite;
-  margin-right: 50%;
+  margin-right: 56%;
+  margin-top: 40%;
 }
 
 @keyframes spin {
@@ -240,3 +241,11 @@ input[type="file"] {
   100% { transform: rotate(360deg); }
 }
 
+
+.classifier_par {
+    color:#fff;
+    text-align: left;
+    font-size: 30px;
+    line-height: 20px;
+    max-width: 45%;
+}
