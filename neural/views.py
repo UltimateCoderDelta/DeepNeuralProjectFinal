@@ -6,7 +6,7 @@ from .forms import UploadFileForm
 import requests
 import json
 import pandas as pd
-from .ai_models import generate_text, skin_cancer_classifier
+from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -16,6 +16,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.conf import settings
+import os
 
 
 # Create your views here.
@@ -216,7 +218,7 @@ def post_user_image(request):
           if not user_image:
             raise ValueError("The file provided is empty or incorrect!")
          #Post the as JSON to the IMAGE FILE database (TO DO)
-          user_document = UserImagePost.objects.create(image=user_image)
+          user_document = UserImagePost.objects.create(image=user_image, model_name="skin_class")
           user_document.save()
           return Response({"image": user_image.name}, status=status.HTTP_201_CREATED)
        except Exception as e:
@@ -228,7 +230,7 @@ def get_user_classification(request):
        #Then predict the image result
        try:
          #Get the user data from the database instead
-          user_data = UserImagePost.objects.first() #returns JSON data
+          user_data = UserImagePost.objects.filter(model_name="skin_class").first() #returns JSON data
           image_path = user_data.image.path
         #   user_image = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
@@ -238,6 +240,45 @@ def get_user_classification(request):
           predicted_result = skin_cancer_classifier(image_path)
           UserImagePost.objects.all().delete()
           return Response({"prediction": predicted_result}, status=status.HTTP_200_OK)
+       except Exception as e:
+          return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+       
+@api_view(['POST'])
+def post_user_image_pneumonia(request):
+    """
+    This function will allow the user to post their
+    image files, which will be accessed by a seperate view
+    """ 
+    if request.method == "POST":
+       #We expect a JSON object
+       try:
+          user_image = request.FILES.get("file")
+          if not user_image:
+            raise ValueError("The file provided is empty or incorrect!")
+         #Post the as JSON to the IMAGE FILE database (TO DO)
+          user_document = UserImagePost.objects.create(image=user_image, model_name="pneumonia")
+          user_document.save()
+          return Response({"image": user_image.name}, status=status.HTTP_201_CREATED)
+       except Exception as e:
+         return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
+       
+
+@api_view(['GET'])
+def get_user_classification_pneumonia(request):
+    if request.method == "GET":
+       #Then predict the image result
+       try:
+         #Get the user data from the database instead
+          user_data = UserImagePost.objects.filter(model_name="pneumonia").first()
+          image_path = user_data.image.path
+        #   user_image = getattr(user_data, field_object.attname)
+          # Convert the JSON data to a string
+          if not image_path:
+           raise ValueError("The image provided is not available!")    
+        #   user_data = json.loads(json_str)      
+          predicted_result = pneumonia_classifier(image_path)
+          UserImagePost.objects.all().delete()
+          return Response({"prediction_pneumonia": predicted_result}, status=status.HTTP_200_OK)
        except Exception as e:
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

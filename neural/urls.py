@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from .views import PostDocument
 from rest_framework import routers
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -19,5 +21,10 @@ urlpatterns = [
     path("chatbot_request/", views.post_user_document),
     path("chatbot_summary/", views.get_user_summary),
     path("classification_upload/", views.post_user_image),
-    path("classification_result/", views.get_user_classification)
+    path("classification_result/", views.get_user_classification),
+    path("classification_upload_pneumonia/", views.post_user_image_pneumonia),
+    path("classification_result_pneumonia/", views.get_user_classification_pneumonia),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
