@@ -69,7 +69,13 @@ class UserPostDocumentation(models.Model):
     
 
 class UserImagePost(models.Model):
-    image = models.ImageField(upload_to='media')
+    image = models.ImageField(upload_to='neural/media')
+    model_name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.model_name
+    
+class UserImagePostPneumonia(models.Model):
+    image = models.ImageField(upload_to='neural/mediaSec')
     model_name = models.CharField(max_length=100)
     def __str__(self):
         return self.model_name

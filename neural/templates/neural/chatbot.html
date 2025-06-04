@@ -37,8 +37,8 @@
    </div>
     <div id="task-selection">
          <div id="image-class" class="task-item" >Image Classification</div>
-         <div class="task-item">Text Classification</div>
-         <div class="task-item">Document Summarization</div>
+         <div id="text-class" class="task-item">Text Classification</div>
+         <div id="summarizer-class" class="task-item">Document Summarization</div>
     </div>
    <section id="textbox-box">
       <!-- Establish the pop up for selection -->
@@ -65,46 +65,125 @@
     const taskSelectionMenu = document.getElementById("task-selection");
     const modelCard = document.querySelector(".model_categorization");
     const imageClass = document.getElementById("image-class");
-    // const responseBody = document.getElementById("responseBody"); 
+    const textClassification = document.getElementById("text-class");
+    const summarizerClass = document.getElementById("summarizer-class");
+    const responseBody = document.getElementById("responseBody"); 
     const modelCards = document.querySelectorAll(".model_card");
     const fileUploadButton = document.getElementById("file-uploader");
+    let defaultEventHandler = null;
 
     //Make send button initially disabled
     function disableSendButton(){
       sendButton.disabled = true;
     }
 
-    //Hard-coded for now
-   imageClass.addEventListener("click", () =>{
-    const responseBody = document.getElementById("responseBody"); 
-    const modelCategory = document.createElement("section");
-    const textOne = ["Leverage the power AI to perform early skin cancer predictions","Leverage the power AI to perform early lung disease classification"];
-    const titles = ["Skin Cancer Classifier", "Pneumonia Classifier"];
-
-    modelCategory.classList.add("model_categorization");
-    for (let i = 0; i < 2; i++) {
-        const modelArticle = document.createElement("article");
-        modelArticle.classList.add("model_card");
-        modelArticle.setAttribute("id", `AT${i + 1}`);
-        const modelTitle = document.createElement("h3");
-        const modelPar = document.createElement("p");
-        modelTitle.textContent = titles[i];
-        modelPar.textContent = textOne[i];
-        modelArticle.appendChild(modelTitle);
-        modelArticle.appendChild(modelPar);
-        modelCategory.appendChild(modelArticle);
+  const clearScreen = () => {
+      responseBody.innerHTML = "";
     }
-    //After article creation, add the attributes and text
-    responseBody.appendChild(modelCategory);
-    // articleCardSelectionEvent();
-    modelSelectionEventHandler(modelCategory, responseBody);
-   });
+
+    //Creating an event listener for imageclass 
+    const imageClassEventListener = function() {
+      let hasEventListener = false;
+      const responseBody = document.getElementById("responseBody"); 
+      const modelCategory = document.createElement("section");
+      const textOne = ["Leverage the power AI to perform early skin cancer predictions","Leverage the power AI to perform early lung disease classification"];
+      const titles = ["Skin Cancer Classifier", "Pneumonia Classifier"];
+
+      //Clear the screen first
+      clearScreen();
+    
+       //Proceed to add the click button logic
+       const imageClassListener = () => {
+        modelCategory.classList.add("model_categorization");
+          for (let i = 0; i <= 1; i++) { //Need to fix the Pneumonia model in  future update
+              const modelArticle = document.createElement("article");
+              modelArticle.classList.add("model_card");
+              modelArticle.setAttribute("id", `AT${i + 1}`);
+              const modelTitle = document.createElement("h3");
+              const modelPar = document.createElement("p");
+              modelTitle.textContent = titles[i];
+              modelPar.textContent = textOne[i];
+              modelArticle.appendChild(modelTitle);
+              modelArticle.appendChild(modelPar);
+              modelCategory.appendChild(modelArticle);
+          } 
+           //If modelCategory is already a child of responseBody, remove it
+          responseBody.appendChild(modelCategory);
+          //Then add it back in future iterations to avoid clutter
+          modelSelectionEventHandler(modelCategory, responseBody);
+        }
+      imageClassListener();
+  }  
+
+   const summarizerClassEventListener = function () {
+      clearScreen();
+      //Inform user of model switch
+      const p = document.createElement("p");
+      p.innerHTML = `The model has been switched to <b>Model Summarization - Model V1</b>. Feel free to insert textual documents with a limit of 2000 words,
+                     and retrieve the summarized version.`
+      responseBody.appendChild(p);
+      //Perform logic to allow users to summarize documents
+      const buttonListener = () => {
+            const bodyText = document.createElement("p");
+            const resonseText = document.createElement("p");
+            //Adding a class attribute to each div
+            bodyText.classList.add("responseBox");
+            resonseText.classList.add("summaryBox");
+            //Check if the h2 content is displayed, if it is, remove it,
+            if (!(greetingMessage.textContent === "")) {
+              //Deactivate 
+              greetingMessage.textContent = "";
+            }
+            if (textBoxArea.value === undefined) {
+              throw new Error("The textbox body is empty!");
+            }
+            const documentMain = textBoxArea.value;
+            bodyText.textContent = documentMain;
+            addToTextCanva(responseBody, bodyText);
+            //Also send the message to the summarizer via fetch
+            postUserDocument("document", documentMain, "chatbot_request")
+               .then(() => {
+                //If the POST is successful then call get
+                console.log(documentMain);
+                 return getUserDocument("summary", "chatbot_summary");
+               })
+               .then((summary) => {
+                //If get is successful, return the summary
+                try {
+                  if (!((summary === "") || (summary === undefined))) {
+                  // If not empty, return string, and add it to the screen as the response
+                  resonseText.textContent = summary;
+                  addToTextCanva(responseBody, resonseText);
+                }
+               } catch (error) {
+                 console.log(error);
+              }
+               })
+               .catch((failureMessage) => {
+                console.log(failureMessage);
+               });
+            // const message = {inputs: bodyText}
+            textBoxArea.value = "";
+            sendButton.disabled = true;
+       }
+      sendButton.addEventListener("click", ()=>{  //9 is the enter key code
+            buttonListener();
+    });
+
+    textBoxArea.addEventListener("keyup", (event) => {
+      if (event.keyCode === 13) {
+         buttonListener();
+      }
+    });
+   }
+   //Image classification model
+   imageClass.addEventListener("click", imageClassEventListener);
+   summarizerClass.addEventListener("click", summarizerClassEventListener);
 
    //TO DO: Recreate the event listeners for each model card: Pneumonia and Skin Cancer
    //When the user selects the skin cancer model card, they will be allowed to upload
    //their images for prediction purposes using the respective skin cancer model
    const modelSelectionEventHandler = function (modelCategory, responseBody) {
-
         const uploadButtonEventHandler = (model, userFile) => {
               const successMessage = document.createElement("p");
               successMessage.textContent = "The prediction was successful!";
@@ -127,7 +206,6 @@
                       //Create a neat paragraph element to store the result
                       const parEl = document.createElement("p");
                       const divEl = document.createElement("div");
-                      parEl.classList.add("classifier_par");
                       parEl.textContent = prediction;
                       divEl.appendChild(parEl);
                       addToTextCanva(responseBody, divEl);
@@ -151,7 +229,6 @@
                       //Create a neat paragraph element to store the result
                       const parEl = document.createElement("p");
                       const divEl = document.createElement("div");
-                      parEl.classList.add("classifier_par");
                       parEl.textContent = prediction;
                       divEl.appendChild(parEl);
                       addToTextCanva(responseBody, divEl);
@@ -161,39 +238,74 @@
                        responseBody.appendChild(failureMessage);
                      });
                    }
-                }
-                throw new Error("The file is empty or corrupted. Please try again");
+                } else {
+                  throw new Error("The file is empty or corrupted. Please try again");
+                }        
             }
 
+            //Create default event handler
             const fetchButtonEventHandler = (model) => { 
-            //Remove any prior event handlers first
-            fileUploadButton.removeEventListener("change", uploadButtonEventHandler);
-            //Append it again   
-            fileUploadButton.addEventListener("change", () => {
-              uploadButtonEventHandler(model, fileUploadButton.files[0]);
-            });
+              if (defaultEventHandler) {
+                fileUploadButton.removeEventListener("change", defaultEventHandler);
+              }
+            //Append it again  
+            defaultEventHandler = () => {
+            let userFile = fileUploadButton.files[0];
+            if (userFile) {
+              uploadButtonEventHandler(model, userFile);
+              fileUploadButton.value = "";
+              } else {
+                console.log("The file is empty or corrupted!");
+              }
+            };
+            fileUploadButton.addEventListener("change", defaultEventHandler);
          }
 
           const articleEventHandler = (articleId) => {
-          console.log(articleId.target.id);
-          let modelId = articleId.target.id;
+          const descriptions = [`Model has been switched to <b>Skin Cancer Classifier - Model V1</b>. Please be careful when uploading scans, to ensure accurate predictions.
+                            Please note this model is meant for assistive purposes only, and should not be used as a final verdict with respect to the patient.
+                            `,
+                            `Model has been switched to <b>Pneumonia Classifier - Model V1</b>. Please be careful when uploading scans, to ensure accurate predictions.
+                            Please note this model is meant for assistive purposes only, and should not be used as a final verdict with respect to the patient.`]
+          console.log(articleId.currentTarget.id);
+          let modelId = articleId.currentTarget.id;
           //We must first check the model card id
           fileUploadButton.disabled = false;
           let model = "";
           //if the id is AT1 - use the skin cancer classifier
           if (modelId === "AT1") {
              //Enable and highlight send button
+              const modelType = document.createElement("p");
+              const div = document.createElement("div");
               model = "SkinClassifier";
+              //Clear the responsebody
+              if (!(responseBody.innerHTML === "")) {
+                  responseBody.innerHTML = "";
+              }
+              //Then add the model description
+              modelType.innerHTML = descriptions[0];
+              div.appendChild(modelType);
+              responseBody.appendChild(div);
           }
           else if (modelId === "AT2") {
+              const modelType = document.createElement("p");
+              const div = document.createElement("div");
               model = "PneumoniaClassifier";
+              //Clear the responsebody
+              if (!(responseBody.innerHTML === "")) {
+                  responseBody.innerHTML = "";
+              }
+              //Then add the model description
+              modelType.innerHTML = descriptions[1];
+              div.appendChild(modelType);
+              responseBody.appendChild(div);
           }
           fetchButtonEventHandler(model);
          }
 
        if (modelCategory) {
           //Gather the model id's for each article
-          const modelSectionArticles = modelCategory.childNodes;
+          const modelSectionArticles = modelCategory.querySelectorAll("article");
           console.log(modelSectionArticles);
           modelSectionArticles.forEach((article) => {
             //For each article, add an event handler
@@ -203,61 +315,7 @@
          } 
     }
         
-         //Check that the model category section is not undefined
-  
-   
-
-
-
-  //  const articleCardSelectionEvent = function () {
-  //       const modelCards = document.querySelectorAll(".article-card");
-  //       modelCards.forEach((element, index) => {
-  //         //Give each element a unique id (numerical)   
-  //         if (index === 0) {
-  //           fileUploadButton.disabled = false;
-  //           //Clear the response body
-  //           //Add an event listener for the skin cancer classifier card
-  //           element.addEventListener(("click"), () => {
-  //             responseBody.innerHTML = "";
-  //               //Use skin cancer classifier
-  //               const displayMessage = document.createElement("p");
-  //               displayMessage.textContent = `
-  //               Skin cancer classification mode initiated. 
-  //               Please upload an image scan for classification
-  //               purposes. Target classes are: malignant [1] 
-  //               and benign [0]. 
-
-  //               PLEASE NOTE: This model is designed for assistive purposes only!
-                
-  //               `;
-  //               responseBody.appendChild(displayMessage);
-  //               //Once available, gather the correct model after image upload and perform prediction upon scan/image upload
-  //               fileUploader("classification_result", "prediction", "classification_upload");
-  //           });
-  //         }
-  //         else if (index === 1) {
-  //           fileUploadButton.disabled = false;
-  //           element.addEventListener(("click"), () => {
-  //               responseBody.innerHTML = "";
-  //               const displayMessage = document.createElement("p");
-  //               displayMessage.textContent = `
-  //               Pneumonia classification mode initiated. 
-  //               Please upload an image scan for classification
-  //               purposes. Target classes are: pneumonia [1] 
-  //               and non-pneumonia [0]. 
-
-  //               PLEASE NOTE: This model is designed for assistive purposes only!
-                
-  //               `;
-  //               responseBody.appendChild(displayMessage);
-  //               fileUploader("classification_result_pneumonia", "prediction_pneumonia", "classification_upload_pneumonia");
-  //           });
-  //         }     
-  //    });
-  // }
-
-   //Add an event listener to the input file element, once the value is not empty/changed
-   // add the image to the canva
+         //Check that the model category section is not undefine
 
    const classificationService = function(classifierPath, uploadedFile, getPathName, postPath) {
       const loader = document.createElement("div");
@@ -288,30 +346,6 @@
           });
    }
    
-   //TO DO: ADJUST THE CLASSIFIERS ACCORDING TO THE MODEL SELECTED THAT'S THE ISSUE HERE, REMOVE ALL OTHER LINES OF CODE NOT
-   //NEEDED
-
-  //  let fileUploaderListener;
-
-  //  const fileUploader = function (modelTaskPath, modelGetPathName, postPath) {
-  //     if (fileUploaderListener) {
-  //       //Remove the listener
-  //       fileUploadButton.removeEventListener("change", fileUploaderListener);
-  //     }
-      
-  //     fileUploaderListener = () => {
-  //       fileUploadButton.addEventListener("change", () => {
-  //       if (fileUploadButton.files[0]) {
-  //         const uploadedImage = fileUploadButton.files[0];
-  //         classificationService(modelTaskPath, uploadedImage, modelGetPathName, postPath);
-  //         //Clear image field
-  //         fileUploadButton.files[0] = "";
-  //         } else throw new Exception("Empty file");
-  //     }, false);
-  //   }
-  //   fileUploadButton.addEventListener("change", fileUploaderListener);
-  //  }
-
    //Add event listeners to the article cards
      menuButton.addEventListener("click", () => {
           if (taskSelectionMenu.style.display === "block") {
@@ -346,64 +380,54 @@
     // Create an event listener for the send button, which upon being sent will retrieve the user document from the text area, and
     // send it as a post request to the respective POST location
 
-    const buttonListener = () => {
-            const bodyText = document.createElement("p");
-            const resonseText = document.createElement("p");
-            //Adding a class attribute to each div
-            bodyText.setAttribute("class", "responseBox");
-            resonseText.setAttribute("class", "summaryBox");
-            //Check if the h2 content is displayed, if it is, remove it,
-            if (!(greetingMessage.textContent === "")) {
-              //Deactivate 
-              greetingMessage.textContent = "";
-            }
-            if (textBoxArea.value === undefined) {
-              throw new Error("The textbox body is empty!");
-            }
-            const documentMain = textBoxArea.value;
-            bodyText.textContent = documentMain;
-            addToTextCanva(responseBody, bodyText);
-            //Also send the message to the summarizer via fetch
-            postUserDocument("document", documentMain, "chatbot_request")
-               .then(() => {
-                //If the POST is successful then call get
-                 return getUserDocument("summary", "chatbot_summary");
-               })
-               .then((summary) => {
-                //If get is successful, return the summary
-                try {
-                  if (!((summary === "") || (summary === undefined))) {
-                  // If not empty, return string, and add it to the screen as the response
-                  resonseText.textContent = summary;
-                  addToTextCanva(responseBody, resonseText);
-                }
-               } catch (error) {
-                 console.log(error);
-              }
-               })
-               .catch((failureMessage) => {
-                console.log(failureMessage);
-               });
-            // const message = {inputs: bodyText}
-            textBoxArea.value = "";
-            sendButton.disabled = true;
-    }
-
-    sendButton.addEventListener("click", ()=>{  //9 is the enter key code
-            buttonListener();
-        });
-
-    textBoxArea.addEventListener("keyup", (event) => {
-      if (event.keyCode === 13) {
-         buttonListener();
-      }
-    });
+    // const buttonListener = () => {
+    //         const bodyText = document.createElement("p");
+    //         const resonseText = document.createElement("p");
+    //         //Adding a class attribute to each div
+    //         bodyText.setAttribute("class", "responseBox");
+    //         resonseText.setAttribute("class", "summaryBox");
+    //         //Check if the h2 content is displayed, if it is, remove it,
+    //         if (!(greetingMessage.textContent === "")) {
+    //           //Deactivate 
+    //           greetingMessage.textContent = "";
+    //         }
+    //         if (textBoxArea.value === undefined) {
+    //           throw new Error("The textbox body is empty!");
+    //         }
+    //         const documentMain = textBoxArea.value;
+    //         bodyText.textContent = documentMain;
+    //         addToTextCanva(responseBody, bodyText);
+    //         //Also send the message to the summarizer via fetch
+    //         postUserDocument("document", documentMain, "chatbot_request")
+    //            .then(() => {
+    //             //If the POST is successful then call get
+    //              return getUserDocument("summary", "chatbot_summary");
+    //            })
+    //            .then((summary) => {
+    //             //If get is successful, return the summary
+    //             try {
+    //               if (!((summary === "") || (summary === undefined))) {
+    //               // If not empty, return string, and add it to the screen as the response
+    //               resonseText.textContent = summary;
+    //               addToTextCanva(responseBody, resonseText);
+    //             }
+    //            } catch (error) {
+    //              console.log(error);
+    //           }
+    //            })
+    //            .catch((failureMessage) => {
+    //             console.log(failureMessage);
+    //            });
+    //         // const message = {inputs: bodyText}
+    //         textBoxArea.value = "";
+    //         sendButton.disabled = true;
+    // }
 
     const postUserDocument = async function(key, file, checkpoint) { //Returns a promise
             if (document === undefined) {
                 throw new Error("The document is empty!");
             }
-            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
+            const response = await fetch(`http://localhost:8000/neural/chatbot_request/`, {
                     method: "POST",
                     headers: {
                       'Content-Type': 'application/json',
@@ -421,8 +445,10 @@
         } 
         
       const postUserImage = async function (file, checkpoint) {
+        console.log(checkpoint);
            const formData = new FormData();
            formData.append("file", file);
+
            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
             method:"POST",
             body: formData
@@ -442,7 +468,7 @@
           // return the summarized data to the user
         const getUserDocument = async (key, checkpoint) => {
           try {
-            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`);
+            const response = await fetch(`http://localhost:8000/neural/chatbot_summary/`);
             if (response.ok) {
               const jsonResponse = await response.json();
               //returns a JavaScript object with the summary
@@ -455,7 +481,6 @@
             console.log(error);
           }          
         }
-
       disableSendButton();
    </script>
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context
-from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost
+from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia
 from .forms import UploadFileForm
 import requests
 import json
@@ -162,7 +162,7 @@ class PostDocument(APIView):
         return Response("POST TESTING")
 
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 def post_user_document(request):
     """
     This function will allow the user to post their
@@ -203,7 +203,7 @@ def get_user_summary(request):
           UserPostDocumentation.objects.all().delete()
           return Response({"summary": summarized_data}, status=status.HTTP_200_OK)
        except Exception as e:
-          return Response({"error ": {str(e)}}, status=status.HTTP_400_BAD_REQUEST)
+          return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
  
 @api_view(['POST'])
 def post_user_image(request):
@@ -256,7 +256,7 @@ def post_user_image_pneumonia(request):
           if not user_image:
             raise ValueError("The file provided is empty or incorrect!")
          #Post the as JSON to the IMAGE FILE database (TO DO)
-          user_document = UserImagePost.objects.create(image=user_image, model_name="pneumonia")
+          user_document = UserImagePostPneumonia.objects.create(image=user_image, model_name="pneumonia")
           user_document.save()
           return Response({"image": user_image.name}, status=status.HTTP_201_CREATED)
        except Exception as e:
@@ -269,7 +269,7 @@ def get_user_classification_pneumonia(request):
        #Then predict the image result
        try:
          #Get the user data from the database instead
-          user_data = UserImagePost.objects.filter(model_name="pneumonia").first()
+          user_data = UserImagePostPneumonia.objects.filter(model_name="pneumonia").first()
           image_path = user_data.image.path
         #   user_image = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
@@ -277,7 +277,7 @@ def get_user_classification_pneumonia(request):
            raise ValueError("The image provided is not available!")    
         #   user_data = json.loads(json_str)      
           predicted_result = pneumonia_classifier(image_path)
-          UserImagePost.objects.all().delete()
+          UserImagePostPneumonia.objects.all().delete()
           return Response({"prediction_pneumonia": predicted_result}, status=status.HTTP_200_OK)
        except Exception as e:
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
