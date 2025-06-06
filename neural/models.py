@@ -1,4 +1,6 @@
 from django.db import models
+from django.forms import ModelForm
+from django.core.exceptions import NON_FIELD_ERRORS
 
 # Create your models here.
 class BlogsOriginal(models.Model):
@@ -89,4 +91,25 @@ class UserImagePostPneumonia(models.Model):
     def __str__(self):
         return self.model_name
 
-    
+class UserList(models.Model):
+      #Creating the user creation fields
+      first_name = models.CharField(max_length=20)
+      last_name = models.CharField(max_length=20)
+      email = models.EmailField(max_length=30, primary_key=True)
+      password = models.CharField(max_length=20)
+      last_login = models.DateTimeField(blank=True, null=True)
+      
+      error_messages = {
+            NON_FIELD_ERRORS: {
+                "unique_together": "%(model_name)s's %(field_labels)s are not unique.",
+            }
+        }
+      def __str__(self):
+          return f'User account: {self.email} has been created'
+      
+#Create the 
+class UserListForm(ModelForm):
+      class Meta:
+          model = UserList
+          fields = ["first_name", "last_name", "email", "password"]
+

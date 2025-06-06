@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from . import views
 from .views import PostDocument
 from rest_framework import routers
@@ -6,6 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path("accounts/", include("django.contrib.auth.urls")),
     path("", views.home, name="home"),
     path("predictive_models/", views.predictive_models, name="predictive_models"),
     path("chatbot/", views.health_chatbot_pagination, name="chatbot"),
@@ -26,6 +27,7 @@ urlpatterns = [
     path("classification_result/", views.get_user_classification),
     path("classification_upload_pneumonia/", views.post_user_image_pneumonia),
     path("classification_result_pneumonia/", views.get_user_classification_pneumonia),
+    path("sign_up/", views.sign_up, name='sign_up'),
 ]
 
 # if settings.DEBUG:
