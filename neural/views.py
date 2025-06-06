@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context
-from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment
-from .forms import UploadFileForm
+from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment, \
+     UserListForm
+from django.urls import reverse
+from .forms import UploadFileForm, UserSignupForm, CustomUserCreationForm
 import requests
 import json
 import pandas as pd
@@ -17,6 +19,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from django.conf import settings
+from django.contrib.auth import authenticate, login
 import os
 
 
@@ -323,3 +326,19 @@ def get_user_sentiment(request):
           return Response({"sentiment_prediction": sentiment_data}, status=status.HTTP_200_OK)
        except Exception as e:
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Creating user accounts
+def sign_up(request):
+   if request.method == 'POST':
+      #If the request is a post request, gather the json value from the request
+      form = CustomUserCreationForm(request.POST)
+      if form.is_valid(): #If the form is valid
+        user = form.save()
+        login(request, user)
+        return redirect(reverse("home")) #Redirect the user to the welcome page 
+   else:
+      form = CustomUserCreationForm()
+   return render(request, "neural/user_signup.html", {"form": form})
+
+#

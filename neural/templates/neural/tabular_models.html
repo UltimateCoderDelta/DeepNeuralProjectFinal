@@ -14,12 +14,23 @@
 
 {% block header %}
   <nav id="nav">
-    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
     <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
-    <div>
-      <span class="nav-item"><a href="{% url 'predictive_models' %}">Predictive Models</a></span>
-      <span class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
-    </div>
+    <div class="loginSection">
+      <span  class="nav-item"><a href="{% url 'predictive_models' %}">ML Models</a></span>
+      <span  class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+    {% if user.is_authenticated %}
+        <span class="nav-item"><a href="{% url 'chatbot' %}">Anxio</a></span>
+        <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVisual</a></span>
+        <span id="logout" class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+        <div>
+          <i class="fa-regular fa-user"></i>
+        </div>
+    {% else %}
+      <span id="login" class="nav-item"><a href="{% url 'login' %}">Login</a></span>
+      <span id="sign-up" class="nav-item"><a href="{% url 'sign_up' %}">Sign Up</a></span>
+    </div>    
+    {% endif %}
   </nav>
   <section>
     <div class="blog_title">

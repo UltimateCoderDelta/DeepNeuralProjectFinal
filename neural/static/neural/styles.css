@@ -22,6 +22,7 @@ filter: grayscale(60%);
     justify-content:space-between;
     align-items:flex-end;
     flex-wrap: nowrap;
+    flex-basis: 200px;
     margin:0;
     padding:18px;
     position: fixed;
@@ -80,8 +81,14 @@ filter: grayscale(60%);
 }
 
 .nav-item a {
+    display: inline-block;
+    white-space: nowrap;
+    min-width: 100px;
     text-decoration: none;
     color: #000;
+    margin-right:8px;
+    font-weight: 500;
+    padding-top: 5px;
 }
 
 #home_content {
@@ -667,7 +674,7 @@ pre {
     font-size: 13px;
 }
 
-#submit-button {
+#submit-button, .login_out_button {
     max-width: 100px;
     background-color: #0069d9;
     border-color: #0062cc;
@@ -689,3 +696,37 @@ pre {
     -o-transition: All 0.5s ease-in;
 }
 
+.sign-up input {
+    /* max-width: 600px; */
+    min-width: 332px;
+    height: 40px;
+    margin-left: 15px;
+    border: none;
+    background-color: #f4f4f4;
+    color: #393c41;
+    border-radius: 5px;
+}
+
+.sign-up label {
+
+}
+
+.loginSection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    flex-basis: 200px;
+}
+
+#logout, #login, #sign-up {
+    background-color: #3e6ae1;
+    border-radius: 6px;
+    border: none;
+    min-width: 45px;
+    min-height: 30px;
+    text-align: center;
+    color:#fff;
+    font-family: "Poppins", "serif";
+    font-weight: 500;
+}
