@@ -35,7 +35,7 @@
    <div id="responseBody">
       <h2 id="greetingMessage">This is Anxio, how can I help?</h2>
    </div>
-    <div id="task-selection">
+    <div id="task-selection" style="display: none;">
          <div id="image-class" class="task-item" >Image Classification</div>
          <div id="text-class" class="task-item">Text Classification</div>
          <div id="summarizer-class" class="task-item">Document Summarization</div>
@@ -44,8 +44,8 @@
       <!-- Establish the pop up for selection -->
           <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" style="max-width: 80%" placeholder="Enter document text" maxlength="2000"></textarea> 
         
-            <input type="file" id="file-uploader" accept="image/png, image/jpeg" disabled>
-            <label class="send_button" style="margin-top: 65px;" for="file-uploader" >
+            <input type="file" id="file-uploader" accept="image/png, image/jpeg">
+            <label id="file-upload-icon" class="send_button" style="margin-top: 65px;" for="file-uploader">
                 <i class="fa-solid fa-paperclip" style="margin-top: 19px;"></i>
             </label>
             <button id="send_button" class="send_button" type="submit" style="margin-top: 65px;">
@@ -70,6 +70,7 @@
     const responseBody = document.getElementById("responseBody"); 
     const modelCards = document.querySelectorAll(".model_card");
     const fileUploadButton = document.getElementById("file-uploader");
+    const fileDisplayIcon = document.getElementById("file-upload-icon");
     let defaultEventHandler = null;
 
     //Make send button initially disabled
@@ -115,8 +116,84 @@
       imageClassListener();
   }  
 
+   const textClassifierEventListener = function () {
+      clearScreen();
+
+      //Check that the file uploader is none
+      if (fileDisplayIcon.style.display === "block") {
+        fileDisplayIcon.style.display = "none";
+      }
+      //Inform user of model switch
+      const p = document.createElement("p");
+      p.innerHTML = `The model has been switched to <b>Mental Health Sentiment Analysis - Model V1</b>.
+                     This model is designed to predict a patient's mental health based on their textual
+                     statements, allowing for rapid recognition of critical mental and emotional states. 
+                     The current model can predict the following conditions: depression, anxiety, bipolar and normal.
+                     
+                     Note: please recall that this model is designed for assistive purposes only.
+                     `
+      responseBody.appendChild(p);
+      //Perform logic to allow users to summarize documents
+      const buttonListener = () => {
+            const bodyText = document.createElement("p");
+            const resonseText = document.createElement("p");
+            //Adding a class attribute to each div
+            bodyText.classList.add("responseBox");
+            resonseText.classList.add("summaryBox");
+            //Check if the h2 content is displayed, if it is, remove it,
+            if (!(greetingMessage.textContent === "")) {
+              //Deactivate 
+              greetingMessage.textContent = "";
+            }
+            if (textBoxArea.value === undefined) {
+              throw new Error("The textbox body is empty!");
+            }
+            const documentMain = textBoxArea.value;
+            bodyText.textContent = documentMain;
+            addToTextCanva(responseBody, bodyText);
+            //Also send the message to the summarizer via fetch
+            postUserSentiment(documentMain, "chatbot_sentiment_post") //Change fetch request to sentiment mode
+               .then(() => {
+                //If the POST is successful then call get
+                console.log(documentMain);
+                 return getUserDocument("sentiment_prediction", "chatbot_sentiment"); //Change fetch request to sentiment mode
+               })
+               .then((sentiment) => {
+                //If get is successful, return the summary
+                try {
+                  if (!((sentiment === "") || (sentiment === undefined))) {
+                  // If not empty, return string, and add it to the screen as the response
+                  resonseText.textContent = sentiment;
+                  addToTextCanva(responseBody, resonseText);
+                }
+               } catch (error) {
+                 console.log(error);
+              }
+               })
+               .catch((failureMessage) => {
+                console.log(failureMessage);
+               });
+            // const message = {inputs: bodyText}
+            textBoxArea.value = "";
+            sendButton.disabled = true;
+       }
+      sendButton.addEventListener("click", ()=>{  //9 is the enter key code
+            buttonListener();
+    });
+
+    textBoxArea.addEventListener("keyup", (event) => {
+      if (event.keyCode === 13) {
+         buttonListener();
+      }
+    });
+   }
+
    const summarizerClassEventListener = function () {
       clearScreen();
+      //Check that the file uploader is none
+      if (fileDisplayIcon.style.display === "block") {
+        fileDisplayIcon.style.display = "none";
+      }
       //Inform user of model switch
       const p = document.createElement("p");
       p.innerHTML = `The model has been switched to <b>Model Summarization - Model V1</b>. Feel free to insert textual documents with a limit of 2000 words,
@@ -141,7 +218,7 @@
             bodyText.textContent = documentMain;
             addToTextCanva(responseBody, bodyText);
             //Also send the message to the summarizer via fetch
-            postUserDocument("document", documentMain, "chatbot_request")
+            postUserDocument(documentMain, "chatbot_request")
                .then(() => {
                 //If the POST is successful then call get
                 console.log(documentMain);
@@ -179,10 +256,8 @@
    //Image classification model
    imageClass.addEventListener("click", imageClassEventListener);
    summarizerClass.addEventListener("click", summarizerClassEventListener);
-
-   //TO DO: Recreate the event listeners for each model card: Pneumonia and Skin Cancer
-   //When the user selects the skin cancer model card, they will be allowed to upload
-   //their images for prediction purposes using the respective skin cancer model
+   textClassification.addEventListener("click", textClassifierEventListener);
+ 
    const modelSelectionEventHandler = function (modelCategory, responseBody) {
         const uploadButtonEventHandler = (model, userFile) => {
               const successMessage = document.createElement("p");
@@ -270,11 +345,13 @@
           console.log(articleId.currentTarget.id);
           let modelId = articleId.currentTarget.id;
           //We must first check the model card id
-          fileUploadButton.disabled = false;
+          // fileUploadButton.disabled = false; //Instead false, we could simply make it visible
+          fileDisplayIcon.style.display = "block";
           let model = "";
           //if the id is AT1 - use the skin cancer classifier
           if (modelId === "AT1") {
              //Enable and highlight send button
+              fileDisplayIcon.style.display = "block";
               const modelType = document.createElement("p");
               const div = document.createElement("div");
               model = "SkinClassifier";
@@ -288,6 +365,7 @@
               responseBody.appendChild(div);
           }
           else if (modelId === "AT2") {
+              fileDisplayIcon.style.display = "block";
               const modelType = document.createElement("p");
               const div = document.createElement("div");
               model = "PneumoniaClassifier";
@@ -347,15 +425,20 @@
    }
    
    //Add event listeners to the article cards
-     menuButton.addEventListener("click", () => {
-          if (taskSelectionMenu.style.display === "block") {
+    const taskSelectionEvent = () => {
+      if (taskSelectionMenu.style.display === "block") {
             taskSelectionMenu.style.display = "none"; 
           }
-          else {
-             taskSelectionMenu.style.display = "block"; 
-          }       
+      else {
+          taskSelectionMenu.style.display = "block"; 
+      }
+    }
+     menuButton.addEventListener("click", () => {
+       taskSelectionEvent();
      });
- 
+     taskSelectionMenu.addEventListener("mouseleave", () => {
+       taskSelectionMenu.style.display = "none"; 
+     });
  
     function addToTextCanva(parentElement, childElement){
        //This function is designed to add the sent text to the main body
@@ -380,59 +463,38 @@
     // Create an event listener for the send button, which upon being sent will retrieve the user document from the text area, and
     // send it as a post request to the respective POST location
 
-    // const buttonListener = () => {
-    //         const bodyText = document.createElement("p");
-    //         const resonseText = document.createElement("p");
-    //         //Adding a class attribute to each div
-    //         bodyText.setAttribute("class", "responseBox");
-    //         resonseText.setAttribute("class", "summaryBox");
-    //         //Check if the h2 content is displayed, if it is, remove it,
-    //         if (!(greetingMessage.textContent === "")) {
-    //           //Deactivate 
-    //           greetingMessage.textContent = "";
-    //         }
-    //         if (textBoxArea.value === undefined) {
-    //           throw new Error("The textbox body is empty!");
-    //         }
-    //         const documentMain = textBoxArea.value;
-    //         bodyText.textContent = documentMain;
-    //         addToTextCanva(responseBody, bodyText);
-    //         //Also send the message to the summarizer via fetch
-    //         postUserDocument("document", documentMain, "chatbot_request")
-    //            .then(() => {
-    //             //If the POST is successful then call get
-    //              return getUserDocument("summary", "chatbot_summary");
-    //            })
-    //            .then((summary) => {
-    //             //If get is successful, return the summary
-    //             try {
-    //               if (!((summary === "") || (summary === undefined))) {
-    //               // If not empty, return string, and add it to the screen as the response
-    //               resonseText.textContent = summary;
-    //               addToTextCanva(responseBody, resonseText);
-    //             }
-    //            } catch (error) {
-    //              console.log(error);
-    //           }
-    //            })
-    //            .catch((failureMessage) => {
-    //             console.log(failureMessage);
-    //            });
-    //         // const message = {inputs: bodyText}
-    //         textBoxArea.value = "";
-    //         sendButton.disabled = true;
-    // }
-
-    const postUserDocument = async function(key, file, checkpoint) { //Returns a promise
+    
+    const postUserDocument = async function(file, checkpoint) { //Returns a promise
             if (document === undefined) {
                 throw new Error("The document is empty!");
             }
-            const response = await fetch(`http://localhost:8000/neural/chatbot_request/`, {
+            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
                     method: "POST",
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({key: file}),                  
+                    body: JSON.stringify({"document": file}),                  
+            }).then(response => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)   
+          ).then(jsonResponse => {
+            console.log(jsonResponse);
+          })
+        } 
+
+         const postUserSentiment = async function(statement, checkpoint) { //Returns a promise
+            if (document === undefined) {
+                throw new Error("The document is empty!");
+            }
+            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({"sentiment": statement}),                  
             }).then(response => {
               if (response.ok) {
                 return response.json();
@@ -468,7 +530,7 @@
           // return the summarized data to the user
         const getUserDocument = async (key, checkpoint) => {
           try {
-            const response = await fetch(`http://localhost:8000/neural/chatbot_summary/`);
+            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`);
             if (response.ok) {
               const jsonResponse = await response.json();
               //returns a JavaScript object with the summary
@@ -481,7 +543,9 @@
             console.log(error);
           }          
         }
+
       disableSendButton();
+
    </script>
 {% endblock %}
 

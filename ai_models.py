@@ -4,9 +4,12 @@ import time
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img
 from keras.preprocessing import image
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 import django
 from django.conf import settings
+import pickle
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deepsite.settings")
 
@@ -90,6 +93,65 @@ def pneumonia_classifier(user_image_path):
           with a {(classes[0][0] * 100)} confidence rate ")
     else:
        raise Exception("No images detected, please reupload")
+    
+
+def load_sentiment_model():
+    sentiment_model_path = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_sentiment_classifier_v2.keras')
+    #Check if the path is correct
+    if sentiment_model_path:
+       #Load it
+       try:
+          model = tf.keras.models.load_model(sentiment_model_path)
+          return model
+       except Exception:
+          raise RuntimeError("The model failed to load!") 
+    
+def load_sentiment_tokenizer():
+    path_to_tokenizer = os.path.join(settings.BASE_DIR, 'neural/ml_models/tokenizers', 'sentiment_tokenizer.pkl')
+    if path_to_tokenizer:
+       return pickle.load(open(path_to_tokenizer, 'rb'))
+    else:
+       raise Exception("The path specified is invalid") 
+     
+def sentiment_classifier_labels():
+    labels = ['Anxiety', 'Normal', 'Depression', 'Bipolar']
+    label_index = dict()
+    for index, status in enumerate(labels):
+       if status not in label_index:
+          label_index[status] = index
+    
+    return label_index
 
 
-# pneumonia_classifier("neural/media/Pneumonia.png")
+def sentiment_classifier(text):
+   #Check if the text the user entered isn't empty
+   if text:
+      #Convert the text into an array
+      text_list = [text]
+      #Then load the model and tokenizer  
+      maxlen = 200 
+      model = load_sentiment_model()
+      tokenizer = load_sentiment_tokenizer()
+      labels = sentiment_classifier_labels()
+
+      if (model and tokenizer and labels): #If the model, tokenizer, and labels are operational 
+         #Then sequence the user input text
+         sequenced_text = tokenizer.texts_to_sequences(text_list)
+         #Pad the sequences for equal length
+         sequenced_text = pad_sequences(sequenced_text, maxlen=maxlen, padding='post',
+                                        truncating='post')
+         #Perform the prediction
+         prediction = model.predict(sequenced_text)
+
+         #Gather the most likely sentiment
+         prediction_index = np.argmax(prediction[0]) #Return the index of the prediction
+
+         #Identify sentiment  
+         index_label = {value: key for key, value in labels.items()}  
+         prediction_result = index_label[prediction_index]
+         return (f"The predicted label for the statement: \"{text}\" is considered {prediction_result}")
+      else:
+         raise Exception("One of the models failed to load")
+   else:
+      raise Exception("The text for sentiment analysis must not be empty")
+         

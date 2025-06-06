@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context
-from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia
+from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment
 from .forms import UploadFileForm
 import requests
 import json
 import pandas as pd
-from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier
+from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier, sentiment_classifier
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -282,4 +282,44 @@ def get_user_classification_pneumonia(request):
        except Exception as e:
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    
+
+@api_view(['POST'])
+def post_user_sentiment(request):
+    """
+    This function will allow the user to post their
+    sentiment, which will be accessed by a seperate view
+    """ 
+    if request.method == "POST":
+       #We expect a JSON object
+       try:
+          user_data = request.data.get("sentiment")
+          if not user_data:
+            raise ValueError("The sentiment text provided is empty!")
+         #Post the as JSON to the database
+          user_document = UserPostSentiment.objects.create(sentiment={'user_statement': user_data})
+          user_document.save()
+          return Response({"statement": user_data}, status=status.HTTP_201_CREATED)
+       except Exception as e:
+         return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
+       
+@api_view(['GET'])
+def get_user_sentiment(request):
+    field_name = 'sentiment'
+    if request.method == "GET":
+       #Then develop the sentiment for the text
+       try:
+         #Get the user data from the database instead
+          user_data = UserPostSentiment.objects.first() #returns JSON data
+          field_object = UserPostSentiment._meta.get_field(field_name)
+          field_value = getattr(user_data, field_object.attname)
+          # Convert the JSON data to a string
+          user_sentiment = field_value['user_statement']
+          if not user_sentiment:
+           raise ValueError("The text provided is empty!")    
+        #   user_data = json.loads(json_str)      
+          sentiment_data = sentiment_classifier(user_sentiment) #Change the function
+          #Delete all data from the database for the next request
+          UserPostSentiment.objects.all().delete()
+          return Response({"sentiment_prediction": sentiment_data}, status=status.HTTP_200_OK)
+       except Exception as e:
+          return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)

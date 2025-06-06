@@ -20,6 +20,8 @@ urlpatterns = [
     path("file_uploader/deep_visual/", views.deep_visual, name="deep_visual"),
     path("chatbot_request/", views.post_user_document),
     path("chatbot_summary/", views.get_user_summary),
+    path("chatbot_sentiment_post/", views.post_user_sentiment),
+    path("chatbot_sentiment/", views.get_user_sentiment),
     path("classification_upload/", views.post_user_image),
     path("classification_result/", views.get_user_classification),
     path("classification_upload_pneumonia/", views.post_user_image_pneumonia),
