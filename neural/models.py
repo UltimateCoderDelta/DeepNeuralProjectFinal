@@ -66,6 +66,15 @@ class UserPostDocumentation(models.Model):
 
     def returnJson(self):
         return str(self.document)
+
+class UserPostSentiment(models.Model):
+    sentiment = models.JSONField()
+
+    def __str__(self):
+        return str(self.sentiment)
+
+    def returnJson(self):
+        return str(self.sentiment)
     
 
 class UserImagePost(models.Model):
