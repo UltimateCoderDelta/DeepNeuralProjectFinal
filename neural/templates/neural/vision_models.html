@@ -2,7 +2,7 @@
 {% load static %}
 
  {% block head %}
- <title>Predictive Models</title>
+ <title>Predictive Text Models</title>
  <meta name="viewport" content="width=320,initial-scale=0.7" >
  <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,13 +44,13 @@
   </nav>
   <section>
     <div class="blog_title">
-     <h2>Tabular Health Predictive Models</h2>
+     <h2>Medical Vision Models</h2>
      <div>
        <p style="text-align: left;">
         Leverage the power of predictive healthcare models, designed for 
-        form-based software applications, where doctors and patients alike,
+        language-based software applications, where doctors and patients alike,
         can make use of assisstive ML models for accurate diagnoses of patient
-        conditions, ranging from breast cancer analysis to heart disease. 
+        conditions.
        </p>
      </div>
     </div>
@@ -87,14 +87,22 @@
   </div>
 <main>
     <section class="model_categorization">
-        {%  for item in tabular_models %}
           <article id="model_card" class="model_card">
-            <h3 class="model_title">{{item.model_name}}</h3>
-            <p>{{item.model_description}}</p>
+            <h3 class="model_title">Pneumonia Predictor Model</h3>
+            <p>
+                <b>Anxio Sentiment Analysis Model v1</b> is a chatbot model capable of detecting 
+                a user/patient's sentiment, ranging from depression, bipolar, normal or anxious.
+                Utilize or fine-tune this model for the development of similar medical applications.   
+            </p>
           </article>
-
-        {% endfor %}
-
+          <article id="model_card" class="model_card">
+            <h3 class="model_title">Skin Cancer Predictor Model</h3>
+            <p>
+                <b>Anxio Sentiment Analysis Model v1</b> is a chatbot model capable of detecting 
+                a user/patient's sentiment, ranging from depression, bipolar, normal or anxious.
+                Utilize or fine-tune this model for the development of similar medical applications.   
+            </p>
+          </article>
     </section>
     <script>
         let modelTitle = document.querySelectorAll(".model_title");

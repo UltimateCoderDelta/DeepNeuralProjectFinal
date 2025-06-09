@@ -4,6 +4,8 @@ from .views import PostDocument
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
+from neural.forms import UserLoginForm
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
@@ -28,6 +30,10 @@ urlpatterns = [
     path("classification_upload_pneumonia/", views.post_user_image_pneumonia),
     path("classification_result_pneumonia/", views.get_user_classification_pneumonia),
     path("sign_up/", views.sign_up, name='sign_up'),
+    path("user_account/", views.user_account, name="user_account"),
+    path("textual_models/", views.textual_models, name="textual_models"),
+    path("vision_models/", views.vision_models, name="vision_models"),
+    path("sentiment_analysis_model", views.sentiment_analysis_model, name="sentiment_analysis")
 ]
 
 # if settings.DEBUG:

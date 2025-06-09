@@ -1,10 +1,28 @@
-// windows.onload = function () {
-//     document.getElementById("imagebtn").style.display = "none";
-// } 
+const primaryNav = document.getElementById("nav");
+const secondNav = document.querySelector(".navSecond");
+const overlayNavItem = document.getElementById("overlay_nav_item");
 
-//Add an event listener to the predict button. The button must
-//check whether there is a value from the file input field. If
-//there is, the fetch API would be called to predict the result 
-//of the image. For now, simply reveal the image on the page as a
-//temporary element. 
+function openNavTop() {
+        document.getElementById("myNavTop").style.width = "100%";
+      }
+
+function closeNavTop() {
+        document.getElementById("myNavTop").style.width = "0%";
+    }
+
+const windowResizeCheck = function () {
+        if (window.innerWidth < 1000) {
+                //Remove the side bar
+                primaryNav.style.display = "none";
+                secondNav.style.display = "flex";
+            
+            } else {
+                  primaryNav.style.display = "flex";
+                  secondNav.style.display = "none";
+                }
+            }
+windowResizeCheck();
+
+window.addEventListener("resize", windowResizeCheck);
+overlayNavItem.addEventListener("click", openNavTop);
 

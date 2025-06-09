@@ -36,9 +36,45 @@
     </div>    
     {% endif %}
   </nav>
+    <nav class="navSecond">
+      <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <div id="overlay_nav_item" >
+      <span class="nav-item menu_btn_nav">Menu</span>
+    {% if user.is_authenticated %}
+        <span class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+    {% endif %}
+    </div>
+  </nav>
 {% endblock %}
 
 {% block content %}
+    <div id="myNavTop" class="overlay">
+          <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
+            <div class="overlay-content">
+                <!-- Add overlay content -->
+                <div class="account_item">
+                    <!-- Icon -->
+                    <h5><a href="{% url 'predictive_models' %}" style="text-decoration: none;">ML Models</a></h5> 
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deepneural_blog' %}">Blog</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                 <div class="account_item">
+                    <h5><a href="{% url 'chatbot' %}">Anxio</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deep_visual' %}">DeepVision</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'user_account' %}">Account Information</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+            </div>
+  </div>
    <main class="model_description_content">
      <section>
        <h3>Model Description</h3>
@@ -197,6 +233,7 @@
          }
          actionListener();
         </script> 
+        <script src="{% static 'neural/script.js' %}"></script>
      </section>
      <section>
        <h3>Metrics</h3>
