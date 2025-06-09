@@ -1,26 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import Context
-from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment, \
-     UserListForm
+from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment,\
+     ProductListCards 
 from django.urls import reverse
-from .forms import UploadFileForm, UserSignupForm, CustomUserCreationForm
+from .forms import UploadFileForm,CustomUserCreationForm
 import requests
 import json
 import pandas as pd
 from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier, sentiment_classifier
-from django.views import View
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.utils.decorators import method_decorator
 import rest_framework 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from django.conf import settings
-from django.contrib.auth import authenticate, login
-import os
+from django.contrib.auth import login
 
 
 # Create your views here.
@@ -341,4 +334,20 @@ def sign_up(request):
       form = CustomUserCreationForm()
    return render(request, "neural/user_signup.html", {"form": form})
 
-#
+#User accounts page
+def user_account(request):
+   products = ProductListCards.objects.all()
+   context = {
+    "account_products": products,
+    }
+   return render(request, "neural/account_page.html", context)
+
+def textual_models(request):
+    return render(request, "neural/textual_models.html")
+
+
+def vision_models(request):
+   return render(request, "neural/vision_models.html")
+
+def sentiment_analysis_model(request):
+   return render(request, "neural/sentiment_analysis_model.html")

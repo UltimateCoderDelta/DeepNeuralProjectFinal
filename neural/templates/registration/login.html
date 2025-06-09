@@ -11,19 +11,31 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Login</h2>
-  <form method="post" class="sign-up">
+  <section class="login_form">
+  <form id="login_form" method="post" class="sign-up">
+    <h2 id="login-title">Sign In</h2>
+      {% csrf_token %}
        <div class="form-group">
-            {% csrf_token %}
-            {{form.as_p}}
+          {{ form.username.errors }}
+          <input type="text" id="username" name="username" placeholder="Username" class="input_field">
+          <!-- {{form.as_p}} -->
        </div>
-        <input  type="submit" value="Login"/>
-        <input type="hidden" name="next" value="{% url 'home' %}"/>
+       <div class="form-group">
+         {{ form.password.errors }}
+          <input type="password" id="password" name="password" placeholder="Password">
+       </div>
+       <div style="margin-bottom:30px;">
+          <input id="login-button" type="submit" value="Login"/>
+          <input type="hidden" name="next" value="{% url 'user_account' %}"/>
+       </div>    
   </form>
   <p>
-    <a href="{% url 'home' %}">Back to homepage</a>
-    <a href="{% url 'password_reset' %}">Forgot your password?</a>
+    <a href="{% url 'home' %}" class="form_anchors">Back to homepage</a>
+    <a href="{% url 'password_reset' %}" class="form_anchors">Trouble Signing In?</a>
   </p>
+  <div style="border-top: solid 1px #393c41; border-bottom: solid 1px #393c41; margin-top: 50px;">Or</div>
+  <span id="create_account_btn"><a href="{% url 'sign_up' %}" style="text-decoration: none; color:#fff;">Create Account</a></span>
+  </section>
 {% endblock %}
 
 

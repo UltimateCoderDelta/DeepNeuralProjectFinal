@@ -1,0 +1,184 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>DeepNeural</title>
+ <meta name="viewport" content="width=320,initial-scale=0.7" >
+ <link type="text/css" href="{% static '/neural/styles.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+ <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+
+{% endblock %}
+
+  {% block header %}
+  <nav id="nav">
+      <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
+      <div class="loginSection">
+          <span  class="nav-item"><a href="{% url 'predictive_models' %}">ML Models</a></span>
+          <span  class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+        {% if user.is_authenticated %}
+            <span class="nav-item"><a href="{% url 'chatbot' %}">Anxio</a></span>
+            <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVision</a></span>
+            <span id="logout" class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+            <span><a href="{% url 'user_account' %}" style="color:#000;"><i class="fa-regular fa-user"></i></a></span>
+            
+        {% else %}
+          <span id="login" class="nav-item"><a href="{% url 'login' %}">Login</a></span>
+          <span id="sign-up" class="nav-item"><a href="{% url 'sign_up' %}">Sign Up</a></span>
+      </div>   
+      {% endif %}
+  </nav>
+    <nav class="navSecond">
+      <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <div id="overlay_nav_item" >
+      <span class="nav-item menu_btn_nav">Menu</span>
+    {% if user.is_authenticated %}
+        <span class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+    {% endif %}
+    </div>
+
+  </nav>
+  {% endblock %}
+
+  {% block content %}
+    <main id="account_page_overlay">
+        <section id="account_side_info" class="account_option_select">
+            <!-- General account options i.e. settings, logout, etc. -->   
+            <div class="account_item">
+                <!-- Icon -->
+                 <i class="fa-solid fa-house account_icons"></i>
+                 <h5><a href="{% url 'user_account' %}" style="text-decoration: none; color: #000;">My products</a></h5> 
+             </div>
+             <div class="account_item">
+                <i class="fa-regular fa-user account_icons"></i>
+                <h5>Account Information</h5>
+             </div>
+        </section>
+        <div id="myNav" class="overlay">
+            <a href="javascript:void(0)" class="closebtn", onclick="closeNav()">&times;</a>
+           
+            <div class="overlay-content">
+                <!-- Add overlay content -->
+                <div class="account_item">
+                    <!-- Icon -->
+                    <i class="fa-solid fa-house account_icons"></i>
+                    <h5><a href="{% url 'user_account' %}" style="text-decoration: none;">My products</a></h5> 
+                </div>
+                <div class="account_item">
+                    <i class="fa-regular fa-user account_icons"></i>
+                    <h5><a href="">Account Information</a></h5>
+                </div>
+            </div>
+        </div>
+        <div id="myNavTop" class="overlay">
+            <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
+           
+            <div class="overlay-content">
+                <!-- Add overlay content -->
+                <div class="account_item">
+                    <!-- Icon -->
+                    <h5><a href="{% url 'predictive_models' %}" style="text-decoration: none;">ML Models</a></h5> 
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deepneural_blog' %}">Blog</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                 <div class="account_item">
+                    <h5><a href="{% url 'chatbot' %}">Anxio</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deep_visual' %}">DeepVision</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'user_account' %}">Account Information</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+            </div>
+        </div>
+        <section class="products_select">
+          <div id="my_products_overlay" class="account_item" style="margin-bottom: 20px;">
+              <!-- Icon -->
+                <i class="fa-solid fa-house account_icons"></i>
+                <h5><a id="overlay_btn" style="text-decoration: none; color: #000;">My products</a></h5> 
+          </div>
+            <h2>My products</h2>
+            <section id="product_catalog">
+                <!-- Add a database products for ease-->
+              {% for product in account_products %}
+                <article class="product_card">
+                  <h6>{{product.product_name}}</h6>
+                  <p>
+                    {{product.product_descr}}
+                  </p>
+                  <p>
+                    {% with product.href_name as url_name %}
+                    <a href="{% url url_name %}">{{product.product_name}}</a>
+                    {% endwith %}
+                  </p>
+                </article>
+                {% endfor %}
+            </section>
+            <!-- User products displayed Anxion, visualization, models for devs -->
+        </section>
+
+        <script>
+           const overlayContent = document.getElementById("overlay_btn");
+           const sideInfo = document.getElementById("account_side_info");
+           const productSelect = document.querySelector(".products_select");
+           const productsOverlayButton = document.getElementById("my_products_overlay");
+           const overlayNavItem = document.getElementById("overlay_nav_item");
+           const mainNavbar = document.querySelector(".loginSection");
+           const primaryNav = document.getElementById("nav");
+           const secondNav = document.querySelector(".navSecond");
+          
+           //Add event listener to the sideElements section for resizing
+           function openNav() {
+               document.getElementById("myNav").style.width = "100%";
+              }
+
+             function openNavTop() {
+               document.getElementById("myNavTop").style.width = "100%";
+              }
+
+            /* Close when someone clicks on the "x" symbol inside the overlay */
+            function closeNav() {
+              document.getElementById("myNav").style.width = "0%";
+            }
+
+             function closeNavTop() {
+              document.getElementById("myNavTop").style.width = "0%";
+            }
+
+            const windowResizeCheck = function () {
+                if (window.innerWidth < 1000) {
+                  //Remove the side bar
+                   sideInfo.style.display = "none";
+                    productSelect.style.marginLeft = "50px";
+                    productSelect.style.marginBottom = "30px";
+                    productsOverlayButton.style.display = "flex";
+                    primaryNav.style.display = "none";
+                    secondNav.style.display = "flex";
+            
+                } else {
+                  sideInfo.style.display = "block";
+                  primaryNav.style.display = "flex";
+                  secondNav.style.display = "none";
+                }
+            }
+            windowResizeCheck();
+
+            window.addEventListener("resize", windowResizeCheck);
+            productsOverlayButton.addEventListener("click", openNav);
+            overlayNavItem.addEventListener("click", openNavTop);
+        </script>
+    </main>
+  {% endblock %}

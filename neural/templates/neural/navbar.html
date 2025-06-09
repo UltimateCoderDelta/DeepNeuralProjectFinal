@@ -1,0 +1,31 @@
+{% extends "./base.html" %}
+{% load static %}
+
+  <div id="myNavTop" class="overlay">
+          <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
+            <div class="overlay-content">
+                <!-- Add overlay content -->
+                <div class="account_item">
+                    <!-- Icon -->
+                    <h5><a href="{% url 'predictive_models' %}" style="text-decoration: none;">ML Models</a></h5> 
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deepneural_blog' %}">Blog</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                 <div class="account_item">
+                    <h5><a href="{% url 'chatbot' %}">Anxio</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deep_visual' %}">DeepVision</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'user_account' %}">Account Information</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+            </div>
+  </div>
+

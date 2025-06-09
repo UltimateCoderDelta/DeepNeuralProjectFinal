@@ -23,17 +23,26 @@
       <span  class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
     {% if user.is_authenticated %}
         <span class="nav-item"><a href="{% url 'chatbot' %}">Anxio</a></span>
-        <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVisual</a></span>
+        <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVision</a></span>
         <span id="logout" class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
-        <div>
-          <i class="fa-regular fa-user"></i>
-        </div>
+        <a href="{% url 'user_account' %}" style="color:#000;"><i class="fa-regular fa-user"></i></a>
     {% else %}
       <span id="login" class="nav-item"><a href="{% url 'login' %}">Login</a></span>
       <span id="sign-up" class="nav-item"><a href="{% url 'sign_up' %}">Sign Up</a></span>
     </div>    
     {% endif %}
   </nav>
+      <nav class="navSecond">
+      <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <div id="overlay_nav_item" >
+      <span class="nav-item menu_btn_nav">Menu</span>
+    {% if user.is_authenticated %}
+        <span class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+    {% endif %}
+    </div>
+
+  </nav>
+
   <section id="header_box">
    <div id="banner_section">
     <h2>Seeking to bring about vast improvements in healthcare <b>
@@ -50,7 +59,33 @@
   {% endblock %}
  
   {% block content %}
-
+      <div id="myNavTop" class="overlay">
+          <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
+            <div class="overlay-content">
+                <!-- Add overlay content -->
+                <div class="account_item">
+                    <!-- Icon -->
+                    <h5><a href="{% url 'predictive_models' %}" style="text-decoration: none;">ML Models</a></h5> 
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deepneural_blog' %}">Blog</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                 <div class="account_item">
+                    <h5><a href="{% url 'chatbot' %}">Anxio</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deep_visual' %}">DeepVision</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'user_account' %}">Account Information</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+            </div>
+        </div>
   <main id="home_content">       
      <section class="mission_section">
        <h2>Our Mission</h2>
@@ -124,6 +159,9 @@
     const modelsCard = document.getElementById("modelsCard");
     const cardData = document.getElementById("deepneural_models");
     const signup = document.getElementById("sign-up");
+    const primaryNav = document.getElementById("nav");
+    const secondNav = document.querySelector(".navSecond");
+    const overlayNavItem = document.getElementById("overlay_nav_item");
 
     function modelCard(option) {
       if (option === "blogCard") {
@@ -207,11 +245,34 @@
        }
     }
 
+    function openNavTop() {
+        document.getElementById("myNavTop").style.width = "100%";
+      }
+
+    function closeNavTop() {
+          document.getElementById("myNavTop").style.width = "0%";
+      }
+
+          const windowResizeCheck = function () {
+                if (window.innerWidth < 1000) {
+                  //Remove the side bar
+                    primaryNav.style.display = "none";
+                    secondNav.style.display = "flex";
+            
+                } else {
+                  primaryNav.style.display = "flex";
+                  secondNav.style.display = "none";
+                }
+            }
+            windowResizeCheck();
+
+            window.addEventListener("resize", windowResizeCheck);
 
 
     btn1.addEventListener("click", changeInnerText);
     btn2.addEventListener("click", changeInnerText);
     btn3.addEventListener("click", changeInnerText);
+    overlayNavItem.addEventListener("click", openNavTop);
   </script>
   {% endblock %}
 

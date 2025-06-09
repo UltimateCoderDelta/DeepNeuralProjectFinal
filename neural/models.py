@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 from django.core.exceptions import NON_FIELD_ERRORS
+from django.urls import reverse
 
 # Create your models here.
 class BlogsOriginal(models.Model):
@@ -112,4 +113,20 @@ class UserListForm(ModelForm):
       class Meta:
           model = UserList
           fields = ["first_name", "last_name", "email", "password"]
+
+
+class ProductListCards(models.Model):
+      product_name = models.CharField(max_length=30)
+      product_descr = models.CharField(max_length=200)
+      href_name = models.CharField(max_length=30)
+
+      data = {
+            'product_name': product_name,
+            'product_descr': product_descr,
+            'href_name': href_name
+      }
+      def __str__(self):
+         return str(self.data)
+
+
 

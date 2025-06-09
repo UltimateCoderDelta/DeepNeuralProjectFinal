@@ -36,7 +36,7 @@
     </div>    
     {% endif %}
   </nav>
-  <nav class="navSecond">
+    <nav class="navSecond">
       <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
     <div id="overlay_nav_item" >
       <span class="nav-item menu_btn_nav">Menu</span>
@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block content %}
- <div id="myNavTop" class="overlay">
+    <div id="myNavTop" class="overlay">
           <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
             <div class="overlay-content">
                 <!-- Add overlay content -->
@@ -75,60 +75,54 @@
                 </div>
             </div>
   </div>
-   <main class="model_description_content" >
+   <main class="model_description_content">
      <section>
        <h3>Model Description</h3>
        <p>
-        The following model is designed to predict, given a certain number of inputs, whether a person has and/or is it 
-        at risk of acquiring heart disease. This model is composed of 13 input features, 
-        and is designed to work within form-based applications, i.e. software applications which require user input.
+        DeepNeural's sentiment analysis classifier model v1 is designed to predict - according to the text entered - a user's
+        sentiment, with current capabilities ranging from identifying depression, anxiety, bipolarism or normal. This is highly 
+        important for the speedy identification of a patient's mental state, for early detection of potentially fatal actions or deeds
+        which might occur.  
        </p>
        <p>
         NOTE: The following model is meant as an assistive tool, and must NOT directly be used to produce the final 
-        verdict on a person or patient's condition. As it is meant to promote further evaluations upon having completed its prediction.
+        verdict on a patient's condition. As it is meant to promote further evaluations upon having completed its prediction.
        </p>
        <ul>
          <li><b>Developed by:</b> DeepNeural</li>
-         <li><b>Model type:</b> Tabular Classification</li>
+         <li><b>Model type:</b> Language (text) Classification</li>
          <li><b>Language(s):</b> English</li>
-         <li><b>License:</b> MIT</li>      
+         <li><b>License:</b> MIT</li>   
+         <li><b>Source: </b><a href="https://huggingface.co/DeepNeural/deepneural_sentiment_classifier_v2">Sentiment Model (HuggingFace)</a></li>   
        </ul>
      </section>
      <section>
       <h3>Model Inputs</h3>
-
+        <p>The following model works with textual inputs, e.g. a paragraph.</p>
      </section>
      <section>
       <h3>Uses</h3>
         <p>
-            This model is primarily designed for Data Scientists, Software Engineers and Machine Learning Engineers 
-            who have an interest in developing heart disease software applications, for various healthcare institutions, ranging from hospitals to clinics. Furthermore, this model is also designed for 
-            educational purposes within acadamia, whereby diabetic risk-analysis is a priority of the study.
+          This model is primarily designed for Data Scientists, Software Engineers and Machine Learning Engineers who 
+          have an interest in developing NLP-based word embedding/text classification models, for various healthcare institutions, 
+          ranging from hospitals to clinics.
         </p>
         <p>
-            Foreseeable users of the software applications to be developed with this model include: doctors, nurses (with respect to their patients)
+          Foreseeable users of the software applications to be developed with this model include: doctors, nurses (with respect to their patients)
         </p>
-     </section>
-     <section>
-       <h3>Bias, Risks, and Limitations</h3>
-       <p>
-        Please be adviced that our model was trained on a specific dataset for heart disease classification, and although it has an high level of accuracy 
-        and precision, there may come certain moments where misclassifications occur.
-       </p>
      </section>
      <section>
       <h3>How to Use the Model</h3>
         <p>
-          To properly make use of this model, please refer to the illustration below, which showcases how this model can be loaded directly into an application. Please note, that, because it was built with the Scikit-Learn Machine Learning library, the model has been saved as a .joblib file. With that in mind, please proceed by 
-          copying the following code into your coding environment (Python).
+          To properly make use of this model, please refer to the code block below
         </p>
         <ol>
           <li>
-            <p>Install Joblib</p>
+            <p>Install TensorFlow</p>
           <div class="code_article">
             <pre class="code_block">
 
-              !pip install joblib
+              !pip install tensorflow
             </pre>
            <div class="button-float">
             <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i>  
@@ -136,11 +130,11 @@
           </div>
           </li>
           <li>
-          <p>Load model upon installtion</p>
-          <div class="code_article"> 
+          <p>Load model upon installation</p>
+          <div class="code_article">
             <pre class="code_block">
 
-              my_model = joblib.load(<span class="hljs-string">"heart_disease_classifier_model_v1.joblib"</span>)
+              my_model = tensorflow.keras.models.load(<span class="hljs-string">"deepneural_sentiment_classifier_v2.keras"</span>)
             </pre>
             <div class="button-float">
             <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
@@ -150,14 +144,13 @@
           <li>
            <p>Alternatively (for a direct download from Hugging Face models)</p>
            <div class="code_article">
-            <pre class="code_block">  
+            <pre class="code_block"> 
+            <span class="hljs-keyword">import</span> os
+            <span class="hljs-string">os.environment["KERAS_BACKEND"] = "jax"</span>
+            <span class="hljs-keyword">import</span> keras
             <span class="hljs-keyword">from</span> huggingface_hub <span class="hljs-keyword">import</span> hf_hub_download
-            <span class="hljs-keyword">import</span> joblib model =  joblib.load(
-               hf_hub_download(
-                    <span class="hljs-string">"DeepNeural/heart_disease_classifier_model_v1"</span> , <span class="hljs-string">"heart_disease_classifier_model_v1.joblib"</span>))</span>
 
-          <span class="hljs-string"># only load pickle files from sources you trust</span>
-          <span class="hljs-string"># read more about it here https://skops.readthedocs.io/en/stable/persistence.html </span>
+            <span class="hljs-string">model = keras.saving.load_model("hf://DeepNeural/deepneural_sentiment_classifier_v2")</span>
            </pre>
            <div class="button-float">
            <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
@@ -165,15 +158,27 @@
           </div>                 
           </li>
           <li>
-        <p>Make predictions (Binary or probability)</p>
+
+          <p>Installing and loading the tokenizer</p>
+           <div class="code_article">
+            <pre class="code_block"> 
+            <span class="hljs-keyword">import</span> pickle
+            <span>tokenizer = pickle.load(open(<span class="hljs-string">path_to_downloaded_tokenizer/sentiment_tokenizer.pkl</span>, <span class="hljs-string">'rb'</span>))</span>
+           </pre>
+           <div class="button-float">
+           <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+           </div> 
+          </div> 
+
+        <p>Make predictions</p>
         <article class="code_article">
             <pre class="code_block">
 
-                 my_model.predict(X_test)
+            <span>sequenced_text = tokenizer.<span class="hljs-keyword">texts_to_sequences</span>(text_list)</span>
+                 
+            <span>sequenced_text = <span class="hljs-keyword">pad_sequences</span>(sequenced_text, maxlen=maxlen, padding='post', truncating='post')</span>
 
-                 <span class="hljs-string"># For probability-based outputs</span>
-
-                 my_model.predict_proba(X_test)
+            <span>my_model.<span class="hljs-keyword">predict</span>(sequenced_text)</span>
             </pre>
             <div class="button-float">
             <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
@@ -235,20 +240,9 @@
         <script src="{% static 'neural/script.js' %}"></script>
      </section>
      <section>
-       <h3>Metrics</h3>
-       <p>
-        We tested our dataset on various Machine Learning models, namely: 
-        logistic regression, Stochastic Gradient Descent, and Support Vector Machines. 
-        After performing hyperparameter tuning on the Logistic Regression model, we opted to 
-        prioritize said model for our metrics calculations. The metrics used were accuracy, precision, 
-        recall, f1-score and AUC. The results for our model can be seen in the 'Results' section.
-       </p>
-     </section>
      <section>
-      <h3>Results</h3>
-      <p>
-        Accuracy - 94% Precision - 94% Recall - 94% AUC ROC - 94%
-      </p>
+      <h3>Training Results</h3>
+      <p>Accuracy - 94%</p>
      </section>
    </main>
 {% endblock %}

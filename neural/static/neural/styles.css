@@ -17,12 +17,10 @@ background-size: cover;
 filter: grayscale(60%);
 }
 
-#nav{
+#nav, .navSecond {
     display: flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    flex-wrap: nowrap;
-    flex-basis: 200px;
+    justify-content:space-evenly;
+    /* align-items:center; */
     margin:0;
     padding:18px;
     position: fixed;
@@ -89,6 +87,13 @@ filter: grayscale(60%);
     margin-right:8px;
     font-weight: 500;
     padding-top: 5px;
+}
+
+.form_anchors {
+    /* text-decoration: none; */
+    color:#28282B;
+    margin-top: 50px;
+    padding: 15px;
 }
 
 #home_content {
@@ -697,7 +702,7 @@ pre {
 }
 
 .sign-up input {
-    /* max-width: 600px; */
+    max-width: 400px;
     min-width: 332px;
     height: 40px;
     margin-left: 15px;
@@ -728,5 +733,213 @@ pre {
     text-align: center;
     color:#fff;
     font-family: "Poppins", "serif";
+    font-weight: 500;
+}
+
+#logout_account_page {
+    border: none;
+    background-color: none;
+}
+
+#create_account_btn {
+    margin-top: 15px;
+    background-color: #3e6ae1;
+    padding-bottom: 15px;
+    padding-top: 8px;
+    border-radius: 8px;
+    min-width: 200px;
+    max-height: 40px;
+    min-width: 332px;
+    color:#fff;
+    font-family: "Poppins", "serif";
+    text-align: center;
+}
+
+#login_form label {
+    display: none;
+}
+
+.login_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-field {
+   min-width: 332px;
+    height: 40px;
+    margin-left: 15px;
+    border: none;
+    background-color: #f4f4f4;
+    color: #393c41;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin: 18px;
+    border-radius: 5px;
+}
+
+#login-title {
+    margin-top: 15%;
+    margin-bottom: 30px;
+    font-weight: 600;
+    margin-right: 242px;
+}
+
+#reset-account-form, #sign-up-form {
+    margin-top: 15%;
+}
+
+#reset-account-form h2 {
+    font-weight: 555;
+}
+/* User Account Page */
+#account_page_overlay {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-basis: 200px;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    margin-top: 200px;
+    position: relative;
+}
+
+.account_option_select {
+    flex: 1;
+    margin-left: 5%;
+    display: none;
+}
+
+.account_option_select div {
+    margin-bottom:40px;
+}
+
+.products_select {
+    flex:4;
+}
+
+.account_item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-basis: 50px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.account_icons {
+    margin-right: 12px; 
+    margin-bottom: 5px;
+}
+
+#my_products_overlay {
+    display: none;
+    cursor: pointer;
+}
+
+.product_card {
+    /* padding:35px; */
+    min-width: 100px;
+    max-width: 269px;
+    border: 1px solid #A9A9A9;
+    border-radius: 6px;
+    margin-left: 2%;
+    margin-top: 30px;
+    text-align: left;
+}
+
+.product_card h6 {
+    /* margin-bottom: 30px; */
+    border-bottom: 1px solid #A9A9A9;
+    padding: 35px;
+    background-color: #5D3FD3;
+    color: #fff;
+}
+
+.product_card p {
+    padding-left:8px;
+    padding-right: 10px;
+    text-align: left;
+}
+
+.product_card a {
+    color: #A9A9A9;
+}
+
+#product_catalog {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-basis: 200px;
+}
+
+.overlay {
+  /* Height & width depends on how you want to reveal the overlay (see JS below) */   
+  height: 100%;
+  width: 0;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  background-color: #fff; /* Black fallback color */
+  background-color: rgba(255,255,255, 0.9); /* Black w/opacity */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+  position: relative;
+  top: 25%; /* 25% from the top */
+  width: 100%; /* 100% width */
+  text-align: center; /* Centered text/links */
+  margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+  margin-left: 50px;
+}
+
+/* The navigation links inside the overlay */
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block; /* Display block instead of inline */
+  transition: 0.3s; /* Transition effects on hover (color) */
+}
+
+/* When you mouse over the navigation links, change their color */
+.overlay a:hover, .overlay a:focus {
+  color: #000;
+}
+
+/* Position the close button (top right corner) */
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}
+
+.product_select {
+    padding: 500px;
+}
+
+.menu_btn_nav {
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    background-color:#D3D3D3;
+    cursor: pointer;
     font-weight: 500;
 }
