@@ -1,0 +1,261 @@
+{% extends "./base.html" %}
+{% load static %}
+
+ {% block head %}
+ <title>Predictive Models</title>
+ <meta name="viewport" content="width=320,initial-scale=0.7" >
+ <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kadwa:wght@400;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block header %}
+  <nav id="nav">
+    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
+    <div class="loginSection">
+      <span  class="nav-item"><a href="{% url 'predictive_models' %}">ML Models</a></span>
+      <span  class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
+    {% if user.is_authenticated %}
+        <span class="nav-item"><a href="{% url 'chatbot' %}">Anxio</a></span>
+        <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVisual</a></span>
+        <span id="logout" class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+        <div>
+          <i class="fa-regular fa-user"></i>
+        </div>
+    {% else %}
+      <span id="login" class="nav-item"><a href="{% url 'login' %}">Login</a></span>
+      <span id="sign-up" class="nav-item"><a href="{% url 'sign_up' %}">Sign Up</a></span>
+    </div>    
+    {% endif %}
+  </nav>
+    <nav class="navSecond">
+      <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
+    <div id="overlay_nav_item" >
+      <span class="nav-item menu_btn_nav">Menu</span>
+    {% if user.is_authenticated %}
+        <span class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
+    {% endif %}
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+    <div id="myNavTop" class="overlay">
+          <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
+            <div class="overlay-content">
+                <!-- Add overlay content -->
+                <div class="account_item">
+                    <!-- Icon -->
+                    <h5><a href="{% url 'predictive_models' %}" style="text-decoration: none;">ML Models</a></h5> 
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deepneural_blog' %}">Blog</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                 <div class="account_item">
+                    <h5><a href="{% url 'chatbot' %}">Anxio</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'deep_visual' %}">DeepVision</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <div class="account_item">
+                    <h5><a href="{% url 'user_account' %}">Account Information</a></h5>
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+            </div>
+  </div>
+   <main class="model_description_content">
+     <section>
+       <h3>Model Description</h3>
+       <p>
+        The following image classification model is designed to accurately predict whether a patient 
+        has/does not have skin cancer, by analyzing various patterns across the image scans. Under the hood
+        the model uses the power convolutional neural networks (CNN's) to filter certain qualities and features
+        from the image to properly identify - depending on the changes in pixels - if a person possesses skin cancer.  
+       </p>
+       <p>
+        NOTE: The following model is meant as an assistive tool, and must NOT directly be used to produce the final 
+        verdict on a patient's condition, as it is meant to promote further evaluations upon having completed its prediction.
+       </p>
+       <ul>
+         <li><b>Developed by:</b> DeepNeural</li>
+         <li><b>Model type:</b> Image Classification</li>
+         <li><b>License:</b> MIT</li>  
+          <!--Upload image models to HuggingFace  -->
+         <li><b>Source: </b><a href="https://huggingface.co/DeepNeural/deepneural_Skin_Cancer_Detector">Skin Cancer Classifier (HuggingFace)</a></li>   
+       </ul>
+     </section>
+     <section>
+      <h3>Model Inputs</h3>
+        <p>The following model works with image based inputs, and therefore only accepts <em>jpeg</em> and <em>png</em>
+         image formats.</p>
+     </section>
+     <section>
+      <h3>How to Use the Model</h3>
+        <p>
+          To properly make use of this model, please refer to the code block below. Please note that all model files
+          can be downloaded directly from the HuggingFace hub via the hyperlink provided above.
+        </p>
+        <ol>
+          <li>
+            <p>Install TensorFlow and Keras (optional since it's embedded in TensorFlow)</p>
+          <div class="code_article">
+            <pre class="code_block">
+
+              !pip install tensorflow
+              !pip install keras
+            </pre>
+           <div class="button-float">
+            <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i>  
+          </div>
+          </div>
+          </li>
+
+          <li>
+          <p>Loading the model after installation</p>
+          <div class="code_article">
+            <pre class="code_block">
+
+             <span class="hljs-string">import</span> os
+             <span class="hljs-string">import tensorflow as tf</span>
+
+             <span class="hljs-keyword">def</span> load_skin_cancer_model():
+                <span class="hljs-string">#The path where you saved the model</span>
+                 classifier_directory = <span class="hljs-keyword">os</span>.<span class="hljs-keyword">path.</span><span class="hljs-keyword">join</span>(path, <span class="hljs-string">deepneural_Skin_Cancer_Detector.keras</span>)
+
+                 <span class="hljs-keyword">if</span> (classifier_directory):
+                 <span class="hljs-string">#if the model was found, load it</span> 
+                 <span class="hljs-keyword">try</span>:
+                    model = <span class="hljs-keyword">tf</span>.keras.models.load_model(classifier_directory)
+                        <span class="hljs-keyword">return</span> model
+                 <span class="hljs-keyword">except Exception</span>: 
+                        <span class="hljs-keyword">raise </span><span class="hljs-keyword">RuntimeError(<span class="hljs-string">"the model failed to load!"</span>)</span>
+            </pre>
+            <div class="button-float">
+            <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+            </div> 
+          </div>
+          </li>
+
+          <li>
+           <p>Alternatively (for a direct download from Hugging Face models)</p>
+           <div class="code_article">
+            <pre class="code_block"> 
+            <span class="hljs-keyword">import</span> os
+            <span class="hljs-string">os.environment["KERAS_BACKEND"] = "jax"</span>
+            <span class="hljs-keyword">import</span> keras
+
+            model = <span class="hljs-keyword">keras</span>.saving.load_model(<span class="hljs-string">"hf://DeepNeural/deepneural_Skin_Cancer_Detector"</span>)
+           </pre>
+           <div class="button-float">
+           <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+           </div> 
+          </div>                 
+          </li>
+          <li>
+
+          <p>Building the model function and making predictions</p>
+           <div class="code_article">
+            <pre class="code_block"> 
+            <span class="hljs-keyword">from</span> tensorflow.keras.preprocessing.image <span class="hljs-keyword">import </span>load_img
+            <span class="hljs-keyword">from</span> keras.preprocessing.image <span class="hljs-keyword">import </span>image
+            <span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as </span>np
+
+
+            <span class="hljs-keyword">def </span>pneumonia_classifier(<span class="hljs-string">user_image_path</span>):
+               <span class="hljs-keyword">if</span> user_image_path:
+                 <span class="hljs-keyword">model</span> = load_skin_cancer_model()
+                 <span class="hljs-keyword">skin_cancer_img</span> = load_img(<span class="hljs-string">user_image_path</span>, target_size=(224, 224))
+
+                 x = image.img_to_array(skin_cancer_img)
+                 x = np.expand_dims(x, axis=0)
+
+                 <span class="hljs-string"># predict outcome</span>
+                 image_tensor = <span class="hljs-keyword">np</span>.vstack([x])
+                 classes = <span class="hljs-keyword">model</span>.predict(image_tensor)
+                 <span class="hljs-keyword">if</span> (classes[0] > 0.5):
+                    <span class="hljs-keyword">return</span> (f<span class="hljs-string">"The following image scan is considered malignant \
+                     with a {(classes[0][0] * 100)}% confidence rate"</span>)
+                <span class="hljs-keyword">else</span>:
+                     <span class="hljs-keyword">return</span> (f<span class="hljs-string">"The following image scan is considered benign \
+                        with a <span class="hljs-keyword">{(classes[0][0] * 100)}</span>% confidence rate"</span>)
+              <span class="hljs-keyword">else</span>:
+                <span class="hljs-keyword">raise </span><span class="hljs-keyword">Exception</span>(<span class="hljs-string">"No images detected, please reupload"</span>)
+           </pre>
+           <div class="button-float">
+           <i class="fa-solid fa-clone clone_button" style="margin-left: 30px; margin-top: 10px; margin-right: 10px;"></i> 
+           </div> 
+          </div> 
+          </li>
+        </ol>
+        <script>
+          //Initially, we will initialize the contents of the code block
+          const codeBlock = document.querySelectorAll(".code_block");
+          const copyButton = document.querySelectorAll(".clone_button");
+          //Iterate through the list of code blocks
+        
+          //Create function to perform the copy action via eventlistener
+          function copyCodeBlock() {
+            return undefined; //return undefined for now
+          }
+
+         let assignAttributesToButtonsAndBlocks = function () {
+            for (let j=0; j<copyButton.length; j++) {
+                 copyButton[j].id = j+1;
+                 codeBlock[j].id = j+1; 
+            }
+         }
+
+         assignAttributesToButtonsAndBlocks(); // initialize id attributes
+         let actionListener = function () {
+          copyButton.forEach((btn) => {
+            btn.addEventListener("click", () => {
+               codeBlock.forEach((blId) => {
+                let btnId = btn.getAttribute("id");
+                if (btnId === blId.getAttribute("id")) {
+                    try {
+                      navigator.clipboard.writeText(blId.textContent);
+                    }
+                    catch(error) {
+                      console.log("Error message: " + error);
+                    }
+                    finally {
+                      if (btn.textContent === "Copied!") {
+                          btn.textContent = "";
+                      } else {
+                        //Make the text and button color go back to normal after 50 milliseconds
+                        btn.textContent = "Copied!";
+                        btn.classList.add("clone_button_trans");
+                      }
+                      setTimeout(() => {
+                          btn.textContent = "";
+                          btn.classList.remove("clone_button_trans");
+                        }, 700);
+                    }
+                }
+               });
+            });
+          });
+         }
+         actionListener();
+        </script> 
+        <script src="{% static 'neural/script.js' %}"></script>
+     </section>
+     <section>
+     <section>
+      <h3>Training Results</h3>
+      <p>Accuracy - 80%</p>
+     </section>
+   </main>
+{% endblock %}

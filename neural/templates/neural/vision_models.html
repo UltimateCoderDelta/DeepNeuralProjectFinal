@@ -48,7 +48,7 @@
      <div>
        <p style="text-align: left;">
         Leverage the power of predictive healthcare models, designed for 
-        language-based software applications, where doctors and patients alike,
+        image-based software applications, where doctors and patients alike,
         can make use of assisstive ML models for accurate diagnoses of patient
         conditions.
        </p>
@@ -90,17 +90,15 @@
           <article id="model_card" class="model_card">
             <h3 class="model_title">Pneumonia Predictor Model</h3>
             <p>
-                <b>Anxio Sentiment Analysis Model v1</b> is a chatbot model capable of detecting 
-                a user/patient's sentiment, ranging from depression, bipolar, normal or anxious.
-                Utilize or fine-tune this model for the development of similar medical applications.   
+                Predict the presence or absence of pneumonia by leveraging the power
+                of image classification.  
             </p>
           </article>
-          <article id="model_card" class="model_card">
+          <article id="model_card_skin" class="model_card">
             <h3 class="model_title">Skin Cancer Predictor Model</h3>
             <p>
-                <b>Anxio Sentiment Analysis Model v1</b> is a chatbot model capable of detecting 
-                a user/patient's sentiment, ranging from depression, bipolar, normal or anxious.
-                Utilize or fine-tune this model for the development of similar medical applications.   
+                Predict the presence or absence of skin cancer by leveraging the power
+                of image classification.   
             </p>
           </article>
     </section>
@@ -113,6 +111,7 @@
               let temp_target_name = event.target.textContent;
               if (temp_target_name === modelTitle[i].textContent) {
                  const template_name = modelTitle[i].textContent.trim().replace(/\s+/g, "_").toLowerCase();
+                 console.log(template_name);
                  window.location.href = `${template_name}/`;
               }
            });
