@@ -351,3 +351,9 @@ def vision_models(request):
 
 def sentiment_analysis_model(request):
    return render(request, "neural/sentiment_analysis_model.html")
+
+def pneumonia_predictor_model(request):
+   return render(request, "neural/image_classification_models_pneumonia.html")
+
+def skin_cancer_predictor_model(request):
+   return render(request, "neural/image_classification_models_skin_cancer.html")

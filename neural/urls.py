@@ -33,7 +33,11 @@ urlpatterns = [
     path("user_account/", views.user_account, name="user_account"),
     path("textual_models/", views.textual_models, name="textual_models"),
     path("vision_models/", views.vision_models, name="vision_models"),
-    path("sentiment_analysis_model", views.sentiment_analysis_model, name="sentiment_analysis")
+    path("sentiment_analysis_model", views.sentiment_analysis_model, name="sentiment_analysis"),
+    path("vision_models/pneumonia_predictor_model/", views.pneumonia_predictor_model, name="pneumonia_predictor_model"),
+    path("vision_models/skin_cancer_predictor_model/", views.skin_cancer_predictor_model, name="skin_cancer_predictor_model"),
+
+
 ]
 
 # if settings.DEBUG:

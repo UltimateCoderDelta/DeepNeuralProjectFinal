@@ -78,8 +78,8 @@ def pneumonia_classifier(user_image_path):
       model = get_pneumonia_model()
 
       #Load the user image from path returned by user
-      skin_cancer_img = load_img(user_image_path, target_size=(28, 28), color_mode="grayscale")
-      x = image.img_to_array(skin_cancer_img)
+      pneumonia_img = load_img(user_image_path, target_size=(28, 28), color_mode="grayscale")
+      x = image.img_to_array(pneumonia_img)
       x = np.expand_dims(x, axis=0)
 
       #Predict outcome
