@@ -162,6 +162,11 @@ p {
 }
 
 #task-selection {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-basis: 100px;
+    min-width: 250px;
     background-color: #1E1E1E;    
     border-radius: 12px;    
     top: 50%;

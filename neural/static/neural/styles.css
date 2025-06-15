@@ -17,6 +17,23 @@ background-size: cover;
 filter: grayscale(60%);
 }
 
+.model_banners {
+    display: flex;
+    margin-top: 80px;
+    align-items:center;
+    flex-direction: column;
+    padding:15px;
+    flex-wrap: nowrap;
+    flex-basis: 100px;
+    border-bottom: solid 1px #A9A9A9;
+    padding-bottom: 10px;
+}
+
+.model_banners p {
+    max-width: 500px;
+    text-align: left;
+}
+
 #nav, .navSecond {
     display: flex;
     justify-content:space-evenly;
@@ -109,9 +126,9 @@ filter: grayscale(60%);
 .mission_section {
     width: 100%;
     color: #fff;
-    padding-bottom: 10%;
+    padding-bottom: 80px;
     border-bottom: solid 1px #A9A9A9;
-    /* flex:1; */
+    flex:1;
 }
 
 .mission_section p {
@@ -176,12 +193,8 @@ filter: grayscale(60%);
     font-size: 15px;
     font-weight: 600;
     border-color:#D3D3D3;
+    cursor: pointer;
 }
-
-/* #btn1:hover, #btn2:hover, #btn3:hover {
-    background-color: #fff;
-    transition: background-color ease-in 0.2s;
-} */
 
 #card_text {
    margin-top: 150px;
@@ -190,7 +203,6 @@ filter: grayscale(60%);
 .company_info {
     display: flex;
     justify-content: space-evenly;
-    align-items: flex-start;
     flex-direction: row;
     flex-wrap: nowrap;
     height: 400px;
@@ -200,7 +212,7 @@ filter: grayscale(60%);
 
 .info_cards h3 {
     width: 230px;
-    font-weight: 200;
+    font-weight: 200;   
 }
 
 .info_cards_span {
@@ -217,11 +229,10 @@ filter: grayscale(60%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     padding-bottom: 10%;
     max-height: 350px;
 }
-
 
 .blog_description {
    display: flex;
@@ -300,9 +311,9 @@ filter: grayscale(60%);
     margin-left:0%;
     margin-right: 0%;
     margin-top: 100px;
-    margin-bottom: 200px;
+    margin-bottom: 30px;
     width: 400px;
-    height: 350px;
+    height: 50%;
     padding: 12px;
     /* cursor: pointer; */
  }
@@ -476,10 +487,11 @@ filter: grayscale(60%);
     justify-content: flex-start;
     text-align: left;
     margin-left:10%;
+    margin-top: 80px;
 }
 
 .model_description_content p {
-    max-width: 50%;
+    max-width: 70%;
     max-height: auto;
 }
 
@@ -491,9 +503,23 @@ filter: grayscale(60%);
    overflow-x: auto;
    scrollbar-width: thin;
    border-radius: 12px;
-   min-width: 60px;
-   max-width: 650px;
+   min-width: 50%;
+   max-width: 65%;
 }
+
+.code_block {
+    white-space: pre-line;
+    margin-left:10px;
+    padding:15px;
+    width: auto;
+    flex-shrink:2;
+}
+
+/* pre {
+  white-space: pre-wrap;
+  max-width: 100%;
+  height: auto;
+} */
 
 .clone_button_trans {
     transition: color ease-in 0.2s;

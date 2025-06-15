@@ -13,78 +13,21 @@
 {% endblock %}
 
 {% block header %}
-  <nav id="nav">
-    <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
-    <!-- <span class="nav-item"><img class="logo" src="/static/deepneural/DeepNeural.png"></span> -->
-    <div class="loginSection">
-      <span  class="nav-item"><a href="{% url 'predictive_models' %}">ML Models</a></span>
-      <span  class="nav-item"><a href="{% url 'deepneural_blog' %}">Blog</a></span>
-    {% if user.is_authenticated %}
-        <span class="nav-item"><a href="{% url 'chatbot' %}">Anxio</a></span>
-        <span class="nav-item"><a href="{% url 'deep_visual' %}">DeepVisual</a></span>
-        <span id="logout" class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
-        <div>
-          <i class="fa-regular fa-user"></i>
-        </div>
-    {% else %}
-      <span id="login" class="nav-item"><a href="{% url 'login' %}">Login</a></span>
-      <span id="sign-up" class="nav-item"><a href="{% url 'sign_up' %}">Sign Up</a></span>
-    </div>    
-    {% endif %}
-  </nav>
-    </nav>
-      <nav class="navSecond">
-      <span class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static '/neural/DeepNeural_Logo_Main.png'%}"></a></span>
-    <div id="overlay_nav_item" >
-      <span class="nav-item menu_btn_nav">Menu</span>
-    {% if user.is_authenticated %}
-        <span class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
-    {% endif %}
-    </div>
-  </nav>
-  <section>
-    <div class="blog_title">
+     {% include './navbar.html' %}
+  <section >
+    <div class="model_banners">
      <h2>Medical Vision Models</h2>
-     <div>
-       <p style="text-align: left;">
+       <p>
         Leverage the power of predictive healthcare models, designed for 
         image-based software applications, where doctors and patients alike,
         can make use of assisstive ML models for accurate diagnoses of patient
         conditions.
        </p>
-     </div>
     </div>
   </section>
 {% endblock %}
 
 {% block content %}
-  <div id="myNavTop" class="overlay">
-          <a href="javascript:void(0)" class="closebtn", onclick="closeNavTop()">&times;</a>
-            <div class="overlay-content">
-                <!-- Add overlay content -->
-                <div class="account_item">
-                    <!-- Icon -->
-                    <h5><a href="{% url 'predictive_models' %}" style="text-decoration: none;">ML Models</a></h5> 
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </div>
-                <div class="account_item">
-                    <h5><a href="{% url 'deepneural_blog' %}">Blog</a></h5>
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </div>
-                 <div class="account_item">
-                    <h5><a href="{% url 'chatbot' %}">Anxio</a></h5>
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </div>
-                <div class="account_item">
-                    <h5><a href="{% url 'deep_visual' %}">DeepVision</a></h5>
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </div>
-                <div class="account_item">
-                    <h5><a href="{% url 'user_account' %}">Account Information</a></h5>
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </div>
-            </div>
-  </div>
 <main>
     <section class="model_categorization">
           <article id="model_card" class="model_card">
@@ -121,7 +64,6 @@
 </main>
 
 {% endblock  %}
-
 
 {% block footer %}
 <section class="company_info">

@@ -3,6 +3,7 @@ deepsite/settings.py
 .venv/
 neural/visualizations
 deepsite/neural/__pycache__
+DeepNeuralProjectFinal\neural\visualizations
 neural/ml_models
 neural/media
 media
