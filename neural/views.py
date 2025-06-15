@@ -4,7 +4,6 @@ from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserIma
      ProductListCards 
 from django.urls import reverse
 from .forms import UploadFileForm,CustomUserCreationForm
-import requests
 import json
 import pandas as pd
 from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier, sentiment_classifier
@@ -14,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from django.contrib.auth import login
+
 
 
 # Create your views here.
@@ -151,13 +151,6 @@ def upload_file(request):
     return render(request, "neural/file-uploader.html", {'form': form})
 
 
-#Working with class-based views here
-class PostDocument(APIView):
-    def post(self, request):
-        response_data = {"user": "request"}
-        return Response("POST TESTING")
-
-
 @api_view(['POST'])
 def post_user_document(request):
     """
@@ -280,7 +273,7 @@ def get_user_classification_pneumonia(request):
 
 
 @api_view(['POST'])
-def post_user_sentiment(request):
+def  post_user_sentiment(request):
     """
     This function will allow the user to post their
     sentiment, which will be accessed by a seperate view
@@ -289,7 +282,7 @@ def post_user_sentiment(request):
        #We expect a JSON object
        try:
           user_data = request.data.get("sentiment")
-          if not user_data:
+          if len(user_data) < 1:
             raise ValueError("The sentiment text provided is empty!")
          #Post the as JSON to the database
           user_document = UserPostSentiment.objects.create(sentiment={'user_statement': user_data})
