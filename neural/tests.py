@@ -68,7 +68,9 @@ class TestAIModelsMethods(unittest.TestCase):
                                  {"file": image})
                 self.assertEqual(response.status_code, 201)
 
-      def test_user_pneumonia_post_for_valid_image(self):
+      #Make sure to add a valid get request test for the image model here as well
+
+      def test_user_pneumonia_post_for_invalid_image(self):
           model_path = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_pneumonia_detector_v1.keras')
           image_path = os.path.join(settings.BASE_DIR, 'media/neural', 'false_path')
           if not os.path.exists(model_path):
@@ -76,6 +78,7 @@ class TestAIModelsMethods(unittest.TestCase):
               response = self.client.post("/neural/classification_upload_pneumonia/", 
                                  {"file": image_path})
               self.assertEqual(response.status_code, 400)
+
 
     #Test user summarization request for passes and failures
       def test_post_user_document_request(self):
@@ -87,9 +90,13 @@ class TestAIModelsMethods(unittest.TestCase):
           response = self.client.get("/neural/chatbot_summary/")
           self.assertEqual(response.status_code, 200)
 
-      
-      
+    #   Write a test to ensure a user's texts are greater than 30 characters
 
+      def test_user_document_greater_than_thirty(self):
+          pass
+    #Test that  the database properly registers new users
+      def test_user_is_found_database(self):
+          pass
       
 
 
