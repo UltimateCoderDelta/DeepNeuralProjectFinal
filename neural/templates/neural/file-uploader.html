@@ -1,9 +1,65 @@
     {% load static %}
      <link type="text/css" href="{% static '/neural/styles.css' %}" rel="stylesheet">
-      <form action=""  method="post" enctype="multipart/form-data" class="user-form-data">
-        {% csrf_token %}
-        <div>
-        {{form}}
-        </div>
-         <input id="submit-button" type="submit" value="Upload" >
-      </form>
+     <section class="login_form">
+        <form action=""  method="post" enctype="multipart/form-data" class="sign-up">
+          {% csrf_token %}
+            <!-- {{form}} -->    
+          <div class="form-group" id="label">
+            <label for="label" class="form-labels">Label</label>
+            <div>
+              <input type="text" name="label" maxlength=50 required />
+            </div>
+          </div>    
+          <div class="form-group" id="data" style="display:none;">
+            <label for="x_Axis_data" class="form-labels" style="margin-bottom: 15px;">Data</label>
+            <div>
+              <input type="text" name="x_Axis_data" maxlength=50/>
+            </div>
+          </div>
+          <label for="csv_file" class="form-labels">Upload File</label>
+            <div class="form-group">
+              <input value="Select File" type="file" accept=".csv" name="csv_file" required />
+            </div>
+            <!-- Select the type of upload (quantitative or qualitative) -->
+          <label>Select Visualization Type</label>
+            <div class="form-group">
+              <fieldset>
+                  <div>
+                    <label for="select-display">Qualitative Chart</label>
+                    <input  type="radio" id="qualitative" value="qualitative" name="select-display" checked/>
+                  </div>
+                  <div>
+                    <label for="select-display">Quantitative Chart</label>
+                    <input id="quantitative" type="radio" value="quantitative" name="select-display"/>
+                </div>
+              </fieldset>
+            </div>
+          <input id="update-buttons" type="submit" value="Upload">
+        </form>
+      </section>
+   <script>
+     const qualitativeSelection = document.getElementById("qualitative");
+     const quantitativeSelection = document.getElementById("quantitative");
+     const dataField = document.getElementById("data");
+     const labelField = document.getElementById("label");
+
+
+     //Add action listener for each selector
+     qualitativeSelection.addEventListener("change", (e) => {
+       e.preventDefault();
+        //if the checkbox has been checked, then remove data field
+        if (qualitativeSelection.checked) {
+           dataField.style.display = "none";
+        }
+     });
+     quantitativeSelection.addEventListener("change", (e) => {
+       e.preventDefault();
+        //if the checkbox has been checked, then remove data field
+        if (quantitativeSelection.checked) {
+           //Clear the qualitative checkbox if wasn't cleared already
+           qualitativeSelection.setAttribute("checked", false);
+           dataField.style.display = "block";
+        }
+     });
+
+   </script>

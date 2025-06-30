@@ -1,6 +1,7 @@
 const primaryNav = document.getElementById("nav");
 const secondNav = document.querySelector(".navSecond");
 const overlayNavItem = document.getElementById("overlay_nav_item");
+const login = document.getElementById("login");
 
 function openNavTop() {
         document.getElementById("myNavTop").style.width = "100%";

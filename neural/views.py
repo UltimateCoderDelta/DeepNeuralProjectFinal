@@ -2,18 +2,21 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment,\
      ProductListCards 
-from django.urls import reverse
-from .forms import UploadFileForm,CustomUserCreationForm
+from django.urls import reverse_lazy
+from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm
 import json
 import pandas as pd
 from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier, sentiment_classifier
 import rest_framework 
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from django.contrib.auth import login
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.views.generic.edit import UpdateView
+from django.core.mail import  EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.contrib.auth import logout
 
 
 # Create your views here.
@@ -67,6 +70,10 @@ def deepneural_blog(request):
     }
     return render(request, "neural/deepneural_blog.html", context)
 
+def logout_form(request):
+    logout(request)
+    return redirect("home")
+
 def deepneural_blog_one(request):
     return render(request, "neural/deepneural_intro.html")
 
@@ -86,6 +93,7 @@ def heart_disease_model_desc(request):
 def diabetes_health_indicator(request):
     return render(request, "neural/diabetes_health_indicator.html")
 
+@login_required(login_url="login_form")
 def health_chatbot_pagination(request):
     return render(request, "neural/chatbot.html") 
 
@@ -93,6 +101,7 @@ def handle_dataframe(df):
     features_list = [feature for feature in df.columns]
     return features_list
 
+@login_required(login_url="login_form")
 def deep_visual(request):
     """
     Function purpose: It obtains a Pandas dataframe,
@@ -130,8 +139,10 @@ def deep_visual(request):
 #Handle the uploaded file with pandas and do what must be done
 def handle_uploaded_file(file=None):
     df = pd.read_csv(file)
+    df.columns = df.columns.str.lower()
     return df
 
+@login_required(login_url="login_form")
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -141,8 +152,8 @@ def upload_file(request):
            except Exception as e:
                HttpResponse(f'Error: {e}')
            else:
-            request.session['data'] = form.cleaned_data['x_Axis_data'] #Gather the data feature name
-            request.session['label'] = form.cleaned_data['label'] #Gather the label feature name
+            request.session['data'] = form.cleaned_data['x_Axis_data'].lower() #Gather the data feature name
+            request.session['label'] = form.cleaned_data['label'].lower() #Gather the label feature name
             
             request.session['converted_csv'] = df.to_json() #attempt without converting to JSON
             return HttpResponseRedirect("deep_visual")
@@ -158,7 +169,7 @@ def post_user_document(request):
     data, which will be accessed by a seperate view
     """ 
     if request.method == "POST":
-       #We expect a JSON object
+       #We expect a JSON object 
        try:
           user_data = request.data.get("document")
           if not user_data:
@@ -179,7 +190,7 @@ def get_user_summary(request):
        #Then summarize the data and return it
        try:
          #Get the user data from the database instead
-          user_data = UserPostDocumentation.objects.first() #returns JSON data
+          user_data = UserPostDocumentation.objects.last() #returns JSON data
           field_object = UserPostDocumentation._meta.get_field(field_name)
           field_value = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
@@ -219,7 +230,7 @@ def get_user_classification(request):
        #Then predict the image result
        try:
          #Get the user data from the database instead
-          user_data = UserImagePost.objects.filter(model_name="skin_class").first() #returns JSON data
+          user_data = UserImagePost.objects.filter(model_name="skin_class").last() #returns JSON data
           image_path = user_data.image.path
         #   user_image = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
@@ -258,7 +269,7 @@ def get_user_classification_pneumonia(request):
        #Then predict the image result
        try:
          #Get the user data from the database instead
-          user_data = UserImagePostPneumonia.objects.filter(model_name="pneumonia").first()
+          user_data = UserImagePostPneumonia.objects.filter(model_name="pneumonia").last()
           image_path = user_data.image.path
         #   user_image = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
@@ -285,7 +296,7 @@ def  post_user_sentiment(request):
           if len(user_data) < 1:
             raise ValueError("The sentiment text provided is empty!")
          #Post the as JSON to the database
-          user_document = UserPostSentiment.objects.create(sentiment={'user_statement': user_data})
+          user_document = UserPostSentiment.objects.create(sentiment={'user_statement': user_data}) #Might add it to a dict instead
           user_document.save()
           return Response({"statement": user_data}, status=status.HTTP_201_CREATED)
        except Exception as e:
@@ -298,7 +309,7 @@ def get_user_sentiment(request):
        #Then develop the sentiment for the text
        try:
          #Get the user data from the database instead
-          user_data = UserPostSentiment.objects.first() #returns JSON data
+          user_data = UserPostSentiment.objects.last() #returns JSON data
           field_object = UserPostSentiment._meta.get_field(field_name)
           field_value = getattr(user_data, field_object.attname)
           # Convert the JSON data to a string
@@ -314,26 +325,77 @@ def get_user_sentiment(request):
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+def login_form(request):
+    return render(request, "/registration/login.html")
+    
 # Creating user accounts
 def sign_up(request):
    if request.method == 'POST':
       #If the request is a post request, gather the json value from the request
       form = CustomUserCreationForm(request.POST)
       if form.is_valid(): #If the form is valid
-        user = form.save()
-        login(request, user)
-        return redirect(reverse("home")) #Redirect the user to the welcome page 
+         form.save()
+        # login(request, user)
+         return redirect(reverse_lazy("login_form")) #Redirect the user to the welcome page 
    else:
       form = CustomUserCreationForm()
    return render(request, "neural/user_signup.html", {"form": form})
 
 #User accounts page
+@login_required(login_url="login_form")
 def user_account(request):
    products = ProductListCards.objects.all()
    context = {
     "account_products": products,
     }
    return render(request, "neural/account_page.html", context)
+
+@login_required(login_url="login_form")
+def user_account_privacy(request):
+   return render(request, "neural/account_privacy.html")
+
+@login_required(login_url="login_form")
+def user_delete_account(request):
+    #After a confirmation form, delete user
+    if request.method == 'POST':
+        form = UserDeletionConfirmation(request.POST)
+        if form.is_valid():
+           try:
+              confirmation = form.cleaned_data["confirm_deletion"]
+           except Exception as e:
+               HttpResponse(f'Error: {e}')
+           else:
+             if confirmation == "delete_account":
+              #If the value is delete_account, delete the user account associated with the current user
+              request.user.delete()
+              return redirect("home")        
+    else:
+        form = UserDeletionConfirmation()
+    return render(request, "neural/deletion_confirmation.html", {'form': form})
+
+
+@login_required(login_url="login_form")
+def user_account_settings(request):
+    current_user = request.user
+    user_current = {
+       "username":current_user.username,
+    #    "name": current_user.full_name,
+       "last_login":current_user.last_login,
+       "date_joined": current_user.date_joined,
+       "email": current_user.email,
+       "id": current_user.id,
+    }
+
+    return render(request, "neural/account_settings.html", user_current)
+
+@login_required(login_url="login_form")
+def user_account_security(request):
+    current_user = request.user
+    user_current = {
+       "email": current_user.email,
+       "id": current_user.id,
+    }
+    return render(request, "neural/account_security.html", user_current)
 
 def textual_models(request):
     return render(request, "neural/textual_models.html")
@@ -350,3 +412,95 @@ def pneumonia_predictor_model(request):
 
 def skin_cancer_predictor_model(request):
    return render(request, "neural/image_classification_models_skin_cancer.html")
+
+@login_required(login_url="login_form")
+def password_reset(request):
+    #After a confirmation form, delete user
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+           try:
+              user_email = form.cleaned_data["email"]
+              if user_email == "":
+                 raise ValueError("Email is empty!")
+              print(user_email)
+           except Exception as e:
+               HttpResponse(f'Error: {e}')
+           else:
+                # #If email is not empty send the reset link
+                text_content = render_to_string(
+                "../templates/email/email_content.txt",
+                )
+
+                html_content = render_to_string(
+                "neural/deletion_confirmation.html"
+                )
+
+                msg = EmailMultiAlternatives(
+                "DeepNeural Password Change Request",
+                text_content,
+                user_email,
+                ["deepneuralgeneral@gmail.com"]
+                )
+
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
+            #Redirect to login page
+                return redirect("account_settings")        
+    else:
+        form = ForgotPasswordForm()
+    return render(request, "registration/password_reset_form.html", {'form': form})
+
+# def password_reset(request):
+#    if request.method == "POST":
+#       form = ForgotPasswordForm()
+#       if form.is_valid():
+#          #Perform actions for the valid form
+#          try:
+#             user_email = form.cleaned_data["email"]
+#             if user_email == "":
+#                raise ValueError("The email must not be empty!")
+#          except Exception as e:
+#             HttpResponse(f'Error: {e}')
+#          else:
+#             #If email is not empty send the reset link
+#             text_content = render_to_string(
+#                "neural/email/email_content.txt",
+#             )
+
+#             html_content = render_to_string(
+#                "neural/deletion_confirmation.html"
+#             )
+
+#             msg = EmailMultiAlternatives(
+#                "DeepNeural Password Change Request",
+#                text_content,
+#                user_email,
+#                ["deepneuralgeneral@gmail.com"]
+#             )
+
+#             msg.attach_alternative(html_content, "text/html")
+#             msg.send()
+
+#             #Redirect to login page
+#             return redirect("home") 
+
+#       else:
+#          form = ForgotPasswordForm()
+
+#       return render(request, "registration/password_reset_form.html", {'form': form})
+
+#User settings update class-based views
+class UpdateUsername(UpdateView):
+   model = User
+   fields = ["username"]
+   template_name = 'neural/username_update_form.html'
+   success_url = reverse_lazy('user_account')
+
+class UpdateEmail(UpdateView):
+   model = User
+   fields = ["email"]
+   template_name = 'neural/email_update_form.html'
+   success_url = reverse_lazy('user_account')
+

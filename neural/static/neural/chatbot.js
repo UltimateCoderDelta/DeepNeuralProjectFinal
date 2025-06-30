@@ -437,7 +437,7 @@
             if (document === undefined) {
                 throw new Error("The document is empty!");
             }
-                await fetch(`https://deepneural.pythonanywhere.com/neural/${checkpoint}/`, {
+                await fetch(`http://localhost:8000/neural/${checkpoint}/`, {
                     method: "POST",
                     headers: {
                       'Content-Type': 'application/json',
@@ -478,7 +478,7 @@
           // return the summarized data to the user
         const getUserDocument = async (key, checkpoint) => {
           try {
-            const response = await fetch(`https://deepneural.pythonanywhere.com/neural/${checkpoint}/`);
+            const response = await fetch(`http://localhost:8000/neural/${checkpoint}/`);
             if (response.ok) {
               const jsonResponse = await response.json();
               //returns a JavaScript object with the summary

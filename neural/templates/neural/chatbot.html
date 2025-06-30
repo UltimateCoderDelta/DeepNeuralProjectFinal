@@ -21,7 +21,6 @@
   <span  class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Main_Gray.png'%}"></a></span>
   {% if user.is_authenticated %}
    <div style="display:flex;">
-    <span class="nav-item"><a>{% include "registration/_logout.html" %}</a></span>
     <span class="nav-item"><a href="{% url 'user_account' %}"><i class="fa-regular fa-user"></i></a></span>
   </div>
   {% endif %}
