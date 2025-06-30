@@ -34,29 +34,43 @@
 {% endblock %}
 
 {% block content %}
-   <main>
+   <main style="display: flex; flex-direction: column; justify-content: space-evenly;">
+     <div id="chart-selector-primary">
+       <div>
+          <label for="chart-selector" style="margin-right: 12px;">Frequency Charts</label>
+          <input type="radio" id="qualitative" name="chart-selector" checked/>
+       </div>
+       <div>
+          <label for="chart-selector" style="margin-right: 12px;">Quantitative Charts</label>
+          <input type="radio" id="quantitative" name="chart-selector"/>
+       </div>
+     </div>
+     <div>
       <section id="chart_selector_parent">
-        <h3>Frequency Charts</h3>
-        <section id="frequency_charts" class="chart_selector">    
-          <article id="bar_example" class="example_chart">   
-            <h4>Bar Chart</h4>
-            <canvas id="bar_exam_canva" class="canva_example"></canvas>
-          </article>
-          <article id="line_example" class="example_chart">
-            <h4>Line Chart</h4>
-            <canvas id="line_exam_canva" class="canva_example"></canvas>
-          </article>
-            <article id="pie_example" class="example_chart">
-                  <h4>Pie Chart</h4>
-                  <canvas id="pie_exam_canva" class="canva_example"></canvas>
-            </article>
-            <article id="polar_example" class="example_chart">
-              <h4>Polar Area Chart</h4>
-              <canvas id="polar_pie_exam_canva" class="canva_example"></canvas>
-            </article>
-        </section>
+        <div id="frequency_charts">
+            <h3>Frequency Charts</h3>
+            <section class="chart_selector">    
+              <article id="bar_example" class="example_chart">   
+                <h4>Bar Chart</h4>
+                <canvas id="bar_exam_canva" class="canva_example"></canvas>
+              </article>
+              <article id="line_example" class="example_chart">
+                <h4>Line Chart</h4>
+                <canvas id="line_exam_canva" class="canva_example"></canvas>
+              </article>
+                <article id="pie_example" class="example_chart">
+                      <h4>Pie Chart</h4>
+                      <canvas id="pie_exam_canva" class="canva_example"></canvas>
+                </article>
+                <article id="polar_example" class="example_chart">
+                  <h4>Polar Area Chart</h4>
+                  <canvas id="polar_pie_exam_canva" class="canva_example"></canvas>
+                </article>
+            </section>
+        </div>  
+       <div id="quantitative_charts" style="display:none;">
         <h3>Quantitative Charts</h3>
-        <section id="quantitative_charts" class="chart_selector">
+        <section class="chart_selector">
           <article id="scatter_example" class="example_chart">
             <h4>Scatter Chart</h4>
             <canvas id="scatter_exam_canva" class="canva_example_quand"></canvas>
@@ -75,7 +89,8 @@
             <canvas id="histquant_exam_canva" class="canva_example_quand"></canvas>
           </article>
         </section> 
-       </section>
+      </div>
+    </section>
 
       <div id="user-chart-selector" style="display: none;">
            <canvas id="pie-chart" style="max-width: 70%; max-height: 600px; margin-right: 5%;"></canvas>
@@ -102,7 +117,33 @@
         </script>
     </script>
   <script src="{% static 'neural/deepvisual.js' %}"></script>
-  <script src="{% static 'neural/script.js' %}"></script>           
+  <script src="{% static 'neural/script.js' %}"></script>  
+  
+  <script>
+     const qualitativeSelection = document.getElementById("qualitative");
+     const quantitativeSelection = document.getElementById("quantitative");
+     const frequencyCharts = document.getElementById("frequency_charts");  
+     const quantitativeCharts = document.getElementById("quantitative_charts");  
+  
+     //Add action listener for each selector
+     qualitativeSelection.addEventListener("change", (e) => {
+       e.preventDefault();
+        //if the checkbox has been checked, then remove data field
+        if (qualitativeSelection.checked) {
+             frequencyCharts.style.display = "block";
+             quantitativeCharts.style.display = "none";
+        }
+     });
+     quantitativeSelection.addEventListener("change", (e) => {
+       e.preventDefault();
+        //if the checkbox has been checked, then remove data field
+        if (quantitativeSelection.checked) {
+           //Clear the qualitative checkbox if wasn't cleared already
+           frequencyCharts.style.display = "none";
+           quantitativeCharts.style.display = "block";
+        }
+     });
+   </script>
 </main>
 {% endblock %}
 

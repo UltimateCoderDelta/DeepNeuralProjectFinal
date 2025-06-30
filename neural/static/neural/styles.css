@@ -37,6 +37,7 @@ filter: grayscale(60%);
 #nav, .navSecond {
     display: flex;
     justify-content:space-evenly;
+    align-items: flex-start;
     /* align-items:center; */
     margin:0;
     padding:18px;
@@ -626,6 +627,7 @@ pre {
     /* border-right: solid 1px #101623; */
     padding:15px;
     max-height: 300px;
+    min-width: 300px;
 }
 
 .example_chart:hover {
@@ -727,6 +729,10 @@ pre {
     -o-transition: All 0.5s ease-in;
 }
 
+.sign-up {
+    margin-top: 120px;
+}
+
 .sign-up input {
     max-width: 400px;
     min-width: 332px;
@@ -738,17 +744,14 @@ pre {
     border-radius: 5px;
 }
 
-.sign-up label {
 
-}
-
-.loginSection {
+/* .loginSection {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
     flex-basis: 200px;
-}
+} */
 
 #logout, #login, #sign-up {
     background-color: #3e6ae1;
@@ -760,6 +763,28 @@ pre {
     color:#fff;
     font-family: "Poppins", "serif";
     font-weight: 500;
+}
+
+#login a , #sign-up a {
+    color:#fff;
+}
+
+.form-labels{
+    margin-right: 50%;
+}
+
+#update-buttons {
+    background-color: #3e6ae1;
+    border-radius: 6px;
+    border: none;
+    max-width: 400px;
+    min-width: 332px;
+    text-align: center;
+    color:#fff;
+    font-family: "Poppins", "serif";
+    font-weight: 500;
+    margin-top: 15px;
+    cursor: pointer;
 }
 
 #logout_account_page {
@@ -791,6 +816,14 @@ pre {
     align-items: center;
 }
 
+/* .update_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 50%;
+} */
+
 .input-field {
    min-width: 332px;
     height: 40px;
@@ -799,6 +832,19 @@ pre {
     background-color: #f4f4f4;
     color: #393c41;
     border-radius: 5px;
+}
+
+#chart-selector-primary{
+    display: flex;
+    margin:20px 40px 30px 30px;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+     
+input[type="radio"] {
+    width: 20px;
+    height: 20px;
 }
 
 .form-group {
@@ -853,11 +899,21 @@ pre {
     flex-basis: 50px;
     align-items: center;
     justify-content: flex-start;
+    min-width: 250px;
 }
 
 .account_icons {
     margin-right: 12px; 
     margin-bottom: 5px;
+}
+
+.overlay-products {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-basis: 100px;
+    min-width: 800px;
 }
 
 #my_products_overlay {
@@ -968,4 +1024,25 @@ pre {
     background-color:#D3D3D3;
     cursor: pointer;
     font-weight: 500;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top:2.5em;
+}
+
+.account-data {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top:2.5em;
+    min-width: 50%;
+}
+
+.account-element {
+    margin-bottom: 30px;
 }

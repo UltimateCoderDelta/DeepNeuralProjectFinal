@@ -1,8 +1,5 @@
 from django import forms
-import pandas as pd
-
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.forms.widgets import PasswordInput, TextInput #Represents an HTML widget
 
 class UploadFileForm(forms.Form):
       label = forms.CharField(max_length=100)
@@ -46,3 +43,17 @@ class UserSignupForm(forms.Form):
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ("email",)
+
+
+class UserDeletionConfirmation(forms.Form):
+      confirm_deletion = forms.CharField(max_length=20)
+
+      def __str__(self):
+           return self.confirm_deletion
+      
+class ForgotPasswordForm(forms.Form):
+      email = forms.EmailField(max_length=50)
+
+      def __str__(self):
+          return self.confirm_deletion
+

@@ -317,6 +317,7 @@ const labels = ['January', 'February', 'March', 'April'];
         const quantConfigFiles = [scatterExampleConfig, lineExampleQuantConfig, BubbleChartQuantConfig, histogramChartQuantConfig];
         const canvaCharts = document.querySelectorAll(".canva_example");
         const canvaChartsQuand = document.querySelectorAll(".canva_example_quand");
+        const chartSelectorMain = document.getElementById("chart-selector-primary");
 
         
         //TO DO: Move to the end of the script later
@@ -345,8 +346,10 @@ const labels = ['January', 'February', 'March', 'April'];
         var chartPicked = '';
         plotsFrequencyObjects.forEach((plot) => {
           plot.addEventListener('click', function(e) {
+          e.preventDefault();
           chartPicked = e.target.id; 
           plotsForSelectionList.forEach((chart, index) => {
+              chartSelectorMain.style.display = "none";
               if (chartPicked === chart) {
                 userChartSelector.style.display = 'flex';
                 chartElements.style.display = 'none';
@@ -392,7 +395,7 @@ const labels = ['January', 'February', 'March', 'April'];
                  }     
                 } //End of main object if statement
                 else {
-                  window.location.href = "{% url 'file_uploader' %}"; 
+                  window.location.href = "/neural/file_uploader/"; 
                 }
               } 
               else { //Check if this else statement makes logical sense
@@ -408,6 +411,7 @@ const labels = ['January', 'February', 'March', 'April'];
           chartPickedQuant = e.target.id; 
           plotsForQuantSelectionList.forEach((chart, index) => {
               if (chartPickedQuant === chart) {
+                chartSelectorMain.style.display = "none";
                 userChartSelector.style.display = 'flex';
                 chartElements.style.display = 'none';
                 chartSelectionConst.style.display = "block";
@@ -450,7 +454,7 @@ const labels = ['January', 'February', 'March', 'April'];
                  }     
                 } else {
                   //Create a new form for numerical data only to fix bugs
-                  window.location.href = "{% url 'file_uploader' %}"; 
+                  window.location.href = "/neural/file_uploader/"; 
                 }
               } 
               else { //Check if this else statement makes logical sense
@@ -462,17 +466,18 @@ const labels = ['January', 'February', 'March', 'April'];
 
       //Add an event listener to the change dataset button
     changeDatasetbtn.addEventListener("click", ()=> {
-          window.location.href = "{% url 'file_uploader' %}"; 
+          window.location.href = "/neural/file_uploader/"; 
       });
 
     changeDatasetbtnQuant.addEventListener("click", ()=> {
-          window.location.href = "{% url 'file_uploader' %}"; 
+          window.location.href = "/neural/file_uploader/"; 
       }); 
 
     chartSelectionSign.addEventListener("click", () => {
-         window.location.href = "{% url 'deep_visual' %}";
+         //Add a timeout before changing screens
+        window.location.href = "/neural/file_uploader/deep_visual/";
     });
 
     chartSelectionConst.addEventListener("click", () =>{
-         window.location.href = "{% url 'deep_visual' %}";
+         window.location.href = "/neural/file_uploader/deep_visual/";
     });   

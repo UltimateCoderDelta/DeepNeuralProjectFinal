@@ -24,25 +24,24 @@
     <main id="account_page_overlay">
         <section id="account_side_info" class="account_option_select">
             <!-- General account options i.e. settings, logout, etc. -->   
-            <div class="account_item">
-                <!-- Icon -->
-                 <i class="fa-solid fa-house account_icons"></i>
-                 <h5><a href="{% url 'user_account' %}" style="text-decoration: none; color: #000;">My products</a></h5> 
-             </div>
              <div class="account_item">
                 <i class="fa-regular fa-user account_icons"></i>
                 <h5><a href="{% url 'account_settings' %}" style="text-decoration: none; color: #000;">Account Information</a></h5>
              </div>
               <div class="account_item">
-                <h5><a href="{% url 'logout' %}" style="text-decoration: none; color: #000;">Sign Out</a></h5>
-                <i class="fa-solid fa-arrow-right-from-bracket" style="margin-left:15px;"></i>
+                <i class="fa-solid fa-shield-halved account_icons"></i>
+                <h5><a href="{% url 'account_security' %}" style="text-decoration: none; color: #000;">Security</a></h5>
+             </div>
+             <div class="account_item">
+                <i class="fa-solid fa-unlock-keyhole account_icons"></i>
+                <h5><a href="{% url 'account_privacy' %}" style="text-decoration: none; color: #000;">Data & Privacy</a></h5>
              </div>
         </section>
         <div id="myNav" class="overlay">
             <a href="javascript:void(0)" class="closebtn", onclick="closeNav()">&times;</a>
            
             <div class="overlay-content">
-               <div class="account_item">
+              <div class="account_item">
                     <!-- Icon -->
                     <i class="fa-solid fa-house account_icons"></i>
                     <h5><a href="{% url 'user_account' %}" style="text-decoration: none;">My Account</a></h5> 
@@ -50,6 +49,14 @@
                 <div class="account_item">
                     <i class="fa-regular fa-user account_icons"></i>
                     <h5><a href="{% url 'account_settings' %}">Account Information</a></h5>
+                </div>
+                <div class="account_item">
+                    <i class="fa-solid fa-shield-halved account_icons"></i>
+                    <h5><a href="{% url 'account_security' %}">Security</a></h5>
+                </div>
+                <div class="account_item">
+                    <i class="fa-solid fa-unlock-keyhole account_icons" ></i>
+                    <h5><a href="{% url 'account_privacy' %}">Data & Privacy</a></h5>
                 </div>
             </div>
         </div>
@@ -83,28 +90,29 @@
         </div>
         <section class="products_select">
           <div id="my_products_overlay" class="account_item" style="margin-bottom: 20px;">
-              <!-- Icon -->
-                <i class="fa-solid fa-house account_icons"></i> 
-                <h5><a id="overlay_btn" style="text-decoration: none; color: #000;">My products</a></h5> 
+              <div id="overlay_btn" class="account_item">
+                  <i class="fa-solid fa-house account_icons"></i>
+                  <h5><a style="text-decoration: none; color: #000;">My Information</a></h5> 
+               </div>
           </div>
-            <h2>My products</h2>
-            <section id="product_catalog">
-                <!-- Add a database products for ease-->
-              {% for product in account_products %}
-                <article class="product_card">
-                  <h6>{{product.product_name}}</h6>
-                  <p>
-                    {{product.product_descr}}
-                  </p>
-                  <p>
-                    {% with product.href_name as url_name %}
-                    <a href="{% url url_name %}">{{product.product_name}}</a>
-                    {% endwith %}
-                  </p>
-                </article>
-                {% endfor %}
+            <h1>Security</h1>
+            <section class="user-info">
+                <h3>Sign In Management</h3>
+                <div class="account-data">
+                  <div class="account-element">
+                    <h6>Sign In Email</h6>
+                    <p>{{email}}</p> 
+                  </div> 
+                  <a href="{% url 'update_email' id %}" style="color:#000;">Edit</a>
+                </div>
+                <div class="account-data">
+                  <div class="account-element">
+                    <h6>Sign In Password</h6>
+                    <p>Update Password</p> 
+                  </div> 
+                  <a href="{% url 'change_password' %}" style="color:#000;">Reset</a>
+                </div>
             </section>
-            <!-- User products displayed Anxion, visualization, models for devs -->
         </section>
 
         <script>
@@ -144,13 +152,13 @@
                     productsOverlayButton.style.display = "flex";
                     primaryNav.style.display = "none";
                     secondNav.style.display = "flex";
+                    overlayContent.style.display = "flex";
             
                 } else {
                   sideInfo.style.display = "block";
                   primaryNav.style.display = "flex";
                   secondNav.style.display = "none";
-                  productsOverlayButton.style.display = "none";
-
+                  overlayContent.style.display = "none";
                 }
             }
             windowResizeCheck();

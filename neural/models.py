@@ -79,7 +79,6 @@ class UserPostSentiment(models.Model):
     def returnJson(self):
         return str(self.sentiment)
     
-
 class UserImagePost(models.Model):
     image = models.ImageField(upload_to='neural/media')
     model_name = models.CharField(max_length=100)

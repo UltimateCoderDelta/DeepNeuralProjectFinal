@@ -1,10 +1,8 @@
 from django.urls import include, path
 from . import views
-from rest_framework import routers
-from django.conf import settings
 from django.conf.urls.static import static
-from neural.forms import UserLoginForm
 from django.contrib.auth import views as auth_views
+from .views import UpdateUsername, UpdateEmail
 
 urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
@@ -29,15 +27,20 @@ urlpatterns = [
     path("classification_upload_pneumonia/", views.post_user_image_pneumonia),
     path("classification_result_pneumonia/", views.get_user_classification_pneumonia),
     path("sign_up/", views.sign_up, name='sign_up'),
+    path("accounts/login/", views.login_form, name="login_form"),
+    path("/logout", views.logout_form, name="logout"),
     path("user_account/", views.user_account, name="user_account"),
     path("textual_models/", views.textual_models, name="textual_models"),
     path("vision_models/", views.vision_models, name="vision_models"),
     path("sentiment_analysis_model", views.sentiment_analysis_model, name="sentiment_analysis"),
     path("vision_models/pneumonia_predictor_model/", views.pneumonia_predictor_model, name="pneumonia_predictor_model"),
     path("vision_models/skin_cancer_predictor_model/", views.skin_cancer_predictor_model, name="skin_cancer_predictor_model"),
-
-
+    path("account_settings/", views.user_account_settings, name="account_settings"),
+    path("account_security/", views.user_account_security, name="account_security"),
+    path("account_privacy/", views.user_account_privacy, name="account_privacy"),
+    path("account/change_username/<int:pk>", UpdateUsername.as_view(), name="update_username"),
+    path("account/change_email/<int:pk>", UpdateEmail.as_view(), name="update_email"),
+    path("change-password/", auth_views.PasswordChangeView.as_view(), name="change_password"),
+    path("account/delete_account/", views.user_delete_account, name="delete_account"),
+    path("account/password_reset/", views.password_reset, name="password_reset"),
 ]
-
-# if settings.DEBUG:
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
