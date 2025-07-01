@@ -11,6 +11,7 @@ import django
 from django.conf import settings
 import pickle
 
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deepsite.settings")
 
 import django
@@ -20,15 +21,20 @@ django.setup()
 # Use a pipeline as a high-level helper
 from transformers import pipeline
 
-# pipe = pipeline("summarization", model="Falconsai/text_summarization")
+pipe = pipeline("summarization", model="Falconsai/text_summarization")
 
-# def generate_text(input_text, model=pipe, max_length=600, min_length=55):
-#   output = model(input_text, max_length=max_length, min_length=min_length)
-#   return ("SUMMARY: \n" + output[0]['summary_text'])
-
-def generate_text(text):
-   return text
-
+def get_summarizer_model():
+    summarizer_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_summarizer_v3.keras')
+   #  #Load model
+    if (summarizer_directory):
+       #If the file was found, load the model
+      #  try:
+       model = tf.keras.models.load_model(summarizer_directory)
+      #  except Exception:
+      #     raise RuntimeError("The model failed to load!")
+      #  else:
+       return model
+       
 def get_skin_cancer_model():
     classifier_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_Skin_Cancer_Detector.keras')
     #Load model
@@ -84,6 +90,7 @@ pneumonia_model = get_pneumonia_model()
 sentiment_model = load_sentiment_model()
 sentiment_tokenizer = load_sentiment_tokenizer()
 sentiment_labels = sentiment_classifier_labels()
+# summarizer_model = get_summarizer_model()
    
 def skin_cancer_classifier(user_image_path):
     if os.path.exists(user_image_path):
@@ -162,3 +169,9 @@ def sentiment_classifier(text):
    else:
       raise ValueError("The text for sentiment analysis must not be empty")
          
+def generate_text(input_text, model=pipe, max_length=600, min_length=70):
+  if len(input_text) > 0:
+      output = model(input_text, max_length=max_length, min_length=min_length)
+      return ("SUMMARY: \n" + output[0]['summary_text'])
+  else:
+     raise ValueError("The text for sentiment analysis must not be empty")
