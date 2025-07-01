@@ -1,5 +1,5 @@
 #ignore settings
-./deepsite/settings.py
+deepsite/settings.py
 .venv/
 neural/visualizations
 deepsite/neural/__pycache__
