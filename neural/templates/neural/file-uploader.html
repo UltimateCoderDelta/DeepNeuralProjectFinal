@@ -5,13 +5,14 @@
           {% csrf_token %}
             <!-- {{form}} -->    
           <div class="form-group" id="label">
-            <label for="label" class="form-labels">Label</label>
+            <label id="initial_label_first" for="label" class="form-labels">Column Name (categorical)</label>
+            <label id="initial_label_sec" for="label" class="form-labels" style="display: none;">Y Label (numeric)</label>
             <div>
               <input type="text" name="label" maxlength=50 required />
             </div>
           </div>    
           <div class="form-group" id="data" style="display:none;">
-            <label for="x_Axis_data" class="form-labels" style="margin-bottom: 15px;">Data</label>
+            <label for="x_Axis_data" class="form-labels" style="margin-bottom: 15px;">X Label (numeric) </label>
             <div>
               <input type="text" name="x_Axis_data" maxlength=50/>
             </div>
@@ -25,11 +26,11 @@
             <div class="form-group">
               <fieldset>
                   <div>
-                    <label for="select-display">Qualitative Chart</label>
+                    <label for="select-display">Frequency Chart</label>
                     <input  type="radio" id="qualitative" value="qualitative" name="select-display" checked/>
                   </div>
                   <div>
-                    <label for="select-display">Quantitative Chart</label>
+                    <label for="select-display">Numerical Chart</label>
                     <input id="quantitative" type="radio" value="quantitative" name="select-display"/>
                 </div>
               </fieldset>
@@ -42,13 +43,16 @@
      const quantitativeSelection = document.getElementById("quantitative");
      const dataField = document.getElementById("data");
      const labelField = document.getElementById("label");
-
+     const yLabel = document.getElementById("initial_label_sec");
+     const yLabelFirst = document.getElementById("initial_label_first");
 
      //Add action listener for each selector
      qualitativeSelection.addEventListener("change", (e) => {
        e.preventDefault();
         //if the checkbox has been checked, then remove data field
         if (qualitativeSelection.checked) {
+           yLabelFirst.style.display = "block";
+           yLabel.style.display = "none";
            dataField.style.display = "none";
         }
      });
@@ -56,8 +60,9 @@
        e.preventDefault();
         //if the checkbox has been checked, then remove data field
         if (quantitativeSelection.checked) {
+           yLabelFirst.style.display = "none";
+           yLabel.style.display = "block";
            //Clear the qualitative checkbox if wasn't cleared already
-           qualitativeSelection.setAttribute("checked", false);
            dataField.style.display = "block";
         }
      });

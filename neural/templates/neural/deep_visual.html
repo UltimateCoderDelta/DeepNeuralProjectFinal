@@ -41,7 +41,7 @@
           <input type="radio" id="qualitative" name="chart-selector" checked/>
        </div>
        <div>
-          <label for="chart-selector" style="margin-right: 12px;">Quantitative Charts</label>
+          <label for="chart-selector" style="margin-right: 12px;">Numerical Charts</label>
           <input type="radio" id="quantitative" name="chart-selector"/>
        </div>
      </div>
@@ -69,7 +69,7 @@
             </section>
         </div>  
        <div id="quantitative_charts" style="display:none;">
-        <h3>Quantitative Charts</h3>
+        <h3>Numerical Charts</h3>
         <section class="chart_selector">
           <article id="scatter_example" class="example_chart">
             <h4>Scatter Chart</h4>
@@ -91,19 +91,21 @@
         </section> 
       </div>
     </section>
-
       <div id="user-chart-selector" style="display: none;">
-           <canvas id="pie-chart" style="max-width: 70%; max-height: 600px; margin-right: 5%;"></canvas>
+           <!-- The image download button -->
+           <canvas id="main-chart" style="max-width: 70%; max-height: 600px; margin-right: 5%;"></canvas>
            <section id="user-selector" style="max-width: 30%;">
             <div id="dataset-change">
               <button id="Select-Chart-Sign" style="text-align: center; display: none;">Change chart </button>
               <button type="button" id="change-datasetbtn">New Dataset</button>
+              <span id="download-button" type="button" style="cursor: pointer;"><i  class="fa-solid fa-download" ></i></span>
             </div>
            </section>
         <section id="user-selector-quant" style="max-width: 30%;">
             <div id="dataset-change-quant">
               <button id="Select-Chart-Const" style="text-align: center; display: none;">Change chart </button>
               <button type="button" id="change-datasetbtn-quant">New Dataset</button>
+              <span id="download-button_sec" type="button" style="margin-left: 5px; cursor: pointer;"><i  class="fa-solid fa-download" ></i></span>
             </div>
         </section>
       </div>
@@ -117,6 +119,7 @@
         </script>
     </script>
   <script src="{% static 'neural/deepvisual.js' %}"></script>
+  <script type="module" src="{% static 'neural/image_downloader.js' %}"></script>
   <script src="{% static 'neural/script.js' %}"></script>  
   
   <script>

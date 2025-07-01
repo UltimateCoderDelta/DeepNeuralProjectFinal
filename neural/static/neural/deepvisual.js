@@ -1,4 +1,5 @@
-const labels = ['January', 'February', 'March', 'April'];
+
+        const labels = ['January', 'February', 'March', 'April'];
         const labelsQuant = [10, 40, 80, 50];
         const ctx = document.getElementById('bar_exam_canva');
         const ctl = document.getElementById('line_exam_canva');
@@ -37,7 +38,7 @@ const labels = ['January', 'February', 'March', 'April'];
         const userChartSelector = document.getElementById('user-chart-selector');
         const chartSelectionConst = document.getElementById('Select-Chart-Const');
         const changeDatasetbtnQuant = document.getElementById('change-datasetbtn-quant');
-
+  
         const barExampleConfig = {
           type: "bar",
             data: {
@@ -270,6 +271,11 @@ const labels = ['January', 'February', 'March', 'April'];
           },
           options: {
             animation:true,
+            animations: {
+              onComplete: function () {
+              console.log(myChart.toBase64Image('image/jpeg', 1));
+              },
+            },
             plugins: {
                 legend: {
                   display: false
@@ -312,16 +318,13 @@ const labels = ['January', 'February', 'March', 'April'];
           }
         };
 
+
         //Create the list of configurations
         const configFiles = [barExampleConfig, lineExampleConfig, pieExampleConfig, polarExampleConfig];
         const quantConfigFiles = [scatterExampleConfig, lineExampleQuantConfig, BubbleChartQuantConfig, histogramChartQuantConfig];
         const canvaCharts = document.querySelectorAll(".canva_example");
         const canvaChartsQuand = document.querySelectorAll(".canva_example_quand");
         const chartSelectorMain = document.getElementById("chart-selector-primary");
-
-        
-        //TO DO: Move to the end of the script later
-        window.onload = function() {
         var ctx_plot = ctx.getContext('2d');
         var ctl_plot = ctl.getContext('2d');
         var ctp_plot = ctp.getContext('2d');
@@ -330,7 +333,21 @@ const labels = ['January', 'February', 'March', 'April'];
         var clq_plot = clq.getContext('2d');
         var cbq_plot = cbq.getContext('2d');
         var hsq_plot = hsq.getContext('2d');
-
+        const chartsForDownloadFreq = [ctx_plot, ctl_plot, ctp_plot, ctpl_plot];
+        const chartsForDownloadNum = [cts_plot, clq_plot, cbq_plot, hsq_plot];
+        const downloadButton = document.getElementById("download-button");
+        const downloadButtonSec = document.getElementById("download-button_sec");
+        
+        //TO DO: Move to the end of the script later
+        window.onload = function() {
+            ctx_plot;
+            ctl_plot;
+            ctp_plot;
+            ctpl_plot;
+            cts_plot;
+            clq_plot;
+            cbq_plot;
+            hsq_plot;
         new Chart(ctx_plot, barExampleConfig);
         new Chart(ctl_plot, lineExampleConfig);
         new Chart(ctp_plot, pieExampleConfig);
@@ -341,6 +358,22 @@ const labels = ['January', 'February', 'March', 'April'];
         new Chart(cbq_plot, BubbleChartQuantConfig);
         new Chart(hsq_plot, histogramChartQuantConfig);          
       };
+
+      function imageDownloader (chart) {
+           const a = document.createElement("a");
+           setTimeout(() => {
+           a.href = chart.toBase64Image('image/png', 1);
+           a.download = "My_Image.png";
+           a.click();
+       }, 500);
+      }
+      
+      function downloadButtonEvent (button, chart, event="click") {
+              button.removeEventListener(event, imageDownloader);
+               button.addEventListener(event, () => {
+                  imageDownloader(chart);
+               });
+      }
 
       //Method #2 - Since we know the object chartInfoCopy will never be undefined (due to the backend)
         var chartPicked = '';
@@ -355,16 +388,18 @@ const labels = ['January', 'February', 'March', 'April'];
                 chartElements.style.display = 'none';
                 chartSelectionSign.style.display = "block";
                 changeDatasetbtn.style.display = "block";
-
+                chartSelectorQuant.style.display = "none";
+                // chartsForDownloadNum[index].toBase64Image('image/jpeg', 1);
                 //Only display this chart
                 // Check if chart if chartInfoCopy JSON object is not empty, proceed with the rest 
                 if (chartInfoCopy) { 
                  //if the data is available, update everything in the chart config
-                 var chartMain = document.getElementById('pie-chart').getContext('2d');
+                 var chartMain = document.getElementById('main-chart').getContext('2d');
                  let selectedChartConfig = configFiles[index];
                  selectedChartConfig.data.labels = chartInfoCopy.labels; 
                  selectedChartConfig.data.datasets[0].data = chartInfoCopy.data;
                  window.chart = new Chart(chartMain, selectedChartConfig);
+                 downloadButtonEvent(downloadButton, window.chart);
                  //Display the actual canva of each of the other charts which is currently not selected
                  for (canva of canvaCharts) {
                     //Add each canva to the right-side of the main chart
@@ -389,6 +424,7 @@ const labels = ['January', 'February', 'March', 'April'];
                               selectedChartConfig.data.datasets[0].data = chartInfoCopy.data; 
                               window.chart.destroy();
                               window.chart = new Chart(chartMain, selectedChartConfig);
+                              downloadButtonEvent(downloadButton, window.chart);
                            }
                         });
                     });
@@ -421,11 +457,12 @@ const labels = ['January', 'February', 'March', 'April'];
                 // Then check if the data for this chart is empty or not, if so, redirect user to fill the data
                 if (chartInfoCopy) {   
                  //if the data is available, update everything in the chart config
-                 var chartMain = document.getElementById('pie-chart').getContext('2d');
+                 var chartMain = document.getElementById('main-chart').getContext('2d');
                  let selectedChartConfigQuant = quantConfigFiles[index];
                  selectedChartConfigQuant.data.labels = chartInfoCopy.labels; 
                  selectedChartConfigQuant.data.datasets[0].data = chartInfoCopy.data; 
-                 window.chart = new Chart(chartMain, selectedChartConfigQuant);
+                 window.chart = new Chart(chartMain, selectedChartConfigQuant);  
+                 downloadButtonEvent(downloadButtonSec, window.chart);
                  //Display the actual canva of each of the other charts which is currently not selected
                  for (canva of canvaChartsQuand) {
                     //Add each canva to the right-side of the main chart
@@ -448,6 +485,7 @@ const labels = ['January', 'February', 'March', 'April'];
                               selectedChartConfigQuant.data.labels = chartInfoCopy.labels; 
                               selectedChartConfigQuant.data.datasets[0].data = chartInfoCopy.data; 
                               window.chart = new Chart(chartMain, selectedChartConfigQuant);
+                              downloadButtonEvent(downloadButtonSec, window.chart);
                            }
                         });
                     });

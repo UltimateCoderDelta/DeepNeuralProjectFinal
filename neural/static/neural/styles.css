@@ -624,7 +624,6 @@ pre {
 .example_chart {
     margin: 12px 0px 25px 12px;
     border-left: solid 1px #101623;
-    /* border-right: solid 1px #101623; */
     padding:15px;
     max-height: 300px;
     min-width: 300px;
@@ -641,6 +640,7 @@ pre {
     width: 300px;
     height: 300px;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 /* #scatter_example {
@@ -673,10 +673,21 @@ pre {
 #dataset-change, #dataset-change-quant {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
+    flex-basis: 100px;
     align-items: center;
     justify-content: space-evenly;
     flex-wrap: nowrap;
     flex-basis: 50px;
+    margin-left: 2px;
+}
+
+.download-button {
+  top:60%; 
+  position: absolute; 
+  z-index: 1;  
+  margin-left: 70%; 
+  margin-top: 35px;
 }
 
 #change-datasetbtn, #change-datasetbtn-quant, #Select-Chart-Sign, #Select-Chart-Const {
