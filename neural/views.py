@@ -16,7 +16,8 @@ from django.contrib.auth.models import User
 from django.views.generic.edit import UpdateView
 from django.core.mail import  EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login, authenticate
+import numpy as np
 
 
 # Create your views here.
@@ -109,33 +110,42 @@ def deep_visual(request):
     selected features for visualization
     """
     session_df = request.session.get('converted_csv', None)
-    features_dict = {}
+    features_dict = {'error_one': '', 'error_two':''}
     if (session_df is None):
          features_dict['data'] = json.dumps([" "])
          features_dict['label'] = json.dumps([20, 30, 40, 50, 30])
+         return render(request, "neural/deep_visual.html", features_dict) 
     else:
         label = request.session.get('label', None) #feature name for labels
         data = request.session.get('data', None)
         session_df = pd.read_json(session_df) 
-        #Create empty features dictionary
-        # Initially check if label is not empty and data is empty
-        if ((label != '') and (data == '')):
-            # The user wants a frequency chart (default)
-            data = session_df[label].value_counts()[:].to_numpy().tolist()
-            labels = session_df[label].unique().tolist()
-            features_dict['data'] = json.dumps(data)
-            features_dict['label'] = json.dumps(labels)
-        
-        elif ((label != '') and (data != '')):
-            # The user wants a quantitative chart (non-default and explicit)
-            data = session_df[data][:].to_list()
-            labels = session_df[label][:].to_list()
-            features_dict['data'] = json.dumps(data)
-            features_dict['label'] = json.dumps(labels)
-     
-    return render(request, "neural/deep_visual.html", features_dict)
-    
-#For the file upload
+         #Check that the feature is in columns, else return an empty
+        if ((data in session_df.columns) or (label in session_df.columns)):
+                #Create empty features dictionary
+                # Initially check if label is not empty and data is empty
+                if ((label != '') and (data == '')):
+                    if session_df[label].dtype == object:
+                    # The user wants a frequency chart (default)
+                        data = session_df[label].value_counts()[:].to_numpy().tolist()
+                        labels = session_df[label].unique().tolist()
+                        features_dict['data'] = json.dumps(data)
+                        features_dict['label'] = json.dumps(labels)
+                    else:
+                       features_dict['error_one'] = 'The label must be categorical'
+                       return redirect('file_uploader')    
+                # The user wants a quantitative chart (non-default and explicit) 
+                elif ((label != '') and (data != '')):
+                    if (((session_df[label].dtype == np.int64 or session_df[label].dtype == np.float64) \
+                         and ((session_df[data].dtype == np.int64 or session_df[data].dtype == np.float64)))):
+                        data = session_df[data][:].to_list()
+                        labels = session_df[label][:].to_list()
+                        features_dict['data'] = json.dumps(data)
+                        features_dict['label'] = json.dumps(labels)
+                    else:
+                       features_dict['error_two'] = 'One of the features is non-numeric'
+                       return redirect('file_uploader')
+    return render(request, "neural/deep_visual.html", features_dict)      
+
 #Handle the uploaded file with pandas and do what must be done
 def handle_uploaded_file(file=None):
     df = pd.read_csv(file)
@@ -180,8 +190,6 @@ def post_user_document(request):
           return Response({"document": user_data}, status=status.HTTP_201_CREATED)
        except Exception as e:
          return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 @api_view(['GET'])
 def get_user_summary(request):
@@ -324,7 +332,7 @@ def get_user_sentiment(request):
        except Exception as e:
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
+@login_required
 def login_form(request):
     return render(request, "/registration/login.html")
     
@@ -334,11 +342,18 @@ def sign_up(request):
       #If the request is a post request, gather the json value from the request
       form = CustomUserCreationForm(request.POST)
       if form.is_valid(): #If the form is valid
+         username = request.POST["username"]
+         password = request.POST["password1"]
          form.save()
-        # login(request, user)
-         return redirect(reverse_lazy("login_form")) #Redirect the user to the welcome page 
+         user = authenticate(request, username=username, password=password)
+         if user is not None:
+            login(request, user)
+         else:
+            form = CustomUserCreationForm(initial={"username":"", "email":"", "password1":"", "password2":""})
+         return redirect(reverse_lazy("user_account")) #Redirect the user to the welcome page 
    else:
-      form = CustomUserCreationForm()
+      form = CustomUserCreationForm(initial={"username":"", "email":"", "password1":"", "password2":""})
+      #TO DO: Tell the user immediately what the requirements for an username, and if said username is already taken
    return render(request, "neural/user_signup.html", {"form": form})
 
 #User accounts page

@@ -17,8 +17,6 @@ import ai_models
 import unittest
 from django.conf import settings
 import os
-from neural import views
-from django.http import HttpRequest
 
 #Check for empty input exception
 class TestAIModelsMethods(unittest.TestCase):

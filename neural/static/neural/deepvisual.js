@@ -1,323 +1,308 @@
+              
+const labels = ['January', 'February', 'March', 'April'];
+const labelsQuant = [10, 40, 80, 50];
+const ctx = document.getElementById('bar_exam_canva');
+const ctl = document.getElementById('line_exam_canva');
+const ctp = document.getElementById('pie_exam_canva');
+const ctpl = document.getElementById('polar_pie_exam_canva');
+const cts = document.getElementById('scatter_exam_canva');
+const clq = document.getElementById('linequant_exam_canva');
+const cbq = document.getElementById('bubblequant_exam_canva');
+const hsq = document.getElementById('histquant_exam_canva');         
+const plotsForSelectionList = ['bar_exam_canva', 'line_exam_canva', 'pie_exam_canva', 'polar_pie_exam_canva'];
+const plotsForQuantSelectionList = ['scatter_exam_canva', 'linequant_exam_canva', 'bubblequant_exam_canva', 'histquant_exam_canva'];
+const plotsFrequencyObjects = [ctx, ctl, ctp, ctpl];
+const plotsQuantitativeObjects = [cts, clq, cbq, hsq];
+const chartInfoCopy = JSON.parse(document.getElementById("chart-data").textContent);
+const chartElements = document.querySelector("#chart_selector_parent");
+const chartSelector = document.getElementById("user-selector"); 
+const userSelectorCharts = document.getElementById("user-selector-charts");
+const userSelectorChartsQuant = document.getElementById("user-selector-charts-quant");
+const chartSelectorQuant = document.getElementById("user-selector-quant"); 
+const chartSelectionSign = document.getElementById("Select-Chart-Sign");
+const changeDatasetbtn = document.getElementById("change-datasetbtn");
+const userChartSelector = document.getElementById('user-chart-selector');
+const chartSelectionConst = document.getElementById('Select-Chart-Const');
+const changeDatasetbtnQuant = document.getElementById('change-datasetbtn-quant');
 
-        const labels = ['January', 'February', 'March', 'April'];
-        const labelsQuant = [10, 40, 80, 50];
-        const ctx = document.getElementById('bar_exam_canva');
-        const ctl = document.getElementById('line_exam_canva');
-        const ctp = document.getElementById('pie_exam_canva');
-        const ctpl = document.getElementById('polar_pie_exam_canva');
-        const cts = document.getElementById('scatter_exam_canva');
-        const clq = document.getElementById('linequant_exam_canva');
-        const cbq = document.getElementById('bubblequant_exam_canva');
-        const hsq = document.getElementById('histquant_exam_canva');
-
-        const barPlotRef = document.getElementById('bar_example');
-        const linePlotRef = document.getElementById('line_example'); 
-        const piePlotRef = document.getElementById('pie_example');
-        const polarPlotRef = document.getElementById('polar_example');
-
-        const scatterPlotRef = document.getElementById('scatter_example');
-        const lineQuantPlotRef = document.getElementById('linequant_example');
-        const bubbleQuantPlotRef = document.getElementById('bubblequant_example');
-        const histQuantPlotRef = document.getElementById('histquant_example');
-      
-        const plotsFrequencyList = ['bar_example', 'line_example', 'pie_example', 'polar_example']; 
-        const plotsForSelectionList = ['bar_exam_canva', 'line_exam_canva', 'pie_exam_canva', 'polar_pie_exam_canva'];
-        const plotsQuantSelectionList = ['scatter_example', 'linequant_example', 'bubblequant_example', 'histquant_example'];
-        const plotsForQuantSelectionList = ['scatter_exam_canva', 'linequant_exam_canva', 'bubblequant_exam_canva', 'histquant_exam_canva'];
-        const plotsFrequencyObjects = [ctx, ctl, ctp, ctpl];
-        const plotsQuantitativeObjects = [cts, clq, cbq, hsq];
-
-
-        const chartInfoCopy = JSON.parse(document.getElementById("chart-data").textContent);
-        const chartElements = document.querySelector("#chart_selector_parent");
-        const chartSelector = document.getElementById("user-selector"); 
-        const chartSelectorQuant = document.getElementById("user-selector-quant"); 
-        const exampleChartsList = document.querySelectorAll(".example_chart");
-        const chartSelectionSign = document.getElementById("Select-Chart-Sign");
-        const changeDatasetbtn = document.getElementById("change-datasetbtn");
-        const userChartSelector = document.getElementById('user-chart-selector');
-        const chartSelectionConst = document.getElementById('Select-Chart-Const');
-        const changeDatasetbtnQuant = document.getElementById('change-datasetbtn-quant');
-  
-        const barExampleConfig = {
-          type: "bar",
-            data: {
-              labels: labels,
-               datasets: [
-                  {
-                    label: 'Bar Plot',
-                    data: [65, 59, 80, 81],
-                  backgroundColor: 'rgb(255, 99, 132)',
-                  },
-               ],
-            },
-            options: {
-               animation: true,
-               responsive: true,
-               scales: {
-                y: {
-                  beginAtZero: true
-                }
-               },
-              plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              },
-              scales: {
-                xAxes: [
-                  {
-                    ticks: {
-                      maxTicksLimit: 2000
+const barExampleConfig = {
+      type: "bar",
+      data: {
+      labels: labels,
+      datasets: [
+                 {
+                label: 'Bar Plot',
+                data: [65, 59, 80, 81],
+                backgroundColor: 'rgb(255, 99, 132)',
+                          },
+                       ],
+                    },
+                    options: {
+                       animation: false,
+                       responsive: true,
+                       maintainAspectRatio: true,
+                       scales: {
+                        y: {
+                          beginAtZero: true
+                        }
+                       },
+                      plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      },
+                      scales: {
+                        xAxes: [
+                          {
+                            ticks: {
+                              maxTicksLimit: 2000
+                            }
+                          }
+                        ]
+                      }
                     }
-                  }
-                ]
-              }
-            }
-        };
+                };
+                
+                const lineExampleConfig = {
+                  type: "line",
+                    data: {
+                      labels: labels,
+                       datasets: [
+                          {
+                            label: 'Line Plot',
+                            data: [65, 59, 80, 81],
+                          backgroundColor: 'rgb(255, 99, 132)',
+                          },
+                       ],
+                    },
+                    options: {
+                       animation: false,
+                       responsive: true,
+                       maintainAspectRatio: true,
+                       scales: {
+                        y: {
+                          beginAtZero: true
+                        }
+                       },
+                      plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      }
+                    }
+                };
         
-        const lineExampleConfig = {
-          type: "line",
-            data: {
-              labels: labels,
-               datasets: [
-                  {
-                    label: 'Line Plot',
-                    data: [65, 59, 80, 81],
-                  backgroundColor: 'rgb(255, 99, 132)',
+                const pieExampleConfig = {
+                  type: "pie",
+                    data: {
+                      labels: labels,
+                       datasets: [
+                          {
+                            label: 'Pie Plot',
+                            data: [65, 59, 80, 81],
+                            backgroundColor: [
+                              'rgb(255, 99, 132)',
+                              'rgb(54, 162, 235)',
+                              'rgb(255, 205, 86)',
+                              'rgb(0, 255, 255)'
+                             ],
+                             hoverOffset: 4,       
+                          },
+                       ],
+                    },
+                    options: {
+                       responsive: true,
+                       maintainAspectRatio: true,
+                       plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      }
+                    }
+                };
+        
+              const polarExampleConfig = {
+                  type: "polarArea",
+                    data: {
+                      labels: labels,
+                       datasets: [
+                          {
+                            label: 'Pie Plot',
+                            data: [65, 59, 80, 81],
+                            backgroundColor: [
+                              'rgb(255, 99, 132)',
+                              'rgb(54, 162, 235)',
+                              'rgb(255, 205, 86)',
+                              'rgb(0, 255, 255)'
+                             ],       
+                          },
+                       ],
+                    },
+                    options: {
+                       responsive: true,
+                       maintainAspectRatio: true,
+                       plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      }
+                    }
+                };
+        
+                //Configurations for numerical plots
+        
+                const scatterExampleConfig = {
+                  type: "scatter",
+                    data: {
+                      labels: labels,
+                       datasets: [
+                          {
+                            label: 'Scatter Plot',
+                            data: [{
+                              x: -10,
+                              y: 0
+                            }, {
+                              x: 0,
+                              y: 10
+                            }, {
+                              x: 10,
+                              y: 5
+                            }, {
+                              x: 0.5,
+                              y: 5.5
+                            }],
+                          backgroundColor: 'rgb(255, 99, 132)',
+                          },
+                       ],
+                    },
+                    options: {
+                       animation: false,
+                       responsive: true,
+                       scales: {
+                        x: {
+                          type:'linear',
+                          position: 'bottom'
+                        }
+                       },
+                      plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      }
+                    }
+                };
+        
+                const lineExampleQuantConfig = {
+                  type: "line",
+                    data: {
+                      labels: labelsQuant,
+                       datasets: [
+                          {
+                            label: 'Line Plot',
+                            data: [65, 59, 80, 81],
+                          backgroundColor: 'rgb(255, 99, 132)',
+                          },
+                       ],
+                    },
+                    options: {
+                       animation:false,
+                       responsive: true,
+                       scales: {
+                        y: {
+                          beginAtZero: true
+                        }
+                       },
+                      plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      }
+                    }
+                };
+        
+                const BubbleChartQuantConfig = {
+                  type:'bubble',
+                  data: {
+                    datasets: [{
+                      label: 'Bubble Chart',
+                      data: [{
+                        x: 20,
+                        y: 30,
+                        r: 15
+                      }, {
+                        x: 40,
+                        y: 10,
+                        r: 10
+                      }],
+                      backgroundColor: 'rgb(255, 99, 132)' 
+                    }]
                   },
-               ],
-            },
-            options: {
-               animation: true,
-               responsive: true,
-               scales: {
-                y: {
-                  beginAtZero: true
-                }
-               },
-              plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              }
-            }
-        };
-
-        const pieExampleConfig = {
-          type: "pie",
-            data: {
-              labels: labels,
-               datasets: [
-                  {
-                    label: 'Pie Plot',
-                    data: [65, 59, 80, 81],
-                    backgroundColor: [
-                      'rgb(255, 99, 132)',
-                      'rgb(54, 162, 235)',
-                      'rgb(255, 205, 86)',
-                      'rgb(0, 255, 255)'
-                     ],
-                     hoverOffset: 4,       
-                  },
-               ],
-            },
-            options: {
-              //  animation: true,
-               responsive: true,
-               maintainAspectRatio: false,
-               plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              }
-            }
-        };
-
-      const polarExampleConfig = {
-          type: "polarArea",
-            data: {
-              labels: labels,
-               datasets: [
-                  {
-                    label: 'Pie Plot',
-                    data: [65, 59, 80, 81],
-                    backgroundColor: [
-                      'rgb(255, 99, 132)',
-                      'rgb(54, 162, 235)',
-                      'rgb(255, 205, 86)',
-                      'rgb(0, 255, 255)'
-                     ],       
-                  },
-               ],
-            },
-            options: {
-              //  animation: true,
-               responsive: true,
-               maintainAspectRatio: false,
-               plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              }
-            }
-        };
-
-        //Configurations for numerical plots
-
-        const scatterExampleConfig = {
-          type: "scatter",
-            data: {
-              labels: labels,
-               datasets: [
-                  {
-                    label: 'Scatter Plot',
-                    data: [{
-                      x: -10,
-                      y: 0
-                    }, {
-                      x: 0,
-                      y: 10
-                    }, {
-                      x: 10,
-                      y: 5
-                    }, {
-                      x: 0.5,
-                      y: 5.5
-                    }],
-                  backgroundColor: 'rgb(255, 99, 132)',
-                  },
-               ],
-            },
-            options: {
-              //  animation: false,
-               responsive: true,
-               scales: {
-                x: {
-                  type:'linear',
-                  position: 'bottom'
-                }
-               },
-              plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              }
-            }
-        };
-
-        const lineExampleQuantConfig = {
-          type: "line",
-            data: {
-              labels: labelsQuant,
-               datasets: [
-                  {
-                    label: 'Line Plot',
-                    data: [65, 59, 80, 81],
-                  backgroundColor: 'rgb(255, 99, 132)',
-                  },
-               ],
-            },
-            options: {
-               animation:true,
-               responsive: true,
-               scales: {
-                y: {
-                  beginAtZero: true
-                }
-               },
-              plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              }
-            }
-        };
-
-        const BubbleChartQuantConfig = {
-          type:'bubble',
-          data: {
-            datasets: [{
-              label: 'Bubble Chart',
-              data: [{
-                x: 20,
-                y: 30,
-                r: 15
-              }, {
-                x: 40,
-                y: 10,
-                r: 10
-              }],
-              backgroundColor: 'rgb(255, 99, 132)' 
-            }]
-          },
-          options: {
-            animation:true,
-            animations: {
-              onComplete: function () {
-              console.log(myChart.toBase64Image('image/jpeg', 1));
-              },
-            },
-            plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  enabled: false
-                }
-              }
-          }
-        };
-
-      const histogramChartQuantConfig = {
-          type: "bar",
-            data: {
-              labels: labelsQuant,
-               datasets: [
-                  {
-                    label: 'Histogram Plot',
-                    data: [65, 59, 80, 81],
-                  backgroundColor: 'rgb(255, 99, 132)',
-                  },
-               ],
-            },
-            options: {
-               animation:true,
-               responsive: true,
-               scales: {
-                y: {
-                  beginAtZero: true
-                }
-               },
-            plugins: {
-            legend: {
-                display: false
-              },
-            tooltip: {
-                enabled: false
-            }
-           }  
-          }
-        };
-
+                  options: {
+                    animation:false,
+                    animations: {
+                      onComplete: function () {
+                      console.log(myChart.toBase64Image('image/jpeg', 1));
+                      },
+                    },
+                    plugins: {
+                        legend: {
+                          display: false
+                        },
+                        tooltip: {
+                          enabled: false
+                        }
+                      }
+                  }
+                };
+        
+              const histogramChartQuantConfig = {
+                  type: "bar",
+                    data: {
+                      labels: labelsQuant,
+                       datasets: [
+                          {
+                            label: 'Histogram Plot',
+                            data: [65, 59, 80, 81],
+                          backgroundColor: 'rgb(255, 99, 132)',
+                          },
+                       ],
+                    },
+                    options: {
+                       animation:false,
+                       responsive: true,
+                       scales: {
+                        y: {
+                          beginAtZero: true
+                        }
+                       },
+                    plugins: {
+                    legend: {
+                        display: false
+                      },
+                    tooltip: {
+                        enabled: false
+                    }
+                   }  
+                  }
+                };
 
         //Create the list of configurations
         const configFiles = [barExampleConfig, lineExampleConfig, pieExampleConfig, polarExampleConfig];
@@ -333,32 +318,11 @@
         var clq_plot = clq.getContext('2d');
         var cbq_plot = cbq.getContext('2d');
         var hsq_plot = hsq.getContext('2d');
-        const chartsForDownloadFreq = [ctx_plot, ctl_plot, ctp_plot, ctpl_plot];
-        const chartsForDownloadNum = [cts_plot, clq_plot, cbq_plot, hsq_plot];
+
         const downloadButton = document.getElementById("download-button");
         const downloadButtonSec = document.getElementById("download-button_sec");
         
         //TO DO: Move to the end of the script later
-        window.onload = function() {
-            ctx_plot;
-            ctl_plot;
-            ctp_plot;
-            ctpl_plot;
-            cts_plot;
-            clq_plot;
-            cbq_plot;
-            hsq_plot;
-        new Chart(ctx_plot, barExampleConfig);
-        new Chart(ctl_plot, lineExampleConfig);
-        new Chart(ctp_plot, pieExampleConfig);
-        new Chart(ctpl_plot, polarExampleConfig);
-
-        new Chart(cts_plot, scatterExampleConfig);
-        new Chart(clq_plot, lineExampleQuantConfig);
-        new Chart(cbq_plot, BubbleChartQuantConfig);
-        new Chart(hsq_plot, histogramChartQuantConfig);          
-      };
-
       function imageDownloader (chart) {
            const a = document.createElement("a");
            setTimeout(() => {
@@ -389,7 +353,6 @@
                 chartSelectionSign.style.display = "block";
                 changeDatasetbtn.style.display = "block";
                 chartSelectorQuant.style.display = "none";
-                // chartsForDownloadNum[index].toBase64Image('image/jpeg', 1);
                 //Only display this chart
                 // Check if chart if chartInfoCopy JSON object is not empty, proceed with the rest 
                 if (chartInfoCopy) { 
@@ -406,12 +369,13 @@
                     //If the chartSelector component has elements remove them 
                     canva.style.cursor = "pointer";
                     canva.style.marginBottom = "30px";
-                    if (chartSelector.contains(canva)) {
-                       chartSelector.removeChild(canva);
+                    if (userSelectorCharts.contains(canva)) {
+                       userSelectorCharts.removeChild(canva);
                     }
-                    chartSelector.appendChild(canva);
+                    userSelectorCharts.appendChild(canva);
                     //For each canva, add an eventlistener                  
                     canva.addEventListener("click", (e)=>{
+                        e.preventDefault();
                         let id = e.target.id;
                         //For each id of the charts list, update the main chart
                         plotsForSelectionList.forEach((chart, i) =>{
@@ -468,12 +432,13 @@
                     //Add each canva to the right-side of the main chart
                     //If the chartSelector component has elements remove them 
                     canva.style.cursor = "pointer";
-                    if (chartSelectorQuant.contains(canva)) {
-                       chartSelectorQuant.removeChild(canva);
+                    if (userSelectorChartsQuant.contains(canva)) {
+                       userSelectorChartsQuant.removeChild(canva);
                     }
-                    chartSelectorQuant.appendChild(canva);
+                    userSelectorChartsQuant.appendChild(canva);
                     //For each canva, add an eventlistener                  
                     canva.addEventListener("click", (e)=>{
+                        e.preventDefault();
                         let id = e.target.id;
                         //For each id of the charts list, update the main chart
                         plotsForQuantSelectionList.forEach((chart, i) =>{
@@ -519,3 +484,23 @@
     chartSelectionConst.addEventListener("click", () =>{
          window.location.href = "/neural/file_uploader/deep_visual/";
     });   
+
+ window.onload = function() {
+      ctx_plot;
+      ctl_plot;
+      ctp_plot;
+      ctpl_plot;
+      cts_plot;
+      clq_plot;
+      cbq_plot;
+      hsq_plot;
+      new Chart(ctx_plot, barExampleConfig);
+      new Chart(ctl_plot, lineExampleConfig);
+      new Chart(ctp_plot, pieExampleConfig);
+      new Chart(ctpl_plot, polarExampleConfig);
+
+      new Chart(cts_plot, scatterExampleConfig);
+      new Chart(clq_plot, lineExampleQuantConfig);
+      new Chart(cbq_plot, BubbleChartQuantConfig);
+      new Chart(hsq_plot, histogramChartQuantConfig);          
+};

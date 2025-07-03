@@ -1,6 +1,5 @@
 #Load and operate saved ML models here
 import os
-import time
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img
 from keras.preprocessing import image
@@ -19,9 +18,9 @@ django.setup()
 
 
 # Use a pipeline as a high-level helper
-from transformers import pipeline
+# from transformers import pipeline
 
-pipe = pipeline("summarization", model="Falconsai/text_summarization")
+# pipe = pipeline("summarization", model="Falconsai/text_summarization")
 
 def get_summarizer_model():
     summarizer_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_summarizer_v3.keras')
@@ -169,9 +168,12 @@ def sentiment_classifier(text):
    else:
       raise ValueError("The text for sentiment analysis must not be empty")
          
-def generate_text(input_text, model=pipe, max_length=600, min_length=70):
-  if len(input_text) > 0:
-      output = model(input_text, max_length=max_length, min_length=min_length)
-      return ("SUMMARY: \n" + output[0]['summary_text'])
-  else:
-     raise ValueError("The text for sentiment analysis must not be empty")
+# def generate_text(input_text, model=pipe, max_length=600, min_length=70):
+#   if len(input_text) > 0:
+#       output = model(input_text, max_length=max_length, min_length=min_length)
+#       return ("SUMMARY: \n" + output[0]['summary_text'])
+#   else:
+#      raise ValueError("The text for sentiment analysis must not be empty")
+
+def generate_text(text):
+   return text
