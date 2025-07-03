@@ -18,21 +18,14 @@
       sendButton.disabled = true;
     }
 
-  const clearScreen = () => {
-      responseBody.innerHTML = "";
-    }
-
     //Creating an event listener for imageclass 
     const imageClassEventListener = function() {
-      let hasEventListener = false;
       const responseBody = document.getElementById("responseBody"); 
       const modelCategory = document.createElement("section");
       const textOne = ["Leverage the power AI to perform early skin cancer predictions","Leverage the power AI to perform early lung disease classification"];
       const titles = ["Skin Cancer Classifier", "Pneumonia Classifier"];
 
-      //Clear the screen first
-      clearScreen();
-    
+      //Clear the screen firs    
        //Proceed to add the click button logic
        const imageClassListener = () => {
         modelCategory.classList.add("model_categorization");
@@ -50,6 +43,7 @@
           } 
            //If modelCategory is already a child of responseBody, remove it
           responseBody.appendChild(modelCategory);
+          scrollScreen(modelCategory);
           //Then add it back in future iterations to avoid clutter
           modelSelectionEventHandler(modelCategory, responseBody);
         }
@@ -57,8 +51,6 @@
   }  
 
    const textClassifierEventListener = function () {
-      clearScreen();
-
       //Check that the file uploader is none
       if (fileDisplayIcon.style.display === "block") {
         fileDisplayIcon.style.display = "none";
@@ -73,13 +65,14 @@
                      Note: please recall that this model is designed for assistive purposes only.
                      `
       responseBody.appendChild(p);
-      //Perform logic to allow users to summarize documents
+      scrollScreen(p);
+      //Perform logic to allow users to summarize documents               
       const buttonListener = () => {
-            const bodyText = document.createElement("p");
-            const resonseText = document.createElement("p");
+            const responseText = document.createElement("p");
             //Adding a class attribute to each div
+            const bodyText = document.createElement("p");
             bodyText.classList.add("responseBox");
-            resonseText.classList.add("summaryBox");
+            responseText.classList.add("summaryBox");
             //Check if the h2 content is displayed, if it is, remove it,
             if (!(greetingMessage.textContent === "")) {
               //Deactivate 
@@ -91,11 +84,12 @@
             const documentMain = textBoxArea.value;
             bodyText.textContent = documentMain;
             addToTextCanva(responseBody, bodyText);
+            //Add the scroll option here
+            scrollScreen(bodyText);
             //Also send the message to the summarizer via fetch
             postUserSentiment(documentMain, "chatbot_sentiment_post") //Change fetch request to sentiment mode
                .then(() => {
                 //If the POST is successful then call get
-                console.log(documentMain);
                  return getUserDocument("sentiment_prediction", "chatbot_sentiment"); //Change fetch request to sentiment mode
                })
                .then((sentiment) => {
@@ -103,11 +97,13 @@
                 try {
                   if (!((sentiment === "") || (sentiment === undefined))) {
                   // If not empty, return string, and add it to the screen as the response
-                  resonseText.textContent = sentiment;
-                  addToTextCanva(responseBody, resonseText);
+                  responseText.textContent = sentiment;
+                  addToTextCanva(responseBody, responseText);
+                  scrollScreen(responseText);
                 }
                } catch (error) {
                  console.log(error);
+                 scrollScreen(failureMessage);
               }
                })
                .catch((failureMessage) => {
@@ -117,19 +113,23 @@
             textBoxArea.value = "";
             sendButton.disabled = true;
        }
+
       sendButton.addEventListener("click", ()=>{  //9 is the enter key code
             buttonListener();
-    });
-
+      });
+    
     textBoxArea.addEventListener("keyup", (event) => {
-      if (event.keyCode === 13) {
+      if (event.code === "Enter") {
          buttonListener();
       }
     });
    }
 
+   const scrollScreen = (element) => {
+      responseBody.scrollTo({left:0, top: element.offsetTop, behavior:"smooth"});   
+   }
+
    const summarizerClassEventListener = function () {
-      clearScreen();
       //Check that the file uploader is none
       if (fileDisplayIcon.style.display === "block") {
         fileDisplayIcon.style.display = "none";
@@ -139,59 +139,6 @@
       p.innerHTML = `The model has been switched to <b>Model Summarization - Model V1</b>. Feel free to insert textual documents with a limit of 2000 words,
                      and retrieve the summarized version.`
       responseBody.appendChild(p);
-      //Perform logic to allow users to summarize documents
-      const buttonListener = () => {
-            const bodyText = document.createElement("p");
-            const resonseText = document.createElement("p");
-            //Adding a class attribute to each div
-            bodyText.classList.add("responseBox");
-            resonseText.classList.add("summaryBox");
-            //Check if the h2 content is displayed, if it is, remove it,
-            if (!(greetingMessage.textContent === "")) {
-              //Deactivate 
-              greetingMessage.textContent = "";
-            }
-            if (textBoxArea.value === undefined) {
-              throw new Error("The textbox body is empty!");
-            }
-            const documentMain = textBoxArea.value;
-            bodyText.textContent = documentMain;
-            addToTextCanva(responseBody, bodyText);
-            //Also send the message to the summarizer via fetch
-            postUserDocument(documentMain, "chatbot_request")
-               .then(() => {
-                //If the POST is successful then call get
-                console.log(documentMain);
-                 return getUserDocument("summary", "chatbot_summary");
-               })
-               .then((summary) => {
-                //If get is successful, return the summary
-                try {
-                  if (!((summary === "") || (summary === undefined))) {
-                  // If not empty, return string, and add it to the screen as the response
-                  resonseText.textContent = summary;
-                  addToTextCanva(responseBody, resonseText);
-                }
-               } catch (error) {
-                 console.log(error);
-              }
-               })
-               .catch((failureMessage) => {
-                console.log(failureMessage);
-               });
-            // const message = {inputs: bodyText}
-            textBoxArea.value = "";
-            sendButton.disabled = true;
-       }
-      sendButton.addEventListener("click", ()=>{  //9 is the enter key code
-            buttonListener();
-    });
-
-    textBoxArea.addEventListener("keyup", (event) => {
-      if (event.keyCode === 13) {
-         buttonListener();
-      }
-    });
    }
    //Image classification model
    imageClass.addEventListener("click", imageClassEventListener);
@@ -214,20 +161,18 @@
                       return getUserDocument("prediction", "classification_result");
                      })
                      .then((prediction) => {
-                      //If the prediction was a success
-                      if (!(responseBody.innerHTML === "")) {
-                        responseBody.innerHTML = "";
-                      }
                       //Create a neat paragraph element to store the result
                       const parEl = document.createElement("p");
                       const divEl = document.createElement("div");
                       parEl.textContent = prediction;
                       divEl.appendChild(parEl);
                       addToTextCanva(responseBody, divEl);
+                      scrollScreen(divEl);
                      })
                      .catch((error) => {
                        console.log(`Issue: ${error}`);
                        responseBody.appendChild(failureMessage);
+                       scrollScreen(failureMessage);
                      });
                 }
               else if (model === "PneumoniaClassifier") {
@@ -237,20 +182,18 @@
                       return getUserDocument("prediction_pneumonia", "classification_result_pneumonia");
                      })
                      .then((prediction) => {
-                      //If the prediction was a success
-                      if (!(responseBody.innerHTML === "")) {
-                        responseBody.innerHTML = "";
-                      }
                       //Create a neat paragraph element to store the result
                       const parEl = document.createElement("p");
                       const divEl = document.createElement("div");
                       parEl.textContent = prediction;
                       divEl.appendChild(parEl);
                       addToTextCanva(responseBody, divEl);
+                      scrollScreen(divEl);
                      })
                      .catch((error) => {
                        console.log(`Issue: ${error}`);
                        responseBody.appendChild(failureMessage);
+                       scrollScreen(failureMessage);
                      });
                    }
                 } else {
@@ -295,28 +238,22 @@
               const modelType = document.createElement("p");
               const div = document.createElement("div");
               model = "SkinClassifier";
-              //Clear the responsebody
-              if (!(responseBody.innerHTML === "")) {
-                  responseBody.innerHTML = "";
-              }
               //Then add the model description
               modelType.innerHTML = descriptions[0];
               div.appendChild(modelType);
               responseBody.appendChild(div);
+              scrollScreen(div);
           }
           else if (modelId === "AT2") {
               fileDisplayIcon.style.display = "block";
               const modelType = document.createElement("p");
               const div = document.createElement("div");
               model = "PneumoniaClassifier";
-              //Clear the responsebody
-              if (!(responseBody.innerHTML === "")) {
-                  responseBody.innerHTML = "";
-              }
               //Then add the model description
               modelType.innerHTML = descriptions[1];
               div.appendChild(modelType);
               responseBody.appendChild(div);
+              scrollScreen(div);
           }
           fetchButtonEventHandler(model);
          }
@@ -378,18 +315,25 @@
       if (taskSelectionMenu.style.display === "block") {
             taskSelectionMenu.style.display = "none"; 
           }
-      else {
+      else if (taskSelectionMenu.style.display === "none") {
           taskSelectionMenu.style.display = "block"; 
-  
       }
     }
+
+   taskSelectionMenu.addEventListener("mouseleave", () => {
+       if (taskSelectionMenu.style.display === "block"){
+        taskSelectionMenu.style.display = "none"; 
+        console.log("unblock");
+       } else {
+        taskSelectionMenu.style.display = "block";
+        console.log("block");
+       }  
+     });
+
      menuButton.addEventListener("click", () => {
        taskSelectionEvent();
      });
-     taskSelectionMenu.addEventListener("mouseleave", () => {
-       taskSelectionMenu.style.display = "none"; 
-     });
- 
+
     function addToTextCanva(parentElement, childElement){
        //This function is designed to add the sent text to the main body
         parentElement.appendChild(childElement);
@@ -397,8 +341,6 @@
 
     // If the text area has a length of text greater than 5 characters allow for the send action
     textBoxArea.addEventListener("input", (e)=>{
-  
-       const responseBody = document.getElementById("responseBody"); //Parent element where all text and responses should appear
        let inputTextLength = textBoxArea.value.length;
        
 
@@ -408,7 +350,7 @@
        } else if (inputTextLength < 3){
         sendButton.disabled = true;
        }
-    })
+    });
 
     // Create an event listener for the send button, which upon being sent will retrieve the user document from the text area, and
     // send it as a post request to the respective POST location

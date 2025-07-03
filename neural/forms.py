@@ -44,7 +44,6 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ("email",)
 
-
 class UserDeletionConfirmation(forms.Form):
       confirm_deletion = forms.CharField(max_length=20)
 

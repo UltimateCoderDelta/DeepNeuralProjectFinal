@@ -2,19 +2,18 @@
      <link type="text/css" href="{% static '/neural/styles.css' %}" rel="stylesheet">
      <section class="login_form">
         <form action=""  method="post" enctype="multipart/form-data" class="sign-up">
-          {% csrf_token %}
-            <!-- {{form}} -->    
+          {% csrf_token %} 
           <div class="form-group" id="label">
-            <label id="initial_label_first" for="label" class="form-labels">Column Name (categorical)</label>
+            <label id="initial_label_first" for="label" class="form-labels">Column Name (categorical)</label> 
             <label id="initial_label_sec" for="label" class="form-labels" style="display: none;">Y Label (numeric)</label>
             <div>
-              <input type="text" name="label" maxlength=50 required />
+               <input id="input-field-label" type="text" name="label" maxlength=50 required />
             </div>
           </div>    
           <div class="form-group" id="data" style="display:none;">
             <label for="x_Axis_data" class="form-labels" style="margin-bottom: 15px;">X Label (numeric) </label>
             <div>
-              <input type="text" name="x_Axis_data" maxlength=50/>
+              <input id="input-field-data" type="text" name="x_Axis_data" maxlength=50/>
             </div>
           </div>
           <label for="csv_file" class="form-labels">Upload File</label>
@@ -45,7 +44,6 @@
      const labelField = document.getElementById("label");
      const yLabel = document.getElementById("initial_label_sec");
      const yLabelFirst = document.getElementById("initial_label_first");
-
      //Add action listener for each selector
      qualitativeSelection.addEventListener("change", (e) => {
        e.preventDefault();
@@ -66,5 +64,5 @@
            dataField.style.display = "block";
         }
      });
-
-   </script>
+</script>
+   

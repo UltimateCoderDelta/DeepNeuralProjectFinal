@@ -508,6 +508,7 @@ filter: grayscale(60%);
    max-width: 65%;
 }
 
+
 .code_block {
     white-space: pre-line;
     margin-left:10px;
@@ -654,11 +655,21 @@ pre {
 #user-chart-selector {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     flex-basis: auto;
     align-items: center;
     padding: 10px;
     display: none;
+}
+
+#user-selector-charts, #user-selector-charts-quant {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
 }
 
 #user-selector, #user-selector-quant {

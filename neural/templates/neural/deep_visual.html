@@ -100,6 +100,7 @@
               <button type="button" id="change-datasetbtn">New Dataset</button>
               <span id="download-button" type="button" style="cursor: pointer;"><i  class="fa-solid fa-download" ></i></span>
             </div>
+            <div id="user-selector-charts"></div>
            </section>
         <section id="user-selector-quant" style="max-width: 30%;">
             <div id="dataset-change-quant">
@@ -107,6 +108,7 @@
               <button type="button" id="change-datasetbtn-quant">New Dataset</button>
               <span id="download-button_sec" type="button" style="margin-left: 5px; cursor: pointer;"><i  class="fa-solid fa-download" ></i></span>
             </div>
+            <div id="user-selector-charts-quant"></div>
         </section>
       </div>
 
@@ -118,19 +120,20 @@
          }
         </script>
     </script>
-  <script src="{% static 'neural/deepvisual.js' %}"></script>
-  <script type="module" src="{% static 'neural/image_downloader.js' %}"></script>
+  <!-- <script type="module" src="{% static 'neural/image_downloader.js' %}"></script> -->
   <script src="{% static 'neural/script.js' %}"></script>  
-  
+   <script src="{% static './neural/deepvisual.js' %}"></script>
   <script>
      const qualitativeSelection = document.getElementById("qualitative");
      const quantitativeSelection = document.getElementById("quantitative");
      const frequencyCharts = document.getElementById("frequency_charts");  
      const quantitativeCharts = document.getElementById("quantitative_charts");  
+     const chartDisplay = document.getElementById("user-selector-charts");
+     const chartDisplayQuant = document.getElementById("user-selector-charts-quant");
+     const mainChartContainer = document.getElementById("user-chart-selector");
   
      //Add action listener for each selector
      qualitativeSelection.addEventListener("change", (e) => {
-       e.preventDefault();
         //if the checkbox has been checked, then remove data field
         if (qualitativeSelection.checked) {
              frequencyCharts.style.display = "block";
@@ -138,7 +141,6 @@
         }
      });
      quantitativeSelection.addEventListener("change", (e) => {
-       e.preventDefault();
         //if the checkbox has been checked, then remove data field
         if (quantitativeSelection.checked) {
            //Clear the qualitative checkbox if wasn't cleared already
@@ -146,6 +148,26 @@
            quantitativeCharts.style.display = "block";
         }
      });
+
+    const windowResizeCheckMain = function (element) {
+          if (window.innerWidth < 1000) {
+              //Remove the side bar
+               chartDisplay.style.flexDirection = "row";
+               chartDisplayQuant.style.flexDirection = "row";
+               chartDisplay.style.width = "500px";
+               chartDisplayQuant.style.width = "500px";
+              } else {
+                chartDisplay.style.flexDirection = "column";
+                chartDisplayQuant.style.flexDirection = "column";
+                chartDisplay.style.width = "auto";
+                chartDisplayQuant.style.width = "auto";
+                }
+            }
+  
+     window.addEventListener("resize", () => {
+        windowResizeCheckMain();
+    });
+    windowResizeCheckMain();
    </script>
 </main>
 {% endblock %}

@@ -116,12 +116,13 @@ p {
     flex-wrap: nowrap;
     align-items: center;
     flex-basis: 100px;
-    min-height: 300px;
-    max-height: 800px;
+    min-height: 400px;
+    max-height: 900px;
     width: 75%;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #fff #343434;
+    scroll-behavior: smooth;
     bottom:20%;
     /* top: auto; */
 }

@@ -25,23 +25,22 @@
   </div>
   {% endif %}
 </nav>
-
 {% endblock %}
 
 {% block content %}
  <main id="chatbot_section">    
-   <div id="responseBody">
+   <div id="responseBody" style="scroll-behavior: smooth;">
       <h2 id="greetingMessage">This is Anxio, how can I help?</h2>
-   </div>
-    <div id="task-selection" style="display: none;">
+      <div id="task-selection" style="display: none;">
          <div id="image-class" class="task-item" >Image Classification</div>
          <div id="text-class" class="task-item">Text Classification</div>
          <div id="summarizer-class" class="task-item">Document Summarization</div>
     </div>
+   </div>
+
    <section id="textbox-box">
       <!-- Establish the pop up for selection -->
           <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" style="max-width: 80%" placeholder="Enter document text" maxlength="2000"></textarea> 
-        
             <input type="file" id="file-uploader" accept="image/png, image/jpeg">
             <label id="file-upload-icon" class="send_button" style="margin-top: 65px;" for="file-uploader">
                 <i class="fa-solid fa-paperclip" style="margin-top: 19px;"></i>
@@ -55,5 +54,4 @@
    </section> 
  </main>
   <script type="module" src="{% static 'neural/chatbot.js' %}"></script>
-{% endblock %}
-
+  {% endblock %}

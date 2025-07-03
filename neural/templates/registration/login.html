@@ -8,6 +8,7 @@
  <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block content %}
@@ -17,12 +18,14 @@
       {% csrf_token %}
        <div class="form-group">
           {{ form.username.errors }}
-          <input type="text" id="username" name="username" placeholder="Username" class="input_field">
-          <!-- {{form.as_p}} -->
+          <input type="text" id="username" name="username" placeholder="Username" class="input_field" value="{% if form.username.value %}{{ form.username.value }}{% else %}{{''}}{% endif %}" /> 
        </div>
-       <div class="form-group">
+       <div class="form-group" style="margin-left: 40px;">
          {{ form.password.errors }}
+         <div>
           <input type="password" id="password" name="password" placeholder="Password">
+          <span id="pass1Button" type="button" style="margin-left: 4px;"><i class="fa-solid fa-eye"></i></span>
+        </div>
        </div>
        <div style="margin-bottom:30px;">
           <input id="login-button" type="submit" value="Login"/>
@@ -36,6 +39,28 @@
   <div style="border-top: solid 1px #393c41; border-bottom: solid 1px #393c41; margin-top: 50px;">Or</div>
   <span id="create_account_btn"><a href="{% url 'sign_up' %}" style="text-decoration: none; color:#fff;">Create Account</a></span>
   </section>
+  <script>
+      const passwordOne = document.getElementById("password");
+      const pass1Button = document.getElementById("pass1Button");
+      const revealPasswordToggle = ({target}) => {
+      const elementId = target.parentElement.id;
+          //If the pass field is not empty, reveal it
+          if (elementId === "pass1Button") {
+              //Reveal password 1
+             if (passwordOne.value !== "") {
+                if (passwordOne.type === "text") {
+                    passwordOne.type = "password";
+              } else {
+                passwordOne.type = "text";
+              }
+            } else {
+              throw new Error("Cannot reveal an empty field");
+            }
+          } 
+      }; 
+   pass1Button.addEventListener("click", revealPasswordToggle);
+
+  </script>
 {% endblock %}
 
 
