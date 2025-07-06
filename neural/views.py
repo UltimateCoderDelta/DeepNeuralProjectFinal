@@ -157,6 +157,10 @@ def handle_uploaded_file(file=None):
     df = pd.read_csv(file)
     df.columns = df.columns.str.lower()
     #Check the size of the dataframe
+    df_size = df.shape[0]
+    print(f'Size:{df_size}')
+    if df_size > 700:
+       df = df[:round((0.10 * df_size))]
     return df
 
 @login_required(login_url="login_form")
@@ -383,7 +387,7 @@ def user_delete_account(request):
         form = UserDeletionConfirmation(request.POST)
         if form.is_valid():
            try:
-              confirmation = form.cleaned_data["confirm_deletion"]
+              confirmation = form.cleaned_data["confirm_deletion"].strip()
            except Exception as e:
                HttpResponse(f'Error: {e}')
            else:

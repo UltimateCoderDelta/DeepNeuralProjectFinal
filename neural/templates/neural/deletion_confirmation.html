@@ -14,14 +14,14 @@
 <Section class="login_form">
   <form method="post" class="sign-up">
     <div>
-      <label for="confirm_password" style="float:left; margin-left: 30px; margin-bottom: 15px;"><b>Confirm Deletion</b></label>
+      <label for="confirm_deletion" style="float:left; margin-left: 30px; margin-bottom: 15px;"><b>Confirm Deletion</b></label>
     </div>
     <div>
       <label>Please type 'delete_account' to confirm deletion</label>
     </div>
         {% csrf_token %}
         <div class="form-group">
-           <input type="text" name="confirm_password" placeholder="Confirm deletion" required/>
+           <input type="text" name="confirm_deletion" placeholder="Confirm deletion" required/>
         </div>
         <input id="update-buttons" type="submit" value="Confirm"/>
   </form>

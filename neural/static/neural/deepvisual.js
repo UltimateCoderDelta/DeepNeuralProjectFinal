@@ -504,3 +504,4 @@ const barExampleConfig = {
       new Chart(cbq_plot, BubbleChartQuantConfig);
       new Chart(hsq_plot, histogramChartQuantConfig);          
 };
+
