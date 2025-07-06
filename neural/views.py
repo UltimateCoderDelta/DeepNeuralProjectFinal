@@ -116,9 +116,17 @@ def deep_visual(request):
          features_dict['label'] = json.dumps([20, 30, 40, 50, 30])
          return render(request, "neural/deep_visual.html", features_dict) 
     else:
+        #Reduce the dataframe size
+        session_df = pd.read_json(session_df)
+        df_size = session_df.shape[0]
+        if df_size > 1000:
+            session_df = session_df[:round((0.10 * df_size))]
+            print(f'Dataframe shape: {session_df.shape[0]}')
+        else:
+            session_df = session_df[:round((0.20 * df_size))]
+            print(f'Dataframe shape: {session_df.shape[0]}')
         label = request.session.get('label', None) #feature name for labels
         data = request.session.get('data', None)
-        session_df = pd.read_json(session_df) 
          #Check that the feature is in columns, else return an empty
         if ((data in session_df.columns) or (label in session_df.columns)):
                 #Create empty features dictionary
@@ -135,21 +143,20 @@ def deep_visual(request):
                        return redirect('file_uploader')    
                 # The user wants a quantitative chart (non-default and explicit) 
                 elif ((label != '') and (data != '')):
-                    if (((session_df[label].dtype == np.int64 or session_df[label].dtype == np.float64) \
-                         and ((session_df[data].dtype == np.int64 or session_df[data].dtype == np.float64)))):
+                    if (((session_df[label].dtype == np.int64 or session_df[label].dtype == np.float64) and ((session_df[data].dtype == np.int64 or session_df[data].dtype == np.float64)))):
                         data = session_df[data][:].to_list()
                         labels = session_df[label][:].to_list()
                         features_dict['data'] = json.dumps(data)
                         features_dict['label'] = json.dumps(labels)
                     else:
-                       features_dict['error_two'] = 'One of the features is non-numeric'
-                       return redirect('file_uploader')
+                        features_dict['error_two'] = 'One of the features is non-numeric'
+                        return redirect('file_uploader')
     return render(request, "neural/deep_visual.html", features_dict)      
 
-#Handle the uploaded file with pandas and do what must be done
 def handle_uploaded_file(file=None):
     df = pd.read_csv(file)
     df.columns = df.columns.str.lower()
+    #Check the size of the dataframe
     return df
 
 @login_required(login_url="login_form")
@@ -164,8 +171,8 @@ def upload_file(request):
            else:
             request.session['data'] = form.cleaned_data['x_Axis_data'].lower() #Gather the data feature name
             request.session['label'] = form.cleaned_data['label'].lower() #Gather the label feature name
-            
-            request.session['converted_csv'] = df.to_json() #attempt without converting to JSON
+            #Clear the session data
+            request.session['converted_csv'] = df.to_json() 
             return HttpResponseRedirect("deep_visual")
     else:
         form = UploadFileForm()

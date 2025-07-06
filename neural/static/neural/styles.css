@@ -639,7 +639,7 @@ pre {
 .canva_example, .canva_example_quand {
     margin: 5px;
     width: 300px;
-    height: 300px;
+    height: 250px;
     flex-shrink: 0;
     cursor: pointer;
 }

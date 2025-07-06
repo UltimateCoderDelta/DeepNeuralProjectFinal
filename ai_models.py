@@ -9,18 +9,12 @@ import numpy as np
 import django
 from django.conf import settings
 import pickle
-
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deepsite.settings")
 
 import django
 django.setup()
 
-
-# Use a pipeline as a high-level helper
-# from transformers import pipeline
-
-# pipe = pipeline("summarization", model="Falconsai/text_summarization")
+# bart_lm = keras_hub.models.GPT2CausalLM.from_preset("gpt2_base_en_cnn_dailymail")
 
 def get_summarizer_model():
     summarizer_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_summarizer_v3.keras')
@@ -168,9 +162,10 @@ def sentiment_classifier(text):
    else:
       raise ValueError("The text for sentiment analysis must not be empty")
          
-# def generate_text(input_text, model=pipe, max_length=600, min_length=70):
+# def generate_text(input_text, model=bart_lm, max_length=300):
 #   if len(input_text) > 0:
-#       output = model(input_text, max_length=max_length, min_length=min_length)
+#       output = model.generate("The quick brown fox", max_length=max_length)
+#       # output = model(input_text, max_length=max_length, min_length=min_length)
 #       return ("SUMMARY: \n" + output[0]['summary_text'])
 #   else:
 #      raise ValueError("The text for sentiment analysis must not be empty")
