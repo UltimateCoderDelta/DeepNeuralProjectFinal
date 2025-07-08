@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment,\
-     ProductListCards 
+     ProductListCards, ChartFileUploaderData
 from django.urls import reverse_lazy
 from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm
 import json
@@ -102,6 +102,7 @@ def handle_dataframe(df):
     features_list = [feature for feature in df.columns]
     return features_list
 
+
 @login_required(login_url="login_form")
 def deep_visual(request):
     """
@@ -109,49 +110,36 @@ def deep_visual(request):
     and hereafter manipulates the data according to the
     selected features for visualization
     """
-    session_df = request.session.get('converted_csv', None)
     features_dict = {'error_one': '', 'error_two':''}
-    if (session_df is None):
-         features_dict['data'] = json.dumps([" "])
-         features_dict['label'] = json.dumps([20, 30, 40, 50, 30])
-         return render(request, "neural/deep_visual.html", features_dict) 
+    if not ChartFileUploaderData.objects.exists(): #check if data exists, otherwise load charts with dummy data
+           features_dict['data'] = json.dumps([" "])
+           features_dict['label'] = json.dumps([20, 30, 40, 50, 30])
+           return render(request, "neural/deep_visual.html", features_dict) 
     else:
-        #Reduce the dataframe size
-        session_df = pd.read_json(session_df)
-        df_size = session_df.shape[0]
-        if df_size > 1000:
-            session_df = session_df[:round((0.10 * df_size))]
-            print(f'Dataframe shape: {session_df.shape[0]}')
-        else:
-            session_df = session_df[:round((0.20 * df_size))]
-            print(f'Dataframe shape: {session_df.shape[0]}')
         label = request.session.get('label', None) #feature name for labels
         data = request.session.get('data', None)
-         #Check that the feature is in columns, else return an empty
-        if ((data in session_df.columns) or (label in session_df.columns)):
-                #Create empty features dictionary
-                # Initially check if label is not empty and data is empty
-                if ((label != '') and (data == '')):
-                    if session_df[label].dtype == object:
-                    # The user wants a frequency chart (default)
-                        data = session_df[label].value_counts()[:].to_numpy().tolist()
-                        labels = session_df[label].unique().tolist()
-                        features_dict['data'] = json.dumps(data)
-                        features_dict['label'] = json.dumps(labels)
-                    else:
-                       features_dict['error_one'] = 'The label must be categorical'
-                       return redirect('file_uploader')    
-                # The user wants a quantitative chart (non-default and explicit) 
-                elif ((label != '') and (data != '')):
-                    if (((session_df[label].dtype == np.int64 or session_df[label].dtype == np.float64) and ((session_df[data].dtype == np.int64 or session_df[data].dtype == np.float64)))):
-                        data = session_df[data][:].to_list()
-                        labels = session_df[label][:].to_list()
-                        features_dict['data'] = json.dumps(data)
-                        features_dict['label'] = json.dumps(labels)
-                    else:
-                        features_dict['error_two'] = 'One of the features is non-numeric'
-                        return redirect('file_uploader')
-    return render(request, "neural/deep_visual.html", features_dict)      
+
+        # if ((data in dataset_features) or (label in dataset_features)):
+        if ((label != '') and (data != '')):
+            session_df = pd.DataFrame({label:ChartFileUploaderData.objects.values_list('data_label_numeric'),
+                                        data:ChartFileUploaderData.objects.values_list('data_numeric')})
+            data_num = [data[0] for data in session_df[data][:]]
+            labels = [label[0] for label in session_df[label][:]]
+            features_dict['data'] = json.dumps(data_num)
+            features_dict['label'] = json.dumps(labels)
+                            
+        elif ((label != '') and (data == '')):
+             session_df = pd.DataFrame({label:ChartFileUploaderData.objects.values_list('categorical_label')})
+             value_counts = session_df[label].value_counts()
+             print(value_counts)
+             data = value_counts[:].to_numpy().tolist()
+             labels = value_counts.index.tolist()  # Convert Index to list for JSON serialization
+             features_dict['data'] = json.dumps(data)
+             features_dict['label'] = json.dumps(labels)
+        else:
+            return redirect('file_uploader') 
+        ChartFileUploaderData.objects.all().delete()
+        return render(request, "neural/deep_visual.html", features_dict) 
 
 def handle_uploaded_file(file=None):
     df = pd.read_csv(file)
@@ -160,24 +148,54 @@ def handle_uploaded_file(file=None):
     df_size = df.shape[0]
     print(f'Size:{df_size}')
     if df_size > 700:
-       df = df[:round((0.10 * df_size))]
+       df = df[:round((0.30 * df_size))]
+    print(df_size)
     return df
-
+           
 @login_required(login_url="login_form")
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
            try:
+              #Check for a valid csv_conversion process
               df = handle_uploaded_file(request.FILES['csv_file'])
            except Exception as e:
                HttpResponse(f'Error: {e}')
            else:
-            request.session['data'] = form.cleaned_data['x_Axis_data'].lower() #Gather the data feature name
-            request.session['label'] = form.cleaned_data['label'].lower() #Gather the label feature name
-            #Clear the session data
-            request.session['converted_csv'] = df.to_json() 
-            return HttpResponseRedirect("deep_visual")
+            data = form.cleaned_data['x_Axis_data'].lower() #get the label names
+            label = form.cleaned_data['label'].lower() 
+            request.session['data'] = data
+            request.session['label'] = label
+            request.session['dataset_features'] = list(df.columns)  # Convert to list for JSON serialization
+            #Store the data in the database if the # of rows are accurate to the task (frequency or numerical charts)
+            if (data != '' and label != ''): #means the user wants a numeric chart
+                if (((data in df.columns) and (label in df.columns))):
+                    condition_one = (df[data].shape[0] > 0) and (df[label].shape[0] > 0)
+                    condition_two = (((df[data].dtype == np.float64) or (df[data].dtype == np.int64)) and ((df[label].dtype == np.int64) or \
+                                    (df[label].dtype == np.float64)))
+                    if (condition_one and condition_two): # if both label and data features have data
+                        for i in range(df[data].shape[0]):
+                            ChartFileUploaderData.objects.create(
+                                data_label_numeric=df[label][i],
+                                data_numeric=df[data][i],
+                                categorical_label=None
+                            )
+                    return HttpResponseRedirect("deep_visual")
+                else:
+                   return redirect('file_uploader')
+            elif (data == '' and label != ''): # the user wants a frequency chart
+                if (label in df.columns):
+                    if ((df[label].shape[0] > 0) and (df[label].dtype == object)):
+                        for i in range(df[label].shape[0]):
+                            ChartFileUploaderData.objects.create(
+                                categorical_label=df[label][i],
+                                data_label_numeric=None,
+                                data_numeric=None
+                            )
+                    return HttpResponseRedirect("deep_visual")
+                else:
+                  return redirect('file_uploader')
     else:
         form = UploadFileForm()
     return render(request, "neural/file-uploader.html", {'form': form})

@@ -14,18 +14,20 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deepsite.settings")
 import django
 django.setup()
 
-# bart_lm = keras_hub.models.GPT2CausalLM.from_preset("gpt2_base_en_cnn_dailymail")
+# from transformers import pipeline, set_seed
+# generator = pipeline('text-generation', model='openai-gpt')
+# set_seed(42)
+# generator("Hello, I'm a language model,", max_length=30, num_return_sequences=5)
 
 def get_summarizer_model():
     summarizer_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_summarizer_v3.keras')
    #  #Load model
     if (summarizer_directory):
        #If the file was found, load the model
-      #  try:
-       model = tf.keras.models.load_model(summarizer_directory)
-      #  except Exception:
-      #     raise RuntimeError("The model failed to load!")
-      #  else:
+       try:
+         model = tf.keras.models.load_model(summarizer_directory)
+       except Exception:
+          raise RuntimeError("The model failed to load!")
        return model
        
 def get_skin_cancer_model():
@@ -162,11 +164,11 @@ def sentiment_classifier(text):
    else:
       raise ValueError("The text for sentiment analysis must not be empty")
          
-# def generate_text(input_text, model=bart_lm, max_length=300):
+# def generate_text(input_text, generator=generator, max_length=100):
 #   if len(input_text) > 0:
-#       output = model.generate("The quick brown fox", max_length=max_length)
+#       output = generator("The quick brown fox", max_length=max_length, num_return_sequences=1)
 #       # output = model(input_text, max_length=max_length, min_length=min_length)
-#       return ("SUMMARY: \n" + output[0]['summary_text'])
+#       return ("SUMMARY: \n" + output['generated_text'])
 #   else:
 #      raise ValueError("The text for sentiment analysis must not be empty")
 

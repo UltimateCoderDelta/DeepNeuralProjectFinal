@@ -127,5 +127,13 @@ class ProductListCards(models.Model):
       def __str__(self):
          return str(self.data)
 
-
-
+  
+class ChartFileUploaderData(models.Model):
+      categorical_label = models.CharField(max_length=50, null=True, blank=True)
+      data_label_numeric = models.FloatField(null=True, blank=True)
+      data_numeric = models.FloatField(null=True, blank=True)
+      
+      def __str__(self):
+          return str({'catogeorical_data': self.categorical_label,
+                      'data_label': self.data_label_numeric,
+                      'data_numeric': self.data_numeric})
