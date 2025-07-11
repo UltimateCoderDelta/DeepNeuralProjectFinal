@@ -15,11 +15,6 @@ django.setup()
 
 import os
 from huggingface_hub import InferenceClient
-
-client = InferenceClient(
-    provider="hf-inference",
-    api_key=os.environ.get("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"),
-)
        
 def get_skin_cancer_model():
     classifier_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_Skin_Cancer_Detector.keras')
