@@ -3,7 +3,6 @@
 
  {% block head %}
  <title>Predictive Models</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link type="text/css" href="{% static 'neural/chatbot.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +30,7 @@
 {% block content %}
  <main id="chatbot_section">    
    <div id="responseBody" style="scroll-behavior: smooth;">
-      <h2 id="greetingMessage">This is Anxio, how can I help?</h2>
+      <h2 id="greetingMessage" style="margin-top: 45px;">This is Anxio, how can I help?</h2>
       <div id="task-selection" style="display: none;">
          <div id="image-class" class="task-item" >Image Classification</div>
          <div id="text-class" class="task-item">Text Classification</div>

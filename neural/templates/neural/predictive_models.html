@@ -3,7 +3,6 @@
 
  {% block head %}
  <title>Predictive Models</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +13,7 @@
 {% endblock %}
 
 {% block header %}
-{% include './navbar.html' %}
+   {% include './navbar.html' %}
       <section>
       <div class="model_banners">
         <h2>DeepNeural ML Models</h2>

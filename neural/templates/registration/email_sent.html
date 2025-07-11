@@ -11,15 +11,14 @@
 {% endblock %}
 
 {% block content %}
-    <form id="reset-account-form" method="post" class="sign-up">
-        <h2>Send password reset link</h2>
-        {% csrf_token %}
-        <!-- {{ form.as_p }} -->
-        <div class="form-group">
-            <input type="email" id="email" name="email" placeholder="Enter Email">
-        </div>
-        <input type="submit" value="Send Reset Link" />
-    </form>
+<section class="login_form sign-up">
+  <section>
+     <h2>Password Reset Confirmed</h2>
+     <p>A password reset request  has been sent to your email</p>
+  </section>
+    <p>
+       <a href="{% url 'password_reset' %}" class="form_anchors">No mail? Send again</a>
+    </p>
     {% if not user.is_authenticated %}
     <p>
        <a href="{% url 'home' %}" class="form_anchors">Back to homepage</a>
@@ -29,4 +28,5 @@
         <a href="{% url 'account_settings' %}" class="form_anchors">Back to account</a>
       </p>
     {% endif %}
+ </section>   
 {% endblock content %}

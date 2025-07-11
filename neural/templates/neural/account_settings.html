@@ -3,7 +3,6 @@
 
  {% block head %}
  <title>DeepNeural</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link type="text/css" href="{% static '/neural/styles.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,19 +106,19 @@
                   </div> 
                   <a href="{% url 'update_username' id %}" style="color:#000;">Edit</a>
                 </div>
+            </section>
               <h3>Contact Information</h3>
-              <div class="account-data">
-                <div>
-                    <div class="account-element">
-                    </div> 
+            <section class="user-info">
+                <!-- Add a database products for ease-->
+                <div class="account-data">
                     <div class="account-element">
                         <h6>Email</h6>
                         <p>{{email}}</p>
                     </div>
+                  <a href="{% url 'update_email' id %}" style="color:#000;">Edit</a>
                 </div>
-                <a href="{% url 'update_email' id %}" style="color:#000;">Edit</a>
-            </div>
-                          <div class="account-data">
+            </section>
+            <div class="account-data">
                 <div>
                     <div class="account-element">
                       <h3>General Information</h3>

@@ -3,7 +3,7 @@
 
  {% block head %}
  <title>Introducing DeepNeural</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
  <link type="text/css" href="{% static 'neural/styles.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,8 +116,9 @@
       </div>
   </section>
   </main>
+  <script src="{% static 'neural/script.js' %}"></script>
   {% endblock %}
-
+  
   {% block footer %}
   <section class="company_info">
     <article class="info_cards">

@@ -3,7 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment,\
      ProductListCards, ChartFileUploaderData
 from django.urls import reverse_lazy
-from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm, UserResetConfirmPassword
+from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm, UserResetConfirmPassword,\
+     ChangePasswordForm
 import json
 import pandas as pd
 from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier, sentiment_classifier
@@ -447,6 +448,9 @@ def user_account_security(request):
 def textual_models(request):
     return render(request, "neural/textual_models.html")
 
+def email_sent(request):
+   return render(request, "registration/email_sent.html")
+
 
 def vision_models(request):
    return render(request, "neural/vision_models.html")
@@ -460,7 +464,7 @@ def pneumonia_predictor_model(request):
 def skin_cancer_predictor_model(request):
    return render(request, "neural/image_classification_models_skin_cancer.html")
       
-@login_required(login_url="login_form")
+# @login_required(login_url="login_form")
 def password_reset(request):
     #After a confirmation form, delete user
     if request.method == 'POST':
@@ -484,10 +488,48 @@ def password_reset(request):
                 fail_silently=False,
              )
             #Redirect to login page
-        return redirect("account_settings")        
+        return redirect("email_confirm")        
     else:
         form = ForgotPasswordForm()
     return render(request, "registration/password_reset_form.html", {'form': form})
+
+@login_required(login_url='login_form')
+def password_change_form(request):
+    if request.method == "POST":
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            try:
+            #If form is valid, check that the passwords match
+                user = request.user
+                old_password = form.cleaned_data['old_password'].strip()
+                password1 = form.cleaned_data['password1'].strip()
+                password2 = form.cleaned_data['password2'].strip()
+                #Check if the email address is in the database, and if so, save this user
+            except Exception as e:
+                return HttpResponse(f'Error: {e}')
+            else:
+                #Check that the passwords match
+                if user is not None: #if the user exists
+                    #Check if the old password matches what is in the Users DB
+                    if user.check_password(old_password):
+                    #If it matches proceed with the other password checkups
+                        if password1 == password2:
+                            #Then proceed to change the user password
+                            user.set_password(password1)
+                            print(f"Changing password for: {user.username} (id={user.id})")
+                            user.save()
+                            return redirect('password_change_done') #TO DO CREATE VIEW
+                        #if invalid, stay on the form
+                        else:
+                            return redirect('password_change_form') 
+                                     
+    else:
+      form = ChangePasswordForm()
+    return render(request, "registration/password_change_form.html", {'form': form})
+
+@login_required(login_url="login_form")
+def password_change_done(request):
+   return render(request, "registration/password_change_done.html")
 
 def password_reset_confirm(request):
    if request.method == "POST":

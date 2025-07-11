@@ -20,11 +20,6 @@ import json
 
 #Check for empty input exception
 class TestAIModelsMethods(unittest.TestCase):
-      client = Client() #Initializing the client
-      # UserList.objects.create(first_name='dummy_user', last_name='dummy',
-      #                                    email='dummy@gmail.com', password='d1ffic3itP@ss',
-      #                                    last_login='2025-05-12')
-
       def test_sentiment_classifier_value_test(self):
          self.assertRaises(ValueError, ai_models.sentiment_classifier, "")
 

@@ -40,8 +40,10 @@ urlpatterns = [
     path("account_privacy/", views.user_account_privacy, name="account_privacy"),
     path("account/change_username/<int:pk>", UpdateUsername.as_view(), name="update_username"),
     path("account/change_email/<int:pk>", UpdateEmail.as_view(), name="update_email"),
-    path("change-password/", auth_views.PasswordChangeView.as_view(), name="change_password"),
     path("account/delete_account/", views.user_delete_account, name="delete_account"),
     path("account/password_reset/", views.password_reset, name="password_reset"),
+    path("account/password_change/", views.password_change_form, name="password_change_form"),
+    path("account/password_change_done", views.password_change_done, name="password_change_done"),
     path("account/password_reset_confirm/", views.password_reset_confirm, name='password_reset_confirm'),
+    path("account/email_confirm/", views.email_sent, name="email_confirm"),
 ]

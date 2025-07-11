@@ -11,6 +11,10 @@ class UploadFileFormQuant(forms.Form):
       label = forms.CharField(max_length=100, required=True)
       x_Axis_data = forms.CharField(max_length=100, required=True)  
           
+class ChangePasswordForm(forms.Form):
+      old_password = forms.CharField(max_length=30, widget=forms.PasswordInput)
+      password1 = forms.CharField(max_length=30, widget=forms.PasswordInput)
+      password2 = forms.CharField(max_length=30, widget=forms.PasswordInput)
       
 #Creating the user login form
 class UserLoginForm(AuthenticationForm):

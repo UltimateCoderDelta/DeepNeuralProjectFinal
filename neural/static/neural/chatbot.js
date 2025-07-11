@@ -128,9 +128,11 @@ let currentKeyupListener = null;
                } catch (error) {
                  console.log(error);
                  scrollScreen(failureMessage);
+                 removeLoadingIcon();
               }
                })
                .catch((failureMessage) => {
+                removeLoadingIcon();
                 console.log(failureMessage);
                });
             // const message = {inputs: bodyText}
@@ -212,11 +214,13 @@ let currentKeyupListener = null;
                   checkLoadingTime(summary, responseText);
                } catch (error) {
                  console.log(error);
+                 removeLoadingIcon();
               }
                })
                .catch((failureMessage) => {
                 console.log("Error Message: " + failureMessage);
                 errorMessage(failureMessage);
+                removeLoadingIcon();
                });
             // const message = {inputs: bodyText}
             textBoxArea.value = "";
@@ -298,6 +302,7 @@ let currentKeyupListener = null;
                       removeLoadingIcon();
                      })
                      .catch((error) => {
+                       removeLoadingIcon();
                        console.log(`Issue: ${error}`);
                        responseBody.appendChild(failureMessage);
                        scrollScreen(failureMessage);
