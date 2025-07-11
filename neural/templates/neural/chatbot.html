@@ -13,12 +13,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
  <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
+ <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 <script>hljs.highlightAll();</script>
 {% endblock %}
 
 {% block header %}
 <nav id="nav">
-  <span  class="nav-item title"><a href="{% url 'home' %}"><img id="logo" src="{% static 'neural/DeepNeural_Main_Gray.png'%}"></a></span>
+      <span class="nav-item title"><a href="{% url 'home' %}" style="font-family: Audiowide, sans-serif; font-weight: 500; font-size: larger;">DeepNeural</a></span>
   {% if user.is_authenticated %}
    <div style="display:flex;">
     <span class="nav-item"><a href="{% url 'user_account' %}"><i class="fa-regular fa-user"></i></a></span>
@@ -38,19 +39,21 @@
     </div>
    </div>
 
-   <section id="textbox-box">
+<section id="textbox-box">
       <!-- Establish the pop up for selection -->
-          <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" style="max-width: 80%" placeholder="Enter document text" maxlength="2000"></textarea> 
-            <input type="file" id="file-uploader" accept="image/png, image/jpeg">
-            <label id="file-upload-icon" class="send_button" style="margin-top: 65px;" for="file-uploader">
-                <i class="fa-solid fa-paperclip" style="margin-top: 19px;"></i>
-            </label>
-            <button id="send_button" class="send_button" type="submit" style="margin-top: 65px;">
+    <textarea id="textbox" type="text" spellcheck="on" name="textbox" rows="4" cols="100" style="max-width: 100%" placeholder="Summarize text" maxlength="2000"></textarea> 
+    <section id="textbox-box-sec">
+        <input type="file" id="file-uploader" accept="image/png, image/jpeg">
+              <label id="file-upload-icon" class="send_button" style="margin-top: 40px; margin-left: 5px;" for="file-uploader">
+                <i class="fa-solid fa-paperclip" style="margin-top: 20px;"></i>
+              </label>
+            <button id="send_button" class="send_button" type="submit" style="padding-top: 5px;">
               <i class="fa-regular fa-paper-plane" style="size: larger;"></i>
             </button>
-            <button id="menu-button" class="send_button" style="margin-top: 65px;">
+            <button id="menu-button" class="send_button" style="padding-top: 5px;">
               <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
+        </section>   
    </section> 
  </main>
   <script type="module" src="{% static 'neural/chatbot.js' %}"></script>

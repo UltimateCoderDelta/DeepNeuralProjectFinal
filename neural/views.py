@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment,\
-     ProductListCards, ChartFileUploaderData
+     ProductListCards, ChartFileUploaderData, UserList
 from django.urls import reverse_lazy
-from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm
+from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm, UserResetConfirmPassword
 import json
 import pandas as pd
 from ai_models import generate_text, skin_cancer_classifier, pneumonia_classifier, sentiment_classifier
@@ -18,7 +18,10 @@ from django.core.mail import  EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth import logout, login, authenticate
 import numpy as np
-
+import smtplib
+# Import the email modules we'll need
+from email.message import EmailMessage
+from django.core.mail import send_mail
 
 # Create your views here.
 def predictive_models(request):
@@ -213,10 +216,15 @@ def post_user_document(request):
           user_data = request.data.get("document")
           if not user_data:
             raise ValueError("The document provided is empty!")
-         #Post the as JSON to the database
-          user_document = UserPostDocumentation.objects.create(document={'user_document': user_data})
-          user_document.save()
-          return Response({"document": user_data}, status=status.HTTP_201_CREATED)
+         #Store the summary in the database instead
+          try:
+            summary = generate_text(user_data)
+          except Exception as e:
+             return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
+          else:
+            user_document = UserPostDocumentation.objects.create(document={'user_document': summary})
+            user_document.save()
+          return Response({"document": summary}, status=status.HTTP_201_CREATED)
        except Exception as e:
          return Response({"Error: ", str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -235,10 +243,10 @@ def get_user_summary(request):
           if not user_document:
            raise ValueError("The document provided is empty!")    
         #   user_data = json.loads(json_str)      
-          summarized_data = generate_text(user_document)
+        #   summarized_data = generate_text(user_document)
           #Delete all data from the database for the next request
           UserPostDocumentation.objects.all().delete()
-          return Response({"summary": summarized_data}, status=status.HTTP_200_OK)
+          return Response({"summary": user_document}, status=status.HTTP_200_OK)
        except Exception as e:
           return Response({"error ": str(e)}, status=status.HTTP_400_BAD_REQUEST)
  
@@ -456,7 +464,7 @@ def pneumonia_predictor_model(request):
 
 def skin_cancer_predictor_model(request):
    return render(request, "neural/image_classification_models_skin_cancer.html")
-
+      
 @login_required(login_url="login_form")
 def password_reset(request):
     #After a confirmation form, delete user
@@ -469,71 +477,53 @@ def password_reset(request):
                  raise ValueError("Email is empty!")
               print(user_email)
            except Exception as e:
-               HttpResponse(f'Error: {e}')
+               return HttpResponse(f'Error: {e}')
            else:
-                # #If email is not empty send the reset link
-                text_content = render_to_string(
-                "../templates/email/email_content.txt",
-                )
-
-                html_content = render_to_string(
-                "neural/deletion_confirmation.html"
-                )
-
-                msg = EmailMultiAlternatives(
+             with open('./neural/templates/email/email_content.txt') as mail:
+                content = mail.read()
+             send_mail(
                 "DeepNeural Password Change Request",
-                text_content,
-                user_email,
-                ["deepneuralgeneral@gmail.com"]
-                )
-
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
-
+                content,
+                "deepneuralgeneral@gmail.com",
+                [user_email],
+                fail_silently=False,
+             )
             #Redirect to login page
-                return redirect("account_settings")        
+        return redirect("account_settings")        
     else:
         form = ForgotPasswordForm()
     return render(request, "registration/password_reset_form.html", {'form': form})
 
-# def password_reset(request):
-#    if request.method == "POST":
-#       form = ForgotPasswordForm()
-#       if form.is_valid():
-#          #Perform actions for the valid form
-#          try:
-#             user_email = form.cleaned_data["email"]
-#             if user_email == "":
-#                raise ValueError("The email must not be empty!")
-#          except Exception as e:
-#             HttpResponse(f'Error: {e}')
-#          else:
-#             #If email is not empty send the reset link
-#             text_content = render_to_string(
-#                "neural/email/email_content.txt",
-#             )
-
-#             html_content = render_to_string(
-#                "neural/deletion_confirmation.html"
-#             )
-
-#             msg = EmailMultiAlternatives(
-#                "DeepNeural Password Change Request",
-#                text_content,
-#                user_email,
-#                ["deepneuralgeneral@gmail.com"]
-#             )
-
-#             msg.attach_alternative(html_content, "text/html")
-#             msg.send()
-
-#             #Redirect to login page
-#             return redirect("home") 
-
-#       else:
-#          form = ForgotPasswordForm()
-
-#       return render(request, "registration/password_reset_form.html", {'form': form})
+def password_reset_confirm(request):
+   if request.method == "POST":
+      form = UserResetConfirmPassword(request.POST)
+      if form.is_valid():
+        try:
+         #If form is valid, check that the passwords match
+            password1 = form.cleaned_data['password1'].strip()
+            password2 = form.cleaned_data['password2'].strip()
+            username = form.cleaned_data['username'].strip()
+            print(username)
+            #Check if the email address is in the database, and if so, save this user
+        except Exception as e:
+            return HttpResponse(f'Error: {e}')
+        else:
+         #Check that the passwords match
+         if User.objects.filter(username=username).exists():
+            user = User.objects.get(username=username) #collect the user by username
+            if password1 == password2:
+                #Then proceed to change the user password
+                user.set_password(password1)
+                print(f"Changing password for: {user.username} (id={user.id})")
+                user.save()
+                return redirect('login_form')
+            #if invalid, stay on the form
+            else:
+               return redirect('password_reset_confirm')
+            #If successful, try redirect to log
+   else:
+      form = UserResetConfirmPassword()
+   return render(request, "registration/password_reset_confirm.html", {'form': form})
 
 #User settings update class-based views
 class UpdateUsername(UpdateView):
@@ -547,4 +537,3 @@ class UpdateEmail(UpdateView):
    fields = ["email"]
    template_name = 'neural/email_update_form.html'
    success_url = reverse_lazy('user_account')
-

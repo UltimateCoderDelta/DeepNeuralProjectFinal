@@ -39,7 +39,11 @@ class UserSignupForm(forms.Form):
       email = forms.EmailField(max_length=30)
       password = forms.CharField(max_length=20, widget=forms.PasswordInput)
 
-
+class UserResetConfirmPassword(forms.Form):
+      username = forms.CharField(max_length=30)
+      password1 = forms.CharField(max_length=20, widget=forms.PasswordInput)
+      password2 = forms.CharField(max_length=20, widget=forms.PasswordInput)
+      
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ("email",)

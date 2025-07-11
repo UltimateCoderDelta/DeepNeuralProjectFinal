@@ -1,23 +1,39 @@
-    const textBoxArea = document.getElementById("textbox");
-    const sendButton = document.getElementById("send_button");
-    const greetingMessage = document.getElementById("greetingMessage");
-    const menuButton = document.getElementById("menu-button");
-    const taskSelectionMenu = document.getElementById("task-selection");
-    const modelCard = document.querySelector(".model_categorization");
-    const imageClass = document.getElementById("image-class");
-    const textClassification = document.getElementById("text-class");
-    const summarizerClass = document.getElementById("summarizer-class");
-    const responseBody = document.getElementById("responseBody"); 
-    const modelCards = document.querySelectorAll(".model_card");
-    const fileUploadButton = document.getElementById("file-uploader");
-    const fileDisplayIcon = document.getElementById("file-upload-icon");
-    let defaultEventHandler = null;
+const textBoxArea = document.getElementById("textbox");
+const sendButton = document.getElementById("send_button");
+const greetingMessage = document.getElementById("greetingMessage");
+const menuButton = document.getElementById("menu-button");
+const taskSelectionMenu = document.getElementById("task-selection");
+const modelCard = document.querySelector(".model_categorization");
+const imageClass = document.getElementById("image-class");
+const textClassification = document.getElementById("text-class");
+const summarizerClass = document.getElementById("summarizer-class");
+const responseBody = document.getElementById("responseBody"); 
+const modelCards = document.querySelectorAll(".model_card");
+const fileUploadButton = document.getElementById("file-uploader");
+const fileDisplayIcon = document.getElementById("file-upload-icon");
+let defaultEventHandler = null;
+let currentButtonListener = null;
+let currentKeyupListener = null;
 
     //Make send button initially disabled
     function disableSendButton(){
       sendButton.disabled = true;
     }
-
+    
+    const checkLoadingTime = (element, responseText) => {
+        if (!((element === "") || (element === undefined))) {
+            // If not empty, return string, and add it to the screen as the response
+            responseText.textContent = element;
+            addToTextCanva(responseBody, responseText);
+            scrollScreen(responseText);
+            removeLoadingIcon();
+        } else if ((element == "" ||summary == undefined )) {
+          setTimeout(() => {
+           removeLoadingIcon();
+          errorMessage("Timeout Exception");
+          }, 30000);   
+      }
+    }
     //Creating an event listener for imageclass 
     const imageClassEventListener = function() {
       const responseBody = document.getElementById("responseBody"); 
@@ -50,7 +66,19 @@
       imageClassListener();
   }  
 
+   const removeCurrentListeners = () => {
+     if (currentButtonListener) {
+       sendButton.removeEventListener("click", currentButtonListener);
+       currentButtonListener = null;
+     }
+     if (currentKeyupListener) {
+       textBoxArea.removeEventListener("keyup", currentKeyupListener);
+       currentKeyupListener = null;
+     }
+   };
+
    const textClassifierEventListener = function () {
+      removeCurrentListeners();
       //Check that the file uploader is none
       if (fileDisplayIcon.style.display === "block") {
         fileDisplayIcon.style.display = "none";
@@ -86,6 +114,7 @@
             addToTextCanva(responseBody, bodyText);
             //Add the scroll option here
             scrollScreen(bodyText);
+            loadingIcon();
             //Also send the message to the summarizer via fetch
             postUserSentiment(documentMain, "chatbot_sentiment_post") //Change fetch request to sentiment mode
                .then(() => {
@@ -95,12 +124,7 @@
                .then((sentiment) => {
                 //If get is successful, return the summary
                 try {
-                  if (!((sentiment === "") || (sentiment === undefined))) {
-                  // If not empty, return string, and add it to the screen as the response
-                  responseText.textContent = sentiment;
-                  addToTextCanva(responseBody, responseText);
-                  scrollScreen(responseText);
-                }
+                  checkLoadingTime(sentiment, responseText);
                } catch (error) {
                  console.log(error);
                  scrollScreen(failureMessage);
@@ -114,22 +138,38 @@
             sendButton.disabled = true;
        }
 
-      sendButton.addEventListener("click", ()=>{  //9 is the enter key code
-            buttonListener();
-      });
-    
-    textBoxArea.addEventListener("keyup", (event) => {
-      if (event.code === "Enter") {
-         buttonListener();
-      }
-    });
+      currentButtonListener = buttonListener;
+      currentKeyupListener = (event) => {
+        if (event.code === "Enter") {
+          buttonListener();
+        }
+      };
+      sendButton.addEventListener("click", currentButtonListener);
+      textBoxArea.addEventListener("keyup", currentKeyupListener);
    }
 
    const scrollScreen = (element) => {
       responseBody.scrollTo({left:0, top: element.offsetTop, behavior:"smooth"});   
    }
 
+  const  loadingIcon = async () => {
+      var loading_icon = document.createElement('img');
+      loading_icon.src = "/static/neural/Loading_icon.gif";
+      loading_icon.setAttribute("id", "loading_icon");
+      loading_icon.width = 80;
+      loading_icon.height = 80;
+      // responseBody.appendChild(loading_icon);
+      addToTextCanva(responseBody, loading_icon);
+      scrollScreen(loading_icon);
+  }
+
+  const removeLoadingIcon = async () => {
+    const loading_icon = document.getElementById("loading_icon");
+    responseBody.removeChild(loading_icon);
+  }
+
    const summarizerClassEventListener = function () {
+      removeCurrentListeners();
       //Check that the file uploader is none
       if (fileDisplayIcon.style.display === "block") {
         fileDisplayIcon.style.display = "none";
@@ -139,12 +179,75 @@
       p.innerHTML = `The model has been switched to <b>Model Summarization - Model V1</b>. Feel free to insert textual documents with a limit of 2000 words,
                      and retrieve the summarized version.`
       responseBody.appendChild(p);
+      scrollScreen(p);
+      //Perform logic to allow users to summarize documents               
+      const buttonListener = () => {
+            const responseText = document.createElement("p");
+            //Adding a class attribute to each div
+            const bodyText = document.createElement("p");
+            bodyText.classList.add("responseBox");
+            responseText.classList.add("summaryBox");
+            //Check if the h2 content is displayed, if it is, remove it,
+            if (!(greetingMessage.textContent === "")) {
+              //Deactivate 
+              greetingMessage.textContent = "";
+            }
+            if (textBoxArea.value === undefined) {
+              throw new Error("The textbox body is empty!");
+            }
+            const documentMain = textBoxArea.value;
+            bodyText.textContent = documentMain;
+            addToTextCanva(responseBody, bodyText);
+            //Add the scroll option here
+            scrollScreen(bodyText);
+            loadingIcon();
+            //Also send the message to the summarizer via fetch
+            postUserDocument(documentMain, "chatbot_request") //Change fetch request to sentiment mode
+               .then(() => {
+                //If the POST is successful then call get
+                 return getUserDocument("summary", "chatbot_summary"); //Change fetch request to sentiment mode
+               })
+               .then((summary) => {
+                try {
+                  checkLoadingTime(summary, responseText);
+               } catch (error) {
+                 console.log(error);
+              }
+               })
+               .catch((failureMessage) => {
+                console.log("Error Message: " + failureMessage);
+                errorMessage(failureMessage);
+               });
+            // const message = {inputs: bodyText}
+            textBoxArea.value = "";
+            sendButton.disabled = true;
+       }
+
+      currentButtonListener = buttonListener;
+      currentKeyupListener = (event) => {
+        if (event.code === "Enter") {
+          buttonListener();
+        }
+      };
+      sendButton.addEventListener("click", currentButtonListener);
+      textBoxArea.addEventListener("keyup", currentKeyupListener);
    }
+
+   //Adding the event for general summarization    
    //Image classification model
    imageClass.addEventListener("click", imageClassEventListener);
    summarizerClass.addEventListener("click", summarizerClassEventListener);
    textClassification.addEventListener("click", textClassifierEventListener);
- 
+   summarizerClassEventListener();
+
+   const errorMessage = (error) => {
+        const errorText = document.createElement('p');
+        errorText.classList.add("errorMessages");
+        errorText.textContent = `There was an error when accessing the response. \nError Type: ${error}`;
+        addToTextCanva(responseBody, errorText);
+        scrollScreen(errorText);
+   }
+
    const modelSelectionEventHandler = function (modelCategory, responseBody) {
         const uploadButtonEventHandler = (model, userFile) => {
               const successMessage = document.createElement("p");
@@ -155,6 +258,7 @@
               if (userFile) {
                  if (model === "SkinClassifier") {
                   //Send the image to its POST endpoint
+                  loadingIcon();
                   postUserImage(userFile, "classification_upload")
                      .then(() => {
                       //Wait for a successful post request, then call get
@@ -168,6 +272,7 @@
                       divEl.appendChild(parEl);
                       addToTextCanva(responseBody, divEl);
                       scrollScreen(divEl);
+                      removeLoadingIcon();
                      })
                      .catch((error) => {
                        console.log(`Issue: ${error}`);
@@ -176,6 +281,7 @@
                      });
                 }
               else if (model === "PneumoniaClassifier") {
+                loadingIcon();
                 postUserImage(userFile, "classification_upload_pneumonia")
                      .then(() => {
                       //Wait for a successful post request, then call get
@@ -189,6 +295,7 @@
                       divEl.appendChild(parEl);
                       addToTextCanva(responseBody, divEl);
                       scrollScreen(divEl);
+                      removeLoadingIcon();
                      })
                      .catch((error) => {
                        console.log(`Issue: ${error}`);
@@ -355,7 +462,7 @@
     // Create an event listener for the send button, which upon being sent will retrieve the user document from the text area, and
     // send it as a post request to the respective POST location
     const postUserDocument = async function(file, checkpoint) { //Returns a promise
-            if (document === undefined) {
+            if (file === undefined) {
                 throw new Error("The document is empty!");
             }
             await fetch(`http://localhost:8000/neural/${checkpoint}/`, {

@@ -3,7 +3,6 @@ import os
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img
 from keras.preprocessing import image
-from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 import django
@@ -14,21 +13,13 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "deepsite.settings")
 import django
 django.setup()
 
-# from transformers import pipeline, set_seed
-# generator = pipeline('text-generation', model='openai-gpt')
-# set_seed(42)
-# generator("Hello, I'm a language model,", max_length=30, num_return_sequences=5)
+import os
+from huggingface_hub import InferenceClient
 
-def get_summarizer_model():
-    summarizer_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_summarizer_v3.keras')
-   #  #Load model
-    if (summarizer_directory):
-       #If the file was found, load the model
-       try:
-         model = tf.keras.models.load_model(summarizer_directory)
-       except Exception:
-          raise RuntimeError("The model failed to load!")
-       return model
+client = InferenceClient(
+    provider="hf-inference",
+    api_key=os.environ.get("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"),
+)
        
 def get_skin_cancer_model():
     classifier_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_Skin_Cancer_Detector.keras')
@@ -70,7 +61,6 @@ def load_sentiment_tokenizer():
     else:
        raise Exception("The path specified is invalid") 
 
-
 def sentiment_classifier_labels():
     labels = ['Anxiety', 'Normal', 'Depression', 'Bipolar']
     label_index = dict()
@@ -85,7 +75,6 @@ pneumonia_model = get_pneumonia_model()
 sentiment_model = load_sentiment_model()
 sentiment_tokenizer = load_sentiment_tokenizer()
 sentiment_labels = sentiment_classifier_labels()
-# summarizer_model = get_summarizer_model()
    
 def skin_cancer_classifier(user_image_path):
     if os.path.exists(user_image_path):
@@ -164,13 +153,11 @@ def sentiment_classifier(text):
    else:
       raise ValueError("The text for sentiment analysis must not be empty")
          
-# def generate_text(input_text, generator=generator, max_length=100):
-#   if len(input_text) > 0:
-#       output = generator("The quick brown fox", max_length=max_length, num_return_sequences=1)
-#       # output = model(input_text, max_length=max_length, min_length=min_length)
-#       return ("SUMMARY: \n" + output['generated_text'])
-#   else:
-#      raise ValueError("The text for sentiment analysis must not be empty")
+def generate_text(input_text):
+  if len(input_text) > 0:
+      output = client.summarization(input_text, model="Falconsai/text_summarization")
+      # output = model(input_text, max_length=max_length, min_length=min_length)
+      return (output['summary_text'])
+  else:
+     raise ValueError("The text for sentiment analysis must not be empty")
 
-def generate_text(text):
-   return text

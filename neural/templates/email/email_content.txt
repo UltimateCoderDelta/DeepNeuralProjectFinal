@@ -1,9 +1,10 @@
-DeepNeural Password Change Request
+
 
 An attempt was made to change the password on your account.
 To proceed with this operation, please click the following link
 below, to confirm this action: 
 
-Password change request: https://deepneural.pythonanywhere/account/password_reset/
+Password change request: https://deepneural.pythonanywhere/account/password_reset_confirm/
+Password change request: http://localhost:8000/neural/account/password_reset_confirm/
 
-Upon having completed this action,
+Upon having successfully completed this action, you will be redirected to the DeepNeural login page. 

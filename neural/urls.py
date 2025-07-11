@@ -43,4 +43,5 @@ urlpatterns = [
     path("change-password/", auth_views.PasswordChangeView.as_view(), name="change_password"),
     path("account/delete_account/", views.user_delete_account, name="delete_account"),
     path("account/password_reset/", views.password_reset, name="password_reset"),
+    path("account/password_reset_confirm/", views.password_reset_confirm, name='password_reset_confirm'),
 ]

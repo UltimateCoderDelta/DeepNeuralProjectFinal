@@ -348,6 +348,8 @@ const barExampleConfig = {
           plotsForSelectionList.forEach((chart, index) => {
               chartSelectorMain.style.display = "none";
               if (chartPicked === chart) {
+                //If any frequency chart is clicked, remove the display the chart options feature
+                selectChartOptions.style.display = "block";
                 userChartSelector.style.display = 'flex';
                 chartElements.style.display = 'none';
                 chartSelectionSign.style.display = "block";
@@ -411,6 +413,7 @@ const barExampleConfig = {
           chartPickedQuant = e.target.id; 
           plotsForQuantSelectionList.forEach((chart, index) => {
               if (chartPickedQuant === chart) {
+                selectChartOptions.style.display = "block";
                 chartSelectorMain.style.display = "none";
                 userChartSelector.style.display = 'flex';
                 chartElements.style.display = 'none';

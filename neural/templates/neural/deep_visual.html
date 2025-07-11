@@ -91,6 +91,7 @@
         </section> 
       </div>
     </section>
+      <span id="select-chart-quant" type="button" class="chart-toggle-freq" style="margin-left:30px; margin-top:10px; padding-right:12px; display:none;"><i class="fa-solid fa-bars"></i><span style="margin-left:6px;">Chart Options</span></span>
       <div id="user-chart-selector" style="display: none;">
            <!-- The image download button -->
            <canvas id="main-chart" style="max-width: 70%; max-height: 600px; margin-right: 5%;"></canvas>
@@ -104,7 +105,7 @@
            </section>
         <section id="user-selector-quant" style="max-width: 30%;">
             <div id="dataset-change-quant">
-              <button id="Select-Chart-Const" style="text-align: center; display: none;">Change chart </button>
+              <button id="Select-Chart-Const" style="text-align: center; display: none;">Change chart</button>
               <button type="button" id="change-datasetbtn-quant">New Dataset</button>
               <span id="download-button_sec" type="button" style="margin-left: 5px; cursor: pointer;"><i  class="fa-solid fa-download" ></i></span>
             </div>
@@ -120,7 +121,6 @@
          }
         </script>
     </script>
-  <!-- <script type="module" src="{% static 'neural/image_downloader.js' %}"></script> -->
   <script src="{% static 'neural/script.js' %}"></script>  
    <script src="{% static './neural/deepvisual.js' %}"></script>
   <script>
@@ -131,13 +131,20 @@
      const chartDisplay = document.getElementById("user-selector-charts");
      const chartDisplayQuant = document.getElementById("user-selector-charts-quant");
      const mainChartContainer = document.getElementById("user-chart-selector");
-  
+     const chartSelectorQuantSection = document.getElementById("user-selector-quant");
+     const chartSelectorFreqSection = document.getElementById("user-selector");
+     const selectChartOptions = document.getElementById("select-chart-quant");
+     
      //Add action listener for each selector
      qualitativeSelection.addEventListener("change", (e) => {
+        e.preventDefault();
         //if the checkbox has been checked, then remove data field
         if (qualitativeSelection.checked) {
              frequencyCharts.style.display = "block";
              quantitativeCharts.style.display = "none";
+             //Change toggleChartFeature class back to chart-toggle-freq if not already
+             selectChartOptions.classList.remove("chart-toggle-quant");
+             selectChartOptions.classList.add("chart-toggle-freq");
         }
      });
      quantitativeSelection.addEventListener("change", (e) => {
@@ -146,8 +153,32 @@
            //Clear the qualitative checkbox if wasn't cleared already
            frequencyCharts.style.display = "none";
            quantitativeCharts.style.display = "block";
+           //Change the toggleChartFeature class to chart-toggle-quant if not already
+           selectChartOptions.classList.remove("chart-toggle-freq");
+           selectChartOptions.classList.add("chart-toggle-quant");
         }
      });
+
+    const chartSelectorQuantEventToggle = () => {
+      selectChartOptions.addEventListener("click", (e) => {
+      e.preventDefault();
+      const chartToggle = (element) => {
+        if (element.style.display === "none") {
+             element.style.display = "flex";
+        } else if (element.style.display === "flex") {
+          element.style.display = "none";
+      }
+    }
+      //Check which chart types are currently selected
+      if (selectChartOptions.getAttribute("class") === "chart-toggle-quant") {
+         console.log(selectChartOptions.getAttribute("class"));
+         // if the class for chart selector icon is numeric, toggle the numeric charts when clicked
+         chartToggle(chartSelectorQuantSection);
+      } else if (selectChartOptions.getAttribute("class") === "chart-toggle-freq") {
+         chartToggle(chartSelectorFreqSection);
+      }
+    });
+  }
 
     const windowResizeCheckMain = function (element) {
           if (window.innerWidth < 1000) {
@@ -156,31 +187,37 @@
                chartDisplayQuant.style.flexDirection = "row";
                chartDisplay.style.width = "500px";
                chartDisplayQuant.style.width = "500px";
+               //TO DO: When the screen size reduces to less than a 1000 
+               chartSelectorQuantSection.style.display = "none";
+               chartSelectorFreqSection.style.display = "none";
               } else {
                 chartDisplay.style.flexDirection = "column";
                 chartDisplayQuant.style.flexDirection = "column";
                 chartDisplay.style.width = "auto";
                 chartDisplayQuant.style.width = "auto";
+                chartSelectorQuantSection.style.display = "flex";
+                chartSelectorFreqSection.style.display = "flex";
                 }
             }
-  
-     window.addEventListener("resize", () => {
+
+   
+   window.addEventListener("resize", () => {
         windowResizeCheckMain();
     });
     windowResizeCheckMain();
+    chartSelectorQuantEventToggle();
    </script>
 </main>
 {% endblock %}
 
 {% block footer%}
-<section class="company_info">
+<section class="company_info" style="margin-top:100px;">
     <article class="info_cards">
        <h3>Stay Connected</h3>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://x.com/DNeural76430">X</a></span>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://www.linkedin.com/company/dneural">LinkedIn</a></span>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://www.instagram.com/deep_neural/">Instagram</a></span>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://www.facebook.com/DeepNeuralCorp/">Facebook</a></span>
-       <!-- <span class="info_cards_span nav-item"><a class="anchor" href="#">YouTube</a></span> -->
     </article>
     <article class="info_cards">
       <h3>Check Out</h3>
