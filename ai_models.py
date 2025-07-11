@@ -25,7 +25,7 @@ def get_skin_cancer_model():
           model = tf.keras.models.load_model(classifier_directory)
           return model
        except Exception:
-          raise RuntimeError("The model failed to load!") 
+          raise RuntimeError("The model failed to  load!") 
        
 def get_pneumonia_model():
     classifier_directory = os.path.join(settings.BASE_DIR, 'neural/ml_models', 'deepneural_pneumonia_detector_v1.keras')
