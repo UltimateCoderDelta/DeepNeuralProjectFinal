@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import BlogsOriginal, TabularModels, UserPostDocumentation, UserImagePost, UserImagePostPneumonia, UserPostSentiment,\
-     ProductListCards, ChartFileUploaderData, UserList
+     ProductListCards, ChartFileUploaderData
 from django.urls import reverse_lazy
 from .forms import UploadFileForm,CustomUserCreationForm, UserDeletionConfirmation, ForgotPasswordForm, UserResetConfirmPassword
 import json
@@ -14,14 +14,11 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic.edit import UpdateView
-from django.core.mail import  EmailMultiAlternatives
-from django.template.loader import render_to_string
 from django.contrib.auth import logout, login, authenticate
 import numpy as np
-import smtplib
 # Import the email modules we'll need
-from email.message import EmailMessage
 from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def predictive_models(request):
@@ -74,9 +71,10 @@ def deepneural_blog(request):
     }
     return render(request, "neural/deepneural_blog.html", context)
 
+@csrf_exempt
 def logout_form(request):
-    logout(request)
-    return redirect("home")
+     logout(request)
+     return redirect("home")
 
 def deepneural_blog_one(request):
     return render(request, "neural/deepneural_intro.html")
@@ -164,7 +162,7 @@ def upload_file(request):
               #Check for a valid csv_conversion process
               df = handle_uploaded_file(request.FILES['csv_file'])
            except Exception as e:
-               HttpResponse(f'Error: {e}')
+              return HttpResponse(f'Error: {e}')
            else:
             data = form.cleaned_data['x_Axis_data'].lower() #get the label names
             label = form.cleaned_data['label'].lower() 
@@ -242,9 +240,6 @@ def get_user_summary(request):
           user_document = field_value['user_document']
           if not user_document:
            raise ValueError("The document provided is empty!")    
-        #   user_data = json.loads(json_str)      
-        #   summarized_data = generate_text(user_document)
-          #Delete all data from the database for the next request
           UserPostDocumentation.objects.all().delete()
           return Response({"summary": user_document}, status=status.HTTP_200_OK)
        except Exception as e:
@@ -537,3 +532,4 @@ class UpdateEmail(UpdateView):
    fields = ["email"]
    template_name = 'neural/email_update_form.html'
    success_url = reverse_lazy('user_account')
+

@@ -3,7 +3,6 @@
 
  {% block head %}
  <title>DeepNeural Visualizer</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link type="text/css" href="{% static '/neural/styles.css' %}" rel="stylesheet">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +22,9 @@
     <div class="model_banners">
         <h2>DeepNeural Analytics</h2>
         <p>
-            Leverage the power of DeepNeural's analytics platform 
+            Leverage the power of DeepNeural's analytics platform
             to better visualize your datasets, and gain a deeper understanding
-            of the distributions with pie charts, bar plots, histograms and more 
+            of the distributions with pie charts, bar plots, histograms and more
             in an interactive manner. Simply upload a CSV or Microsoft Excel sheet
             to get started!
         </p>
@@ -49,8 +48,8 @@
       <section id="chart_selector_parent">
         <div id="frequency_charts">
             <h3>Frequency Charts</h3>
-            <section class="chart_selector">    
-              <article id="bar_example" class="example_chart">   
+            <section class="chart_selector">
+              <article id="bar_example" class="example_chart">
                 <h4>Bar Chart</h4>
                 <canvas id="bar_exam_canva" class="canva_example"></canvas>
               </article>
@@ -67,14 +66,14 @@
                   <canvas id="polar_pie_exam_canva" class="canva_example"></canvas>
                 </article>
             </section>
-        </div>  
+        </div>
        <div id="quantitative_charts" style="display:none;">
         <h3>Numerical Charts</h3>
         <section class="chart_selector">
           <article id="scatter_example" class="example_chart">
             <h4>Scatter Chart</h4>
             <canvas id="scatter_exam_canva" class="canva_example_quand"></canvas>
-          </article> 
+          </article>
           <!-- Since line charts can also be quantitative -->
           <article id="linequant_example" class="example_chart">
             <h4>Line Chart</h4>
@@ -88,10 +87,9 @@
             <h4>Histogram Chart</h4>
             <canvas id="histquant_exam_canva" class="canva_example_quand"></canvas>
           </article>
-        </section> 
+        </section>
       </div>
     </section>
-      <span id="select-chart-quant" type="button" class="chart-toggle-freq" style="margin-left:30px; margin-top:10px; padding-right:12px; display:none;"><i class="fa-solid fa-bars"></i><span style="margin-left:6px;">Chart Options</span></span>
       <div id="user-chart-selector" style="display: none;">
            <!-- The image download button -->
            <canvas id="main-chart" style="max-width: 70%; max-height: 600px; margin-right: 5%;"></canvas>
@@ -105,7 +103,7 @@
            </section>
         <section id="user-selector-quant" style="max-width: 30%;">
             <div id="dataset-change-quant">
-              <button id="Select-Chart-Const" style="text-align: center; display: none;">Change chart</button>
+              <button id="Select-Chart-Const" style="text-align: center; display: none;">Change chart </button>
               <button type="button" id="change-datasetbtn-quant">New Dataset</button>
               <span id="download-button_sec" type="button" style="margin-left: 5px; cursor: pointer;"><i  class="fa-solid fa-download" ></i></span>
             </div>
@@ -121,30 +119,24 @@
          }
         </script>
     </script>
-  <script src="{% static 'neural/script.js' %}"></script>  
+  <!-- <script type="module" src="{% static 'neural/image_downloader.js' %}"></script> -->
+  <script src="{% static 'neural/script.js' %}"></script>
    <script src="{% static './neural/deepvisual.js' %}"></script>
   <script>
      const qualitativeSelection = document.getElementById("qualitative");
      const quantitativeSelection = document.getElementById("quantitative");
-     const frequencyCharts = document.getElementById("frequency_charts");  
-     const quantitativeCharts = document.getElementById("quantitative_charts");  
+     const frequencyCharts = document.getElementById("frequency_charts");
+     const quantitativeCharts = document.getElementById("quantitative_charts");
      const chartDisplay = document.getElementById("user-selector-charts");
      const chartDisplayQuant = document.getElementById("user-selector-charts-quant");
      const mainChartContainer = document.getElementById("user-chart-selector");
-     const chartSelectorQuantSection = document.getElementById("user-selector-quant");
-     const chartSelectorFreqSection = document.getElementById("user-selector");
-     const selectChartOptions = document.getElementById("select-chart-quant");
-     
+
      //Add action listener for each selector
      qualitativeSelection.addEventListener("change", (e) => {
-        e.preventDefault();
         //if the checkbox has been checked, then remove data field
         if (qualitativeSelection.checked) {
              frequencyCharts.style.display = "block";
              quantitativeCharts.style.display = "none";
-             //Change toggleChartFeature class back to chart-toggle-freq if not already
-             selectChartOptions.classList.remove("chart-toggle-quant");
-             selectChartOptions.classList.add("chart-toggle-freq");
         }
      });
      quantitativeSelection.addEventListener("change", (e) => {
@@ -153,32 +145,8 @@
            //Clear the qualitative checkbox if wasn't cleared already
            frequencyCharts.style.display = "none";
            quantitativeCharts.style.display = "block";
-           //Change the toggleChartFeature class to chart-toggle-quant if not already
-           selectChartOptions.classList.remove("chart-toggle-freq");
-           selectChartOptions.classList.add("chart-toggle-quant");
         }
      });
-
-    const chartSelectorQuantEventToggle = () => {
-      selectChartOptions.addEventListener("click", (e) => {
-      e.preventDefault();
-      const chartToggle = (element) => {
-        if (element.style.display === "none") {
-             element.style.display = "flex";
-        } else if (element.style.display === "flex") {
-          element.style.display = "none";
-      }
-    }
-      //Check which chart types are currently selected
-      if (selectChartOptions.getAttribute("class") === "chart-toggle-quant") {
-         console.log(selectChartOptions.getAttribute("class"));
-         // if the class for chart selector icon is numeric, toggle the numeric charts when clicked
-         chartToggle(chartSelectorQuantSection);
-      } else if (selectChartOptions.getAttribute("class") === "chart-toggle-freq") {
-         chartToggle(chartSelectorFreqSection);
-      }
-    });
-  }
 
     const windowResizeCheckMain = function (element) {
           if (window.innerWidth < 1000) {
@@ -187,37 +155,31 @@
                chartDisplayQuant.style.flexDirection = "row";
                chartDisplay.style.width = "500px";
                chartDisplayQuant.style.width = "500px";
-               //TO DO: When the screen size reduces to less than a 1000 
-               chartSelectorQuantSection.style.display = "none";
-               chartSelectorFreqSection.style.display = "none";
               } else {
                 chartDisplay.style.flexDirection = "column";
                 chartDisplayQuant.style.flexDirection = "column";
                 chartDisplay.style.width = "auto";
                 chartDisplayQuant.style.width = "auto";
-                chartSelectorQuantSection.style.display = "flex";
-                chartSelectorFreqSection.style.display = "flex";
                 }
             }
 
-   
-   window.addEventListener("resize", () => {
+     window.addEventListener("resize", () => {
         windowResizeCheckMain();
     });
     windowResizeCheckMain();
-    chartSelectorQuantEventToggle();
    </script>
 </main>
 {% endblock %}
 
 {% block footer%}
-<section class="company_info" style="margin-top:100px;">
+<section class="company_info">
     <article class="info_cards">
        <h3>Stay Connected</h3>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://x.com/DNeural76430">X</a></span>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://www.linkedin.com/company/dneural">LinkedIn</a></span>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://www.instagram.com/deep_neural/">Instagram</a></span>
        <span class="info_cards_span nav-item"><a class="anchor" href="https://www.facebook.com/DeepNeuralCorp/">Facebook</a></span>
+       <!-- <span class="info_cards_span nav-item"><a class="anchor" href="#">YouTube</a></span> -->
     </article>
     <article class="info_cards">
       <h3>Check Out</h3>

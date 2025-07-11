@@ -31,7 +31,7 @@ let currentKeyupListener = null;
           setTimeout(() => {
            removeLoadingIcon();
           errorMessage("Timeout Exception");
-          }, 30000);   
+          }, 20000);   
       }
     }
     //Creating an event listener for imageclass 
@@ -240,7 +240,7 @@ let currentKeyupListener = null;
    textClassification.addEventListener("click", textClassifierEventListener);
    summarizerClassEventListener();
 
-   const errorMessage = (error) => {
+        const errorMessage = (error) => {
         const errorText = document.createElement('p');
         errorText.classList.add("errorMessages");
         errorText.textContent = `There was an error when accessing the response. \nError Type: ${error}`;
@@ -450,7 +450,6 @@ let currentKeyupListener = null;
     textBoxArea.addEventListener("input", (e)=>{
        let inputTextLength = textBoxArea.value.length;
        
-
        if (inputTextLength >= 3) {
         sendButton.disabled = false;
         //Hereafter add an event listener to the button - when clicked, send the text to the screen as a new component

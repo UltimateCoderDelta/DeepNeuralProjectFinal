@@ -151,7 +151,6 @@ def sentiment_classifier(text):
 def generate_text(input_text):
   if len(input_text) > 0:
       output = client.summarization(input_text, model="Falconsai/text_summarization")
-      # output = model(input_text, max_length=max_length, min_length=min_length)
       return (output['summary_text'])
   else:
      raise ValueError("The text for sentiment analysis must not be empty")
