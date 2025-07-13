@@ -1,7 +1,6 @@
 
 # DeepNeural Project Installation Guide
 
-==========================================================
 Summary: DeepNeural was build with the Django framework, and therefore to ensure a proper duplication 
 of the following project is possible, it is recommended to follow the steps below for local development:
 
@@ -49,8 +48,6 @@ django-rest-framework
 ---
 
 # Running the Django Application
-
-=================================================================
 
 Upon having completed the above installation processes, it is now 
 officially time to check whether django is officially installed. First, navigate the project directory - in this case *DeepNeuralFinal*. Then proceed with running migrations to ensure all database objects are correctly stored. Follow the code instructions below.
