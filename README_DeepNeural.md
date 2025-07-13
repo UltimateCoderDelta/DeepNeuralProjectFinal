@@ -2,9 +2,6 @@
 # DeepNeural Project Installation Guide
 
 ==========================================================
- <script src="https://kit.fontawesome.com/315c494b79.js" crossorigin="anonymous"></script>
-
-
 Summary: DeepNeural was build with the Django framework, and therefore to ensure a proper duplication 
 of the following project is possible, it is recommended to follow the steps below for local development:
 
