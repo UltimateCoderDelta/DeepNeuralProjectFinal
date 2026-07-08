@@ -1,7 +1,7 @@
 
 # DeepNeural Project Installation Guide
 
-Summary: DeepNeural was build with the Django framework, and therefore to ensure a proper duplication 
+Summary: DeepNeural was built with the Django framework, and therefore to ensure a proper duplication 
 of the following project is possible, it is recommended to follow the steps below for local development:
 
 - <i class="fas fa-check"></i> Create a virtual environment 
